@@ -4,6 +4,8 @@ Projet Robotique 2025/2026 en cadre de l’UE LU2IN013 Projet de Développement 
 
 Le lien vers compte Github du professeur : https://github.com/baskiotisn/2IN013robot2025/tree/main
 
+Les rapports (Documentation & Comptes-rendu) se trouvent dans dossier Rapports ou dans Rapport-Branch(version .docx)
+
 ---
 
 # Documentation sur le Projet Robotique : « Robot Dexter »
