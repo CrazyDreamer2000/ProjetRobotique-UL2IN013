@@ -1,7 +1,7 @@
 # Compte Rendu - Séance 1 (21/01/2026)
 
 ## 1. Constitution de l’équipe
-[cite_start]Le groupe a été officiellement formé pour mener à bien le projet de robotique **« Robot Dexter »**[cite: 22]. Il se compose de quatre membres :
+Le groupe a été officiellement formé pour mener à bien le projet de robotique **« Robot Dexter »**. Il se compose de quatre membres :
 * Tratrat Kevin
 * Argeles Alex
 * Xiangkun Zhao
@@ -30,4 +30,4 @@ Cette première étape a permis de clarifier les rôles et de poser les bases d�
 * **Mouvements** : Définition des signatures des fonctions de base pour contrôler les déplacements :
     * `en_avant()` / `en_arriere()`
     * `gauche()` / `droite()`
-* **Choix de bibliothèque** : Sélection de **Turtle** pour l'affichage visuel. [cite_start]Ce module permet de remplir le pré-requis de simulation obligatoire avant le passage sur le robot réel[cite: 52].
+* **Choix de bibliothèque** : Sélection de **Turtle** pour l'affichage visuel.Ce module permet de remplir le pré-requis de simulation obligatoire avant le passage sur le robot réel.
