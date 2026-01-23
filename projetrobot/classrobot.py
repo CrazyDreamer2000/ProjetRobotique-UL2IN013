@@ -8,8 +8,11 @@ class Robot:
     def move(self, vitesse, duree, angle):
         self.angle = angle
         radian_angle = math.radians(self.angle)
-        self.x += vitesse * duree * math.cos(radian_angle)
-        self.y += vitesse * duree * math.sin(radian_angle)
+
+        new_x = vitesse * duree * math.cos(radian_angle)
+        new_y = vitesse * duree * math.sin(radian_angle)
+        self.x = round(new_x,5)
+        self.y = round(new_y,5)
     def get_position(self):
         return (self.x, self.y, self.angle)
 print ("-------------test class Robot-----------------")
