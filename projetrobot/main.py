@@ -21,7 +21,7 @@ while running
     v_lin = 0
     v_ang = 0
 
-    if keys[pygame.K_UP]: 
+    if keys[pygame.K_UP]:              #Configurer les données de base
         v_lin = 100
     if keys[pygame.K_DOWN]:
         v_lin = -100
@@ -30,9 +30,15 @@ while running
     if keys[pygame.K_RIGHT]:
         v_ang = -5
     
-    robot.update_velocity(v_lin, v_ang)
+    robot.update_velocity(v_lin, v_ang)  
 
     robot.move(dt)
+
+    screen.fill((255, 255, 255))
+    robot.draw(screen)
+    pygame.display.flip()
+
+pygame.quit()
     
     
     
