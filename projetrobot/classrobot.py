@@ -7,8 +7,14 @@ class Robot:
         self.y = y
         self.angle = math.radians(angle)
 
-        self.v_linear = 0   # set une vitesse linéaire initiale à 0
-        self.v_angular_velocity = 0  # set un vitesse angulaire initiale à 0
+        self.v_linear = 0   # regler une vitesse linéaire initiale à 0
+        self.v_angular = 0  # regler un vitesse angulaire initiale à 0
+
+    
+    def update_velocity(self, v_linear, v_angular):
+        # Met à jour les vitesses linéaire et angulaire du robot
+        self.v_linear = v_linear
+        self.v_angular = v_angular
     
     
     def move(self, duree):
