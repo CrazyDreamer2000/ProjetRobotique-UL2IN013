@@ -1,4 +1,5 @@
 import math
+import pygame
 class Robot:
     def __init__(self, name, x=0, y=0, angle=0):
         # Initialisation des attributs du robot
@@ -17,24 +18,22 @@ class Robot:
         self.v_angular = v_angular
     
     
-    def move(self, duree):
-        self.angle = self.angle
+    def move(self, dt):
+        # Met à jour la position et l'angle du robot en fonction des vitesses et du temps`
+        self.angle = self.v_angular * dt + self.angle
 
-        new_x = vitesse * duree * self.angle
-        new_y = vitesse * duree * self.angle
+        self.x = self.v_linear * dt * math.cos(self.angle) + self.x
+        self.y = self.v_linear * dt * math.sin(self.angle) + self.y
 
-        self.y += new_y
-        self.x += new_x
-        self.x = round(new_x,5)
-        self.y = round(new_y,5)
+    def draw(self, screen):
+        "dessine le robot sur l'écran pygame"
+        pygame.draw.rect(screen, (0, 0, 255), (self.x, self.y, 30, 30))
+
+        
+
+
     
     
-    def get_position(self):
-        return (self.x, self.y, self.angle)
 
 
-print ("-------------test class Robot-----------------")
-robot1 = Robot("best_robot")
-robot1.move(10, 2, 90)
-position = robot1.get_position()
-print(f"Robot Position: x={position[0]}, y={position[1]}, angle={position[2]}")
+
