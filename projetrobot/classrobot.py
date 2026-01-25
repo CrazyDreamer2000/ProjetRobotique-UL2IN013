@@ -27,10 +27,10 @@ class Robot:
 
     def draw(self, screen):
         "dessine le robot sur l'écran pygame"
-        pygame.draw.rect(screen, (0, 0, 255), (self.x, self.y, 30, 30))
-        head_x = self.x + 15 * math.cos(self.angle)
-        head_y = self.y + 15 * math.sin(self.angle)
-        pygame.draw.line((0, 255, 0),(self.x, self.y), (head_x, head_y))
+        pygame.draw.circle(screen, (0, 0, 255), (self.x, self.y), 50)
+        head_x = self.x + 25 * math.cos(self.angle)
+        head_y = self.y + 25 * math.sin(self.angle)
+        pygame.draw.line(screen, (255, 0, 0), (self.x, self.y), (head_x, head_y), 3 )
         
 
 
