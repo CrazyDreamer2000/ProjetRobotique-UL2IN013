@@ -20,7 +20,7 @@ while running:
             running = False
     
     keys = pygame.key.get_pressed()
-    v_lin = 0
+    v_lin = 0 
     v_ang = 0
 
     if keys[pygame.K_UP]:              #Configurer les données de base
@@ -39,7 +39,7 @@ while running:
     
     if  frame_counter >= 0:
         frame_counter += 1
-        stage = frame_counter // 40
+        stage = frame_counter // 40                 #pour faire un carre
 
         if stage in [0, 2, 4, 6]:
             v_lin = 200
