@@ -1,5 +1,7 @@
 import math
 import pygame
+
+
 class Robot:
     def __init__(self, name, x=0, y=0, angle=0):
         # Initialisation des attributs du robot
@@ -48,20 +50,26 @@ class Robot:
         pygame.draw.line(screen, (255, 0, 0), (self.x, self.y), (head_x, head_y), 3 )
     
     def check_collision(self, obstacles):
-        """Vérifie si le robot (cercle) entre en collision avec un obstacle (rectangle)
-        
-        Principe: On trouve le point le plus proche du centre du robot sur chaque rectangle,
-        puis on calcule la distance entre ce point et le centre du robot.
-        Si cette distance est inférieure au rayon du robot, il y a collision.
-        """
         rayon = 50  # Rayon du robot (cercle)
         
         for obstacle in obstacles:
-            # Trouver le point le plus proche du centre du robot sur le rectangle
-            # Si le robot est à gauche du rectangle, le point le plus proche est sur le bord gauche
-            # Si le robot est au-dessus, le point le plus proche est sur le bord supérieur, etc.
-            closest_x = max(obstacle.left, min(self.x, obstacle.right))
-            closest_y = max(obstacle.top, min(self.y, obstacle.bottom))
+            # Trouver le point le plus proche du rectangle
+            
+            # Vérifier X
+            if self.x < obstacle.left:
+                closest_x = obstacle.left  # Robot à gauche
+            elif self.x > obstacle.right:
+                closest_x = obstacle.right  # Robot à droite
+            else:
+                closest_x = self.x  # Robot dedans
+            
+            # Vérifier Y
+            if self.y < obstacle.top:
+                closest_y = obstacle.top  # Robot au-dessus
+            elif self.y > obstacle.bottom:
+                closest_y = obstacle.bottom  # Robot au-dessous
+            else:
+                closest_y = self.y  # Robot dedans
             
             # Calculer la distance entre le centre du robot et ce point le plus proche
             distance_x = self.x - closest_x
@@ -97,4 +105,9 @@ class Robot:
             self.y = y_min
         if self.y > y_max:
             self.y = y_max
+    
+
+    
+
+
 
