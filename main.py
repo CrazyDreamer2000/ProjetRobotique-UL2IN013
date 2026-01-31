@@ -1,4 +1,5 @@
 from classrobot import Robot
+from fonctions_robot import generer_obstacle, tracer_trajectoire, dessiner_obstacles, effacer_obstacles
 import pygame
 import math
 
@@ -42,11 +43,7 @@ while running:
         # Créer un obstacle au clic de souris
         if event.type == pygame.MOUSEBUTTONDOWN:
             mouse_x, mouse_y = pygame.mouse.get_pos()
-            # Créer un carré centré sur la position du clic
-            obstacle = pygame.Rect(mouse_x - taille_obstacle // 2, 
-                                   mouse_y - taille_obstacle // 2,
-                                   taille_obstacle, 
-                                   taille_obstacle)
+            obstacle = generer_obstacle(mouse_x, mouse_y, taille_obstacle)
             obstacles.append(obstacle)
     
     #Gestion des touches 
@@ -87,12 +84,10 @@ while running:
     screen.fill((255, 255, 255))
     
     # Dessiner les obstacles
-    for obstacle in obstacles:
-        pygame.draw.rect(screen, (100, 100, 100), obstacle)
+    dessiner_obstacles(screen, obstacles)
     
-    # Dessiner la trajectoire (tracé du carré)
-    if len(trajectoire) > 1:
-        pygame.draw.lines(screen, (0, 255, 0), False, trajectoire, 3)
+    # Dessiner la trajectoire du robot
+    tracer_trajectoire(screen, trajectoire)
     
     robot.draw(screen)
     pygame.display.flip()
