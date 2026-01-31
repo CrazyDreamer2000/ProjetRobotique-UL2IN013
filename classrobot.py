@@ -98,5 +98,3 @@ class Robot:
         if self.y > y_max:
             self.y = y_max
 
-
-
