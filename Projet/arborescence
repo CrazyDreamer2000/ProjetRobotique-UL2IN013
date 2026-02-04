@@ -2,7 +2,7 @@ Projet
 	Core
 		classe Robot (coordonnées, largeur, longueur, roues, senseurs) 
 		classe Roue (radius, vitesse)
-		classe Obstacle (centre, x, y)
+		classe Obstacle (x,y,largeur,hauteur)
 	Affichage
 		fichier des fonctions d'affichage (affichage du robot et des obstacles
 	
