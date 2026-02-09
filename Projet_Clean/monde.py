@@ -1,0 +1,1 @@
+# On pourrait mettre ici tout ce qui concerne l'interface, les obstacles, etc
