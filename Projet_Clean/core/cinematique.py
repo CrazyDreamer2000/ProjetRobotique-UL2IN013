@@ -2,12 +2,7 @@ import math
 
 class CinematiqueDeuxRoues:
     """
-    INTERMEDIAIRE (PHYSIQUE) ENTRE ATTRIBUTS ROUES ET DEPLACEMENT ROBOT
-
-    Entrée: Vitesse de rotation des roues
-    Sortie:
-    - vitesse d'avance du robot
-    - vitesse de rotation du robot (rad/s)
+    Intermédiaire entre mesures + état des roues et le déplacement du robot (mises à jour de la position)
     """
 
     def __init__(self, rayon_roue_m: float, ecartement_roues_m: float):
@@ -16,21 +11,19 @@ class CinematiqueDeuxRoues:
 
     def vitesses_robot_depuis_roues(self, vitesse_rotation_gauche: float, vitesse_rotation_droite: float) -> tuple[float, float]:
         """
-        Renvoie :
-        - vitesse_avant
-        - vitesse_rotation (rad/s)
+        Prends en paramètre les vitesses de rotation des roues et renvoie la vitesse avant (m/s) et la vitesse de rotation (rad/s) du robot
         """
         vitesse_lineaire_gauche = self.rayon_roue * vitesse_rotation_gauche # mètres/s = mètres * rad/s 
         vitesse_lineaire_droite = self.rayon_roue * vitesse_rotation_droite #
 
-        vitesse_avant = (vitesse_lineaire_droite + vitesse_lineaire_gauche) / 2
-        vitesse_rotation = (vitesse_lineaire_droite - vitesse_lineaire_gauche) / self.ecartement_roues # différence des vitesses des deux roues / ecartement (plus ils sont écartés, moins ca tourne vite)
+        vitesse_avant = (vitesse_lineaire_droite + vitesse_lineaire_gauche) / 2 # moyenne de la vitesse des roues (choix)
+        vitesse_rotation = (vitesse_lineaire_droite - vitesse_lineaire_gauche) / self.ecartement_roues # différence des vitesses des deux roues / ecartement (plus ils sont écartés, moins le robot tourne vite)
         
         return vitesse_avant, vitesse_rotation
 
     def avance_pos(self, pos, vitesse_avant: float, vitesse_rotation: float, dt: float):
         """
-        Fait avancer la position d'un pas dt
+        Prend en paramètre la position, vitesse avant, et vitesse de rotation du robot ainsi qu'une marge de temps (en secondes) et calcule la nouvelle position du robot à partir des paramètres.
         """
         x, y, ori = pos.x, pos.y, pos.orientation
 
@@ -49,3 +42,4 @@ class CinematiqueDeuxRoues:
         y2 = y - rayon_virage * (math.cos(ori2) - math.cos(ori))
 
         return type(pos)(x2, y2, ori2)
+
