@@ -1,7 +1,8 @@
 import pygame
+import config as cfg
 from core.robot import Robot
 from controle.AlgoCarre import AlgoCarre
-from affichage.pygame_view import dessiner_robot, SCALE
+from affichage.pygame_view import dessiner_robot
 
 largeur, hauteur = 900, 600 # = 4.5 mètres * 3 mètres
 
@@ -9,9 +10,9 @@ pygame.init()
 screen = pygame.display.set_mode((largeur, hauteur))
 clock = pygame.time.Clock()
 
-robot = Robot(rayon_roue_m=0.03, ecartement_roues_m=0.15)
-robot.pos.x = (largeur / 2) / SCALE # pixels -> metres
-robot.pos.y = (hauteur / 2) / SCALE #
+robot = Robot(cfg.RAYON_ROUE, cfg.ECARTEMENT_ROUES)
+robot.pos.x = (largeur / 2) / cfg.SCALE # pixels -> metres
+robot.pos.y = (hauteur / 2) / cfg.SCALE #
 
 algo = AlgoCarre()
 

@@ -1,11 +1,6 @@
 import pygame
 import math
-
-SCALE = 200  # pixels par mètre
-
-ROBOT_L = 0.30 # mètres : Longueur
-ROBOT_l = 0.20 # mètres : largeur
-ECARTEMENT_ROUES = 0.15 # mètres
+import config as cfg
 
 def transformer_point(x, y, cx, cy, angle):
     """Transforme position des points du robot en points sur le repère
@@ -18,12 +13,12 @@ def transformer_point(x, y, cx, cy, angle):
 
 def dessiner_robot(screen, robot):
     """Affiche le robot sur pygame"""
-    cx = robot.pos.x * SCALE # pixels (mètres -> pixels avec *SCALE)
-    cy = robot.pos.y * SCALE # pixels
+    cx = robot.pos.x * cfg.SCALE # pixels (mètres -> pixels avec *SCALE)
+    cy = robot.pos.y * cfg.SCALE # pixels
     ori = robot.pos.orientation
 
-    L = ROBOT_L * SCALE / 2 # pixels (mètres -> pixels avec *SCALE), puis /2 pour ensuite définir les coins
-    l = ROBOT_l * SCALE / 2 #
+    L = cfg.ROBOT_LONGUEUR * cfg.SCALE / 2 # pixels (mètres -> pixels avec *SCALE), puis /2 pour ensuite définir les coins
+    l = cfg.ROBOT_LARGEUR * cfg.SCALE / 2 #
 
     coins = [(-L, -l), (L, -l), (L, l), (-L, l)] # pixels (repère robot)
     points = [transformer_point(x, y, cx, cy, ori) for x, y in coins]  # pixels (repère écran)

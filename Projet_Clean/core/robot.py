@@ -4,7 +4,7 @@ from .cinematique import CinematiqueDeuxRoues
 
 class Robot:
     """Le "core" du robot"""
-    def __init__(self, *, rayon_roue_m: float, ecartement_roues_m: float):
+    def __init__(self, rayon_roue_m: float, ecartement_roues_m: float):
         
         # Modèle qui traduit les vitesses des roues en déplacement du robot
         self.modele_mouvement = CinematiqueDeuxRoues(rayon_roue_m, ecartement_roues_m)
