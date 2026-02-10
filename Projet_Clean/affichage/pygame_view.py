@@ -29,10 +29,6 @@ def dessiner_robot(screen, robot):
     fx, fy = transformer_point(L, 0, cx, cy, ori) # pixels (devant du robot)
     pygame.draw.line(screen, (255, 0, 0), (cx, cy), (fx, fy), 2) # dessiner la direction de l'ecran
 
-#def generer_obstacle(mouse_x, mouse_y, taille=cfg.TAILLE_OBSTACLE)
-    # Crée un obstacle carré centré sur la position donnée
-    # A redefinir en fonction de la classe obstacle
-
 def dessiner_obstacles(screen, obstacles, couleur=cfg.COULEUR_OBSTACLE):
     # Dessine tous les obstacles sur l'écran
     for obstacle in obstacles:

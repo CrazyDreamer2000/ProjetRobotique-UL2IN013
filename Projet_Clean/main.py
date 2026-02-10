@@ -1,8 +1,9 @@
 import pygame
 import config as cfg
 from core.robot import Robot
+from monde import Obstacle
 from controle.AlgoCarre import AlgoCarre
-from affichage.pygame_view import dessiner_robot, generer_obstacle, dessiner_obstacles
+from affichage.pygame_view import dessiner_robot, dessiner_obstacles
 
 largeur, hauteur = 900, 600 # = 4.5 mètres * 3 mètres
 
@@ -26,9 +27,12 @@ while running:
             running = False
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             obs_mousex,obs_mousey= pygame.mouse.get_pos()
-            obstacle = generer_obstacle(obs_mousex,obs_mousey,cfg.TAILLE_OBSTACLE)
+            obstacle = Obstacle(obs_mousex,obs_mousey,cfg.TAILLE_OBSTACLE,cfg.TAILLE_OBSTACLE)
             obstacles.append(obstacle)
-
+            
+            #for obs in obstacles: Test des instances dans la classe Obstacle
+            #    print(obs.x,obs.y,obs.longueur,obs.largeur)
+                
     vg, vd = algo.calculer_commande(robot, dt)
     robot.definir_commande_roues(vg, vd)
 
@@ -36,7 +40,7 @@ while running:
 
     screen.fill((240, 240, 240))
     dessiner_robot(screen, robot)
-    dessiner_obstacles(screen, obstacles)
+    #dessiner_obstacles(screen, obstacles)
     pygame.display.flip()
 
 pygame.quit()
