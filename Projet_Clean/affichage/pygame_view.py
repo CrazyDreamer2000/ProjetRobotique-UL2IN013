@@ -30,9 +30,7 @@ def dessiner_robot(screen, robot):
     pygame.draw.line(screen, (255, 0, 0), (cx, cy), (fx, fy), 2) # dessiner la direction de l'ecran
 
 def dessiner_obstacles(screen, obstacles, couleur=cfg.COULEUR_OBSTACLE):
-    # Dessine tous les obstacles sur l'écran
-    corners=[]
+    """Dessine tous les obstacles sur l'écran"""
     for obs in obstacles:
-        corners.append(obs.get_corners())
-    for obs_corners in corners:
-        pygame.draw.polygon(screen,cfg.COULEUR_OBSTACLE,obs_corners)
+        pygame.draw.polygon(screen,cfg.COULEUR_OBSTACLE,obs.get_corners())
+        

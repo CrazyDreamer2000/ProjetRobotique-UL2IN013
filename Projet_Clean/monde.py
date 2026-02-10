@@ -6,11 +6,13 @@ class Obstacle:
         self.y= y
         self.largeur = largeur
         self.longueur = longueur
+        self.corners = [
+                            (self.x - self.longueur/2, self.y - self.largeur/2), # coin arrière-gauche
+                            (self.x + self.longueur/2, self.y - self.largeur/2), # coin avant-gauche
+                            (self.x + self.longueur/2, self.y + self.largeur/2), # coin avant-droit
+                            (self.x - self.longueur/2, self.y + self.largeur/2) # coin arrière-droit
+                        ]
 
     def get_corners(self):
-        #Permet d'obtenir la position des 4 coins de l'obstacle
-        bottom_left=(self.x-self.longueur/2,self.y-self.largeur/2)
-        bottom_right=(self.x+self.longueur/2,self.y-self.largeur/2)
-        upper_left=(self.x-self.longueur/2,self.y+self.largeur/2)
-        upper_right=(self.x+self.longueur/2,self.y+self.largeur/2)
-        return bottom_left,bottom_right,upper_left,upper_right
+        """Méthode getter pour les coins de l'obstacle"""
+        return self.corners

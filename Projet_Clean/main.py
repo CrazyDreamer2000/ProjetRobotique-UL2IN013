@@ -17,7 +17,7 @@ robot.pos.y = (hauteur / 2) / cfg.SCALE #
 
 algo = AlgoCarre()
 obstacles=[]
-corners=[]
+
 running = True
 while running:
     dt = clock.tick(60) / 1000.0 # on divise par 1000 pour avoir la valeur en secondes (milisecondes -> secondes)
@@ -27,11 +27,7 @@ while running:
             running = False
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             obs_mousex,obs_mousey= pygame.mouse.get_pos()
-            obstacle = Obstacle(obs_mousex,obs_mousey,cfg.TAILLE_OBSTACLE,cfg.TAILLE_OBSTACLE)
-            obstacles.append(obstacle)
-            #for obs in obstacles:       
-                #print(obs.x,obs.y,obs.longueur,obs.largeur)
-                #corners.append(obs.get_corners())
+            obstacles.append(Obstacle(obs_mousex,obs_mousey,cfg.TAILLE_OBSTACLE,cfg.TAILLE_OBSTACLE))
                 
                 
     vg, vd = algo.calculer_commande(robot, dt)
