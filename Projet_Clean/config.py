@@ -14,5 +14,5 @@ RAYON_ROUE = 0.03
 ECARTEMENT_ROUES = 0.15
 
 # Obstacles
-TAILLE_OBSTACLE = 60  # Taille des obstacles carrés en pixels
+TAILLE_OBSTACLE = 0.4  # Taille des obstacles carrés en mètres
 COULEUR_OBSTACLE = (101, 69, 19)  # Couleur RGB des obstacles (marron)

@@ -31,6 +31,18 @@ def dessiner_robot(screen, robot):
 
 def dessiner_obstacles(screen, obstacles, couleur=cfg.COULEUR_OBSTACLE):
     """Dessine tous les obstacles sur l'écran"""
+
     for obs in obstacles:
-        pygame.draw.rect(screen,cfg.COULEUR_OBSTACLE,obs.get_corners())
+
+        L = obs.longueur * cfg.SCALE / 2
+        l = obs.largeur * cfg.SCALE / 2
+
+        points = [
+                    (obs.x - L, obs.y - l), # coin arrière-gauche
+                    (obs.x + L, obs.y - l), # coin avant-gauche
+                    (obs.x + L, obs.y + l), # coin avant-droit
+                    (obs.x - L, obs.y + l) # coin arrière-droit
+                ]
+
+        pygame.draw.polygon(screen,cfg.COULEUR_OBSTACLE, points)
         
