@@ -44,5 +44,6 @@ def dessiner_obstacles(screen, obstacles, couleur=cfg.COULEUR_OBSTACLE):
                     (obs.x - L, obs.y + l) # coin arrière-droit
                 ]
 
-        pygame.draw.polygon(screen,cfg.COULEUR_OBSTACLE, points)
+        pygame.draw.polygon(screen,couleur, points)
+
         
