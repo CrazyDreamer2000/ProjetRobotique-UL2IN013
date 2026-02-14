@@ -23,7 +23,7 @@ class Robot:
             rotation_totale_droite=0.0,
         )
         
-        # Pour déterminer si le robot est en collision
+        # Flag pour déterminer si le robot est en collision
         self.en_collision = False
 
     def definir_commande_roues(self, vitesse_rotation_gauche: float, vitesse_rotation_droite: float):
@@ -35,6 +35,10 @@ class Robot:
         - met à jour les roues
         - calcule le mouvement
         - met à jour la pos (avec vérification des collisions)
+        
+        Paramètres:
+            dt: Temps écoulé en secondes
+            monde: Instance de Monde pour vérifier les collisions (optionnel)
         """
 
         # Envoyer la commande (vitesse rotation) aux roues
