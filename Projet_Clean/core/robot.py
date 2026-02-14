@@ -22,16 +22,19 @@ class Robot:
             rotation_totale_gauche=0.0,
             rotation_totale_droite=0.0,
         )
+        
+        # Pour déterminer si le robot est en collision
+        self.en_collision = False
 
     def definir_commande_roues(self, vitesse_rotation_gauche: float, vitesse_rotation_droite: float):
         self.commande = CommandeRoues(vitesse_rotation_gauche, vitesse_rotation_droite)
 
-    def step(self, dt: float):
+    def step(self, dt: float, monde=None):
         """
         Avance la simulation de dt secondes
         - met à jour les roues
         - calcule le mouvement
-        - met à jour la pos
+        - met à jour la pos (avec vérification des collisions)
         """
 
         # Envoyer la commande (vitesse rotation) aux roues
@@ -48,8 +51,19 @@ class Robot:
             self.roues.vitesse_rotation_droite
         )
 
-        # Avancer la pos
-        self.pos = self.modele_mouvement.avance_pos(self.pos, vitesse_avant, vitesse_rotation, dt)
+        # Calculer la nouvelle position
+        pos_suiv = self.modele_mouvement.avance_pos(self.pos, vitesse_avant, vitesse_rotation, dt)
+        
+        # Vérifier les collisions
+        if monde is not None and monde.collisions_robot(pos_suiv):
+            # Collision détectée: arrêter le robot
+            self.definir_commande_roues(0, 0)
+            self.en_collision = True
+            # La position ne change pas : on garde self.pos
+        else:
+            # Pas de collision: mettre à jour la position
+            self.pos = pos_suiv
+            self.en_collision = False
 
         # Normaliser l'orientation dans [-pi, +pi] 
         self.pos.orientation = (self.pos.orientation + math.pi) % (2 * math.pi) - math.pi
