@@ -1,43 +1,47 @@
-import pygame
+# On pourrait mettre ici tout ce qui concerne l'interface, les obstacles, etc
 import config as cfg
-from core.robot import Robot
-from monde import Obstacle
-from controle.AlgoCarre import AlgoCarre
-from affichage.pygame_view import dessiner_robot, dessiner_obstacles
 
-largeur, hauteur = 900, 600 # = 4.5 mètres * 3 mètres
+class Obstacle:
+    def __init__(self,x,y,largeur,longueur):
+        self.x= x # pixels
+        self.y= y # pixels
+        self.largeur = largeur # mètres
+        self.longueur = longueur # mètres
 
-pygame.init()
-screen = pygame.display.set_mode((largeur, hauteur))
-clock = pygame.time.Clock()
 
-robot = Robot(cfg.RAYON_ROUE, cfg.ECARTEMENT_ROUES)
-robot.pos.x = (largeur / 2) / cfg.SCALE # pixels -> metres
-robot.pos.y = (hauteur / 2) / cfg.SCALE #
-
-algo = AlgoCarre()
-obstacles=[]
-
-running = True
-while running:
-    dt = clock.tick(60) / 1000.0 # on divise par 1000 pour avoir la valeur en secondes (milisecondes -> secondes)
-
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-            obs_mousex,obs_mousey= pygame.mouse.get_pos()
-            obstacles.append(Obstacle(obs_mousex,obs_mousey,cfg.TAILLE_OBSTACLE,cfg.TAILLE_OBSTACLE))
-                
-                
-    vg, vd = algo.calculer_commande(robot, dt)
-    robot.definir_commande_roues(vg, vd)
-
-    robot.step(dt)
-
-    screen.fill((240, 240, 240))
-    dessiner_robot(screen, robot)
-    dessiner_obstacles(screen, obstacles)
-    pygame.display.flip()
-
-pygame.quit()
+class Monde:
+    """Représente l'environnement avec les obstacles"""
+    
+    def __init__(self):
+        self.obstacles = []
+    
+    def ajouter_obstacle(self, obstacle):
+        """Ajoute un obstacle au monde"""
+        self.obstacles.append(obstacle)
+    
+    def collisions_robot(self, pos_robot):
+        """
+        La fonction vérifie s'il y a collision entre le robot et les obstacles
+        """
+        # Position du robot en pixels
+        robot_x_px = pos_robot.x * cfg.SCALE
+        robot_y_px = pos_robot.y * cfg.SCALE
+        
+        # Dimensions du robot en pixels
+        robot_L = cfg.ROBOT_LONGUEUR * cfg.SCALE / 2
+        robot_l = cfg.ROBOT_LARGEUR * cfg.SCALE / 2
+        
+        # Pour chaque obstacle
+        for obs in self.obstacles:
+            # Dimensions de l'obstacle en pixels
+            obs_L = obs.longueur * cfg.SCALE / 2
+            obs_l = obs.largeur * cfg.SCALE / 2
+            
+            # Collision simple AABB (Axis-Aligned Bounding Box)
+            #Avec ça , On vérifie si les rectangles se chevauchent
+            if (abs(robot_x_px - obs.x) < robot_L + obs_L and
+                abs(robot_y_px - obs.y) < robot_l + obs_l):
+                return True  # Collision détectée
+        
+        return False  # Pas de collision
+        
