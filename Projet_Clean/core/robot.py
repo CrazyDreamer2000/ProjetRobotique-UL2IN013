@@ -58,6 +58,8 @@ class Robot:
             self.roues.vitesse_rotation_droite
         )
 
+        self.maj_capteurs(dt, monde, vitesse_avant)
+
         # Calculer la nouvelle position
         pos_suiv = self.modele_mouvement.avance_pos(self.pos, vitesse_avant, vitesse_rotation, dt)
         
@@ -74,3 +76,12 @@ class Robot:
 
         # Normaliser l'orientation dans [-pi, +pi] 
         self.pos.orientation = (self.pos.orientation + math.pi) % (2 * math.pi) - math.pi
+
+
+    def maj_capteurs(self, dt, monde, vitesse_actuelle):
+        """renouvMettre à jour l'état du capteur du robot"""
+
+        "(a = Δv / Δt)"
+        if dt > 0:
+            self.accel_lineaire = (vitesse_actuelle - self.vitesse_precedante) / dt
+        self.vitesse_precedante = vitesse_actuelle
