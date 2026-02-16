@@ -56,12 +56,13 @@ class Monde:
         ori = pos_robot.orientation 
         
         # check pour chaque 0.05 metre
-        pas = 0.05 
+        pas = 0.02 
         for d in range(1, int(portee_max / pas)):
-            dist_test = d * pas
-            # Calculer les coordonnées (en mètres) du point de détection.
-            test_x_m = x_m + dist_test * math.cos(ori)
-            test_y_m = y_m + dist_test * math.sin(ori)
+            dist_test = d * pas 
+            
+             # Calculer les coordonnées (en mètres) du point de détection.
+            test_x_m = x_m + (dist_test + cfg.ROBOT_LONGUEUR / 2)* math.cos(ori)
+            test_y_m = y_m + (dist_test + cfg.ROBOT_LONGUEUR / 2)* math.sin(ori)
             
             # Convertir en coordonnées pixel pour correspondre à la position de l'obstacle
             test_x_px = test_x_m * cfg.SCALE
@@ -75,6 +76,7 @@ class Monde:
                 # Détection de collision
                 if (abs(test_x_px - obs.x) < obs_L and 
                     abs(test_y_px - obs.y) < obs_l):
+                    print(dist_test)
                     return dist_test
                     
         return portee_max # Si aucun obstacle n'est détecté, revenir à la pleine échelle.
