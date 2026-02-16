@@ -22,6 +22,9 @@ class Robot:
             rotation_totale_gauche=0.0,
             rotation_totale_droite=0.0,
         )
+        self.accel_lineaire = 0.0
+        self.vitesse_precedante = 0.0 #pour calculer l'acceleration
+        self.dist_obstacle = 2.0  #la plus grand distance on peut detecter
         
         # Flag pour déterminer si le robot est en collision
         self.en_collision = False
