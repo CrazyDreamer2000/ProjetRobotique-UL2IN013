@@ -4,7 +4,6 @@ def normaliser_angle(angle):
     """Ramène un angle dans [-pi, pi]"""
     return (angle + math.pi) % (2 * math.pi) - math.pi
 
-
 class AlgoCarre:
     """
     Fait un carré parfait basé sur la pose réelle du robot.
@@ -20,6 +19,18 @@ class AlgoCarre:
         self.x_depart = None
         self.y_depart = None
         self.orientation_depart = None
+
+    def traiter_collision(self):
+        """Appelé quand le robot touche un mur"""
+        # Si on avançait et qu'on tape un mur, l'évitement du robot (qui tourne ~90°)
+        # va servir de virage. On considère donc ce côté comme terminé.
+        if self.etat == "avance":
+            self.cote_actuel += 1
+            # On réinitialise les points de départ pour que le prochain segment
+            # commence à la nouvelle position du robot (après l'évitement)
+            self.x_depart = None
+            self.y_depart = None
+            # On reste dans l'état "avance" pour démarrer le côté suivant directement
 
     def calculer_commande(self, robot, dt):
 
