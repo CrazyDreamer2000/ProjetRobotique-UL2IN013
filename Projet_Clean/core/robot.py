@@ -85,3 +85,8 @@ class Robot:
         if dt > 0:
             self.accel_lineaire = (vitesse_actuelle - self.vitesse_precedante) / dt
         self.vitesse_precedante = vitesse_actuelle
+
+        if monde is not None:
+            self.dist_obstacle = monde.lire_distance_devant(self.pos)
+        else:
+            self.dist_obstacle = 5.0 #il y a pas obstacle
