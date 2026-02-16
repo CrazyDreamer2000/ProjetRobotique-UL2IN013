@@ -19,7 +19,7 @@ parser.add_argument(
 parser.add_argument(
     "--vitesse_roues",
     type=float,
-    default=4.0,
+    default=7.0,
     help="Vitesse des roues en rad/s"
 )
 parser.add_argument(
@@ -41,9 +41,7 @@ pygame.init()
 screen = pygame.display.set_mode((cfg.LONGUEUR_MONDE * cfg.SCALE, cfg.LARGEUR_MONDE * cfg.SCALE))
 clock = pygame.time.Clock()
 
-robot = Robot(cfg.RAYON_ROUE, cfg.ECARTEMENT_ROUES, args.orientation)
-robot.pos.x = cfg.LONGUEUR_MONDE / 2 # metres
-robot.pos.y = cfg.LARGEUR_MONDE / 2 #
+robot = Robot(cfg.LONGUEUR_MONDE / 2, cfg.LARGEUR_MONDE / 2, cfg.RAYON_ROUE, cfg.ECARTEMENT_ROUES, args.orientation)
 
 monde = Monde()
 algo = ALGOS[args.algo](args.vitesse_roues)

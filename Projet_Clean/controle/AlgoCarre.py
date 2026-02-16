@@ -1,42 +1,80 @@
 import math
 
-class AlgoCarre:
-    """Algorithme pour tracer un carré"""
+def normaliser_angle(angle):
+    """Ramène un angle dans [-pi, pi]"""
+    return (angle + math.pi) % (2 * math.pi) - math.pi
 
-    def __init__(self, vitesse_roues=4, duree_avance=4, duree_tourne=0.97):
-        self.vitesse = vitesse_roues
-        self.duree_avance = duree_avance
-        self.duree_tourne = duree_tourne
+
+class AlgoCarre:
+    """
+    Fait un carré parfait basé sur la pose réelle du robot.
+    """
+
+    def __init__(self, vitesse_roues, longueur_cote=0.5):
+        self.v = vitesse_roues
+        self.longueur_cote = longueur_cote
 
         self.etat = "avance"
-        self.temps = 0.0
-        self.cotes_faits = 0
+        self.cote_actuel = 0
 
-        self.arret = False
-
+        self.x_depart = None
+        self.y_depart = None
+        self.orientation_depart = None
 
     def calculer_commande(self, robot, dt):
-        """Prend en argument le robot et un tick de temps et renvoie les vitesses de la roue gauche et droite"""
-        
-        if self.cotes_faits >= 4: # Conditions d'arrêt
-            self.arret = True
-        if self.arret:
-            return 0,0
-        
-        self.temps += dt
 
-        # Avance tout droit
+        # Carré terminé
+        if self.cote_actuel >= 4:
+            return 0.0, 0.0
+
+        x = robot.pos.x
+        y = robot.pos.y
+        theta = robot.pos.orientation
+
+        # --- Phase AVANCE ---
         if self.etat == "avance":
-            if self.temps >= self.duree_avance: # Si le temps pour avancer tout droit est dépassé, on réinitialise le timer et on active "tourner"
-                self.temps = 0.0
+
+            # Initialisation du segment
+            if self.x_depart is None:
+                self.x_depart = x
+                self.y_depart = y
+
+            distance = math.sqrt(
+                (x - self.x_depart)**2 +
+                (y - self.y_depart)**2
+            )
+
+            if distance >= self.longueur_cote:
+                # Passage à la rotation
                 self.etat = "tourne"
-            return self.vitesse, self.vitesse # Sinon on continue d'avancer tout droit
+                self.orientation_depart = theta
+                self.x_depart = None
+                self.y_depart = None
+                return 0.0, 0.0
 
-        # Tourne sur place
-        if self.etat == "tourne":
-            if self.temps >= self.duree_tourne: # Si le temps pour tourner sur place est dépassé, on réinitialise le timer et on active "avancer"
-                self.temps = 0.0
+            return self.v, self.v
+
+        # --- Phase TOURNE ---
+        elif self.etat == "tourne":
+
+            # différence entre l'orientation actuelle et celle du début de rotation
+            diff_angle = normaliser_angle(
+                theta - self.orientation_depart
+            )
+
+            # si on a atteint 90°
+            if abs(diff_angle) >= math.pi / 2:
+                self.cote_actuel += 1
                 self.etat = "avance"
-                self.cotes_faits += 1 # Un des cotés a été complété
+                self.orientation_depart = None
+                return 0.0, 0.0
 
-            return -self.vitesse, self.vitesse # Sinon, on continue de tourner sur place
+            angle_restant = (math.pi / 2) - abs(diff_angle) # angle restant avant 90°
+
+            v = self.v * (angle_restant / (math.pi / 2)) # vitesse proportionnelle a l'angle restant
+
+            v = max(v, 0.5) # pr eviter une vitesse trop petite
+
+            return -v, v # tourner sur place (gauche)
+
+        return 0.0, 0.0

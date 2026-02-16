@@ -11,13 +11,13 @@ ORIENTATIONS = {
 
 class Robot:
     """Le "core" du robot"""
-    def __init__(self, rayon_roue_m: float, ecartement_roues_m: float, ori_initiale="droite"):
+    def __init__(self, x:4.5, y:3, rayon_roue_m: float, ecartement_roues_m: float, ori_initiale="droite"):
         
         # Modèle qui traduit les vitesses des roues en déplacement du robot
         self.modele_mouvement = CinematiqueDeuxRoues(rayon_roue_m, ecartement_roues_m)
 
         # Position & angle du robot (séparé du core)
-        self.pos = Pos2D(0.0, 0.0, ORIENTATIONS[ori_initiale])
+        self.pos = Pos2D(x, y, ORIENTATIONS[ori_initiale])
 
         # Commandes envoyées aux roues
         self.commande = CommandeRoues(0.0, 0.0)
