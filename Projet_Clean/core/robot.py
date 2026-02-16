@@ -1,16 +1,23 @@
 import math
-from .types import Pos2D, CommandeRoues, EtatRoues
+from .types import Pos2D, CommandeRoues, EtatRoues, Capteurs
 from .cinematique import CinematiqueDeuxRoues
+
+ORIENTATIONS = {
+                "droite" : 0,
+                "haut" : math.pi / 2,
+                "gauche" : math.pi,
+                "bas" : -math.pi / 2
+             }
 
 class Robot:
     """Le "core" du robot"""
-    def __init__(self, rayon_roue_m: float, ecartement_roues_m: float):
+    def __init__(self, rayon_roue_m: float, ecartement_roues_m: float, ori_initiale="droite"):
         
         # Modèle qui traduit les vitesses des roues en déplacement du robot
         self.modele_mouvement = CinematiqueDeuxRoues(rayon_roue_m, ecartement_roues_m)
 
         # Position & angle du robot (séparé du core)
-        self.pos = Pos2D(0.0, 0.0, 0.0)
+        self.pos = Pos2D(0.0, 0.0, ORIENTATIONS[ori_initiale])
 
         # Commandes envoyées aux roues
         self.commande = CommandeRoues(0.0, 0.0)
@@ -25,6 +32,14 @@ class Robot:
         
         # Flag pour déterminer si le robot est en collision
         self.en_collision = False
+
+        self.capteurs = Capteurs(accelerometre=0.0, capteur_distance=0.0)
+
+    def maj_capteurs(self):
+        """
+        Met à jour les capteurs du robot
+        """
+        pass
 
     def definir_commande_roues(self, vitesse_rotation_gauche: float, vitesse_rotation_droite: float):
         self.commande = CommandeRoues(vitesse_rotation_gauche, vitesse_rotation_droite)

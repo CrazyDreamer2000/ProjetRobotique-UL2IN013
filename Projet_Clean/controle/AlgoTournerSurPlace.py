@@ -3,7 +3,7 @@
 class AlgoTournerSurPlace:
     """Fait tourner le robot sur place en continu"""
 
-    def __init__(self, vitesse, sens="gauche"):
+    def __init__(self, vitesse=0.6, sens="gauche"):
         self.vitesse = vitesse
         self.sens = sens # "gauche" ou "droite"
 

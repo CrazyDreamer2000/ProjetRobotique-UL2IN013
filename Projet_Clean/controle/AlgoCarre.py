@@ -3,7 +3,7 @@ import math
 class AlgoCarre:
     """Algorithme pour tracer un carré"""
 
-    def __init__(self, vitesse_roues=3, duree_avance=4, duree_tourne=1.3):
+    def __init__(self, vitesse_roues=4, duree_avance=4, duree_tourne=0.97):
         self.vitesse = vitesse_roues
         self.duree_avance = duree_avance
         self.duree_tourne = duree_tourne
@@ -12,8 +12,17 @@ class AlgoCarre:
         self.temps = 0.0
         self.cotes_faits = 0
 
+        self.arret = False
+
+
     def calculer_commande(self, robot, dt):
         """Prend en argument le robot et un tick de temps et renvoie les vitesses de la roue gauche et droite"""
+        
+        if self.cotes_faits >= 4: # Conditions d'arrêt
+            self.arret = True
+        if self.arret:
+            return 0,0
+        
         self.temps += dt
 
         # Avance tout droit
@@ -29,8 +38,5 @@ class AlgoCarre:
                 self.temps = 0.0
                 self.etat = "avance"
                 self.cotes_faits += 1 # Un des cotés a été complété
-
-                if self.cotes_faits >= 4:
-                    return 0.0, 0.0  # carré terminé
 
             return -self.vitesse, self.vitesse # Sinon, on continue de tourner sur place
