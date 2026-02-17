@@ -43,12 +43,29 @@ class Robot:
         self.VITESSE_ROTATION_EVITEMENT = 3.0 # Vitesse pour tourner après le choc
 
         self.capteurs = Capteurs(accelerometre=0.0, capteur_distance=0.0)
+        self.vitesse_precedante = 0.0  #pour calculer le acceleration
 
-    def maj_capteurs(self):
-        """
-        Met à jour les capteurs du robot
-        """
-        pass
+    
+    def maj_capteurs(self, dt, monde, vitesse_actuelle):
+        """renouvMettre à jour l'état du capteur du robot"""
+
+        "(a = Δv / Δt)"
+
+        accel = 0.0 # Initialiser l'accélération
+        if dt > 0:
+           accel = (vitesse_actuelle - self.vitesse_precedante) / dt
+        self.vitesse_precedante = vitesse_actuelle
+
+        dist = 2.0 #Initialiser la distance
+
+        if monde is not None:
+            self.dist_obstacle = monde.lire_distance_devant(self.pos)
+        
+        self.capteurs.accelerometre = accel
+        self.capteurs.capteur_distance = dist
+
+    
+
 
     def definir_commande_roues(self, vitesse_rotation_gauche: float, vitesse_rotation_droite: float):
         self.commande = CommandeRoues(vitesse_rotation_gauche, vitesse_rotation_droite)
@@ -115,3 +132,5 @@ class Robot:
 
         # Normaliser l'orientation dans [-pi, +pi] 
         self.pos.orientation = (self.pos.orientation + math.pi) % (2 * math.pi) - math.pi
+
+        return vitesse_avant # utiliser le v pour calculer acceleration

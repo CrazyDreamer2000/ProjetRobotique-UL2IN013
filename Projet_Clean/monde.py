@@ -99,7 +99,7 @@ class Monde:
             test_x_px = test_x_m * cfg.SCALE
             test_y_px = test_y_m * cfg.SCALE
             
-            for obs in self.obstacles:
+            for obs in self.liste_obstacles:
                 # 
                 obs_L = obs.longueur * cfg.SCALE / 2
                 obs_l = obs.largeur * cfg.SCALE / 2
