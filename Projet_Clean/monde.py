@@ -92,21 +92,19 @@ class Monde:
             dist_test = d * pas 
             
              # Calculer les coordonnées (en mètres) du point de détection.
-            test_x_m = x_m + (dist_test + cfg.ROBOT_LONGUEUR / 2)* math.cos(ori)
-            test_y_m = y_m + (dist_test + cfg.ROBOT_LONGUEUR / 2)* math.sin(ori)
+            test_x_m = x_m + (dist_test + cfg.ROBOT_LONGUEUR / 2 )* math.cos(ori)
+            test_y_m = y_m + (dist_test + cfg.ROBOT_LARGEUR / 2)* math.sin(ori)
             
-            # Convertir en coordonnées pixel pour correspondre à la position de l'obstacle
-            test_x_px = test_x_m * cfg.SCALE
-            test_y_px = test_y_m * cfg.SCALE
+        
             
             for obs in self.liste_obstacles:
                 # 
-                obs_L = obs.longueur * cfg.SCALE / 2
-                obs_l = obs.largeur * cfg.SCALE / 2
+                obs_L = obs.longueur  / 2
+                obs_l = obs.largeur  / 2
                 
                 # Détection de collision
-                if (abs(test_x_px - obs.x) < obs_L and 
-                    abs(test_y_px - obs.y) < obs_l):
+                if (abs(test_x_m - obs.x) < obs_L and 
+                    abs(test_y_m - obs.y) < obs_l):
                     print(dist_test)
                     return dist_test
                     

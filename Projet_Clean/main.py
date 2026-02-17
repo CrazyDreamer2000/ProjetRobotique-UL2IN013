@@ -85,8 +85,7 @@ while running:
         robot.definir_commande_roues(v_r_g, v_r_d)
 
     robot.step(dt, monde)
-    v_reel = robot.step(dt, monde)
-    robot.maj_capteurs(dt, monde, v_reel)  
+    robot.maj_capteurs(dt, monde, robot.vitesse_linaire_actuellement)  
 
     screen.fill((240, 240, 240))
     dessiner_robot(screen, robot)
