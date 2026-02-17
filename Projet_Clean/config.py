@@ -1,6 +1,6 @@
-# Fenêtre
-LARGEUR_FENETRE_PX = 900
-HAUTEUR_FENETRE_PX = 600
+# Monde en mètres
+LONGUEUR_MONDE = 4.5
+LARGEUR_MONDE = 3
 
 # Conversion monde (mètres) -> écran (pixels)
 SCALE = 200  # px/m

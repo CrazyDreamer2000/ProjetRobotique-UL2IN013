@@ -24,3 +24,10 @@ class EtatRoues:
     vitesse_rotation_droite: float #
     rotation_totale_gauche: float # rad
     rotation_totale_droite: float #
+
+
+@dataclass
+class Capteurs:
+    """Différentes valeurs des capteurs envoyées au robot"""
+    accelerometre: float
+    capteur_distance: float
