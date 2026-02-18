@@ -26,10 +26,9 @@ class Monde:
     
     def creer_obstacles_aleatoires(self):
         """
-        Crée 5 obstacles dans les COINS du monde
-        Simple : on place directement 1 obstacle par zone
+        Creation de 5 obstacles dans le monde
         """
-        # --- DÉFINIR 5 ZONES FIXES (4 coins + 1 bord) ---
+        # ici 5 zones (4 coins + 1 bord) 
         zones = [
             # (x_min, x_max, y_min, y_max, nom)
             (0.5, 1.5, 0.5, 1.0, "Coin bas-gauche"),      # Zone 1
@@ -39,7 +38,7 @@ class Monde:
             (2.0, 2.5, 0.3, 0.7, "Bord bas-centre")       # Zone 5
         ]
         
-        # --- CRÉER 1 OBSTACLE PAR ZONE ---
+        # un obstacle à la fois
         for i, (x_min, x_max, y_min, y_max, nom) in enumerate(zones):
             
             # Position aléatoire DANS la zone
