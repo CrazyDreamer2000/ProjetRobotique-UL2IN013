@@ -43,12 +43,30 @@ class Robot:
         self.VITESSE_ROTATION_EVITEMENT = 3.0 # Vitesse pour tourner après le choc
 
         self.capteurs = Capteurs(accelerometre=0.0, capteur_distance=0.0)
+        self.vitesse_precedante = 0.0  #pour calculer le acceleration
+        self.vitesse_linaire_actuellement = 0.0
+    
+    def maj_capteurs(self, dt, monde, vitesse_actuelle):
+        """renouvMettre à jour l'état du capteur du robot"""
 
-    def maj_capteurs(self):
-        """
-        Met à jour les capteurs du robot
-        """
-        pass
+        "(a = Δv / Δt)"
+
+        accel = 0.0 # Initialiser l'accélération
+        if dt > 0:
+           accel = (vitesse_actuelle - self.vitesse_precedante) / dt
+        self.vitesse_precedante = vitesse_actuelle
+
+         #Initialiser la distance
+
+        if monde is not None:
+            self.dist_obstacle = monde.lire_distance_devant(self.pos)
+            dist = self.dist_obstacle
+            #print(dist)  #pour tester
+        self.capteurs.accelerometre = accel
+        self.capteurs.capteur_distance = dist
+
+    
+
 
     def definir_commande_roues(self, vitesse_rotation_gauche: float, vitesse_rotation_droite: float):
         self.commande = CommandeRoues(vitesse_rotation_gauche, vitesse_rotation_droite)
@@ -112,6 +130,17 @@ class Robot:
         else:
             # Voie libre : on applique la nouvelle position
             self.pos = pos_suiv
+            
+            # Vérifier si le robot sort de l'écran
+            if monde is not None and monde.est_hors_limites(self.pos):
+                # Ramener dans les limites
+                monde.ramener_dans_limites(self.pos)
+                # Déclencher l'évitement comme pour une collision
+                self.en_collision = True
+                self.temps_reculade = self.TEMPS_RECULADE
+                self.temps_rotation = 0.0
 
         # Normaliser l'orientation dans [-pi, +pi] 
         self.pos.orientation = (self.pos.orientation + math.pi) % (2 * math.pi) - math.pi
+
+        self.vitesse_linaire_actuellement = vitesse_avant # utiliser le v pour calculer acceleration

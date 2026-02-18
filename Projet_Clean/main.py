@@ -34,7 +34,7 @@ args = parser.parse_args()
 # Algorithmes
 ALGOS = {
             "tourner" : AlgoTournerSurPlace,
-            "carre" : AlgoCarre
+            "carre" : AlgoCarre,
         }
 
 pygame.init()
@@ -69,7 +69,7 @@ while running:
                 monde = Monde() # On vide aussi les obstacles pour repartir à zéro
                 algo = ALGOS[args.algo](args.vitesse_roues)
 
-    robot.maj_capteurs()     
+         
                 
     # Gestion de l'IA et des collisions
     if robot.en_collision:
@@ -85,6 +85,7 @@ while running:
         robot.definir_commande_roues(v_r_g, v_r_d)
 
     robot.step(dt, monde)
+    robot.maj_capteurs(dt, monde, robot.vitesse_linaire_actuellement)  
 
     screen.fill((240, 240, 240))
     dessiner_robot(screen, robot)
