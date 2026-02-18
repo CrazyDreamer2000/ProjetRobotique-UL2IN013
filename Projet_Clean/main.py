@@ -34,7 +34,7 @@ args = parser.parse_args()
 # Algorithmes
 ALGOS = {
             "tourner" : AlgoTournerSurPlace,
-            "carre" : AlgoCarre
+            "carre" : AlgoCarre,
         }
 
 pygame.init()
