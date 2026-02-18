@@ -68,7 +68,13 @@ while running:
                 algo = ALGOS[args.algo](args.vitesse_roues)
         
     v_r_g, v_r_d = algo.calculer_commande(robot, dt)
-    robot.definir_commande_roues(v_r_g, v_r_d)
+
+    # on verifie s'il y a un obstacle proche , si oui robot arret de marcher
+    if monde.arreter_avant_obstacle(robot.pos, distance_securite=0.2):
+        robot.definir_commande_roues(0, 0)  # robot s'arrete
+    else:
+        robot.definir_commande_roues(v_r_g, v_r_d)
+
     robot.step(dt, monde)
 
     robot.maj_capteurs(dt, monde, robot.vitesse_linaire_actuellement)  
