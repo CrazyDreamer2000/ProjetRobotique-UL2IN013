@@ -34,20 +34,22 @@ def dessiner_obstacles(screen, monde, couleur=cfg.COULEUR_OBSTACLE):
 
     for obs in monde.liste_obstacles:
 
-        for obs in monde.liste_obstacles:
-
-            cx = obs.x * cfg.SCALE
-            cy = obs.y * cfg.SCALE
-            L = obs.longueur * cfg.SCALE / 2
-            l = obs.largeur * cfg.SCALE / 2
-
-            points = [
-                        (cx - L, cy - l), # coin arrière-gauche
-                        (cx + L, cy - l), # coin avant-gauche
-                        (cx + L, cy + l), # coin avant-droit
-                        (cx - L, cy + l) # coin arrière-droit
-                    ]
-
-            pygame.draw.polygon(screen, couleur, points)
-
+        # Position du centre de l'obstacle en pixels
+        cx = obs.x * cfg.SCALE
+        cy = obs.y * cfg.SCALE
+        
+        # Demi-dimensions (en pixels)
+        L = obs.longueur * cfg.SCALE / 2
+        l = obs.largeur * cfg.SCALE / 2
+        
+        # Les 4 coins dans le repere local de l'obstacle
+        coins_locaux = [(-L, -l), (L, -l), (L, l), (-L, l)]
+        
+        # Transformer chaque coin selon l'orientation de l'obstacle
+        points = [
+            transformer_point(x, y, cx, cy, obs.orientation) 
+            for x, y in coins_locaux
+        ]
+        
+        pygame.draw.polygon(screen, couleur, points)
         
