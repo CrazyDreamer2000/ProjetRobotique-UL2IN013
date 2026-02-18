@@ -29,25 +29,14 @@ class Robot:
             rotation_totale_gauche=0.0,
             rotation_totale_droite=0.0,
         )
-        
-        # Flag pour déterminer si le robot est en collision
-        self.en_collision = False
-        
-        # Timer pour la reculade après collision
-        self.temps_reculade = 0.0  # Durée restante de reculade (en secondes)
-        self.temps_rotation = 0.0  # Durée restante de rotation d'évitement
-        
-        self.TEMPS_RECULADE = 1.0  # Durée de reculade (augmentée pour bien dégager)
-        self.TEMPS_ROTATION = 1.05  # Durée de rotation (1.05s * 3.0rad/s ~= 180 deg)
-        self.VITESSE_RECULADE = -4.0  # Vitesse de roues en arrière (plus rapide)
-        self.VITESSE_ROTATION_EVITEMENT = 3.0 # Vitesse pour tourner après le choc
 
+        self.vitesse_precedante = 0.0
         self.capteurs = Capteurs(accelerometre=0.0, capteur_distance=0.0)
-        self.vitesse_precedante = 0.0  #pour calculer le acceleration
-        self.vitesse_linaire_actuellement = 0.0
+
+        self.en_collision = False
     
     def maj_capteurs(self, dt, monde, vitesse_actuelle):
-        """renouvMettre à jour l'état du capteur du robot"""
+        """Mettre à jour l'état du capteur du robot"""
 
         "(a = Δv / Δt)"
 
@@ -64,8 +53,6 @@ class Robot:
             #print(dist)  #pour tester
         self.capteurs.accelerometre = accel
         self.capteurs.capteur_distance = dist
-
-    
 
 
     def definir_commande_roues(self, vitesse_rotation_gauche: float, vitesse_rotation_droite: float):
@@ -84,51 +71,26 @@ class Robot:
             monde: Instance de Monde pour vérifier les collisions (optionnel)
         """
 
-        # 1. Gestion des commandes (Priorité : Reculade -> Rotation -> Algorithme)
-        # On utilise une structure if/elif pour prioriser l'évitement d'obstacle
-        if self.temps_reculade > 0:
-            # Phase 1 : Reculade (Le robot recule pour se dégager du mur)
-            self.roues.vitesse_rotation_gauche = self.VITESSE_RECULADE
-            self.roues.vitesse_rotation_droite = self.VITESSE_RECULADE
-            self.temps_reculade -= dt
-            
-            # Une fois la reculade terminée, on passe à la phase de rotation
-            if self.temps_reculade <= 0:
-                self.temps_rotation = self.TEMPS_ROTATION
+        if dt<0:
+            return
 
-        elif self.temps_rotation > 0:
-            # Phase 2 : Rotation (Le robot tourne sur place pour changer de direction)
-            self.roues.vitesse_rotation_gauche = -self.VITESSE_ROTATION_EVITEMENT
-            self.roues.vitesse_rotation_droite = self.VITESSE_ROTATION_EVITEMENT
-            self.temps_rotation -= dt
-            
-        else:
-            # Phase 3 : Normal (Le robot suit l'algorithme principal, ex: Carré)
-            self.en_collision = False # On libère le flag seulement ici
-            self.roues.vitesse_rotation_gauche = self.commande.vitesse_rotation_gauche
-            self.roues.vitesse_rotation_droite = self.commande.vitesse_rotation_droite
+        # Application de la commande
+        self.roues.vitesse_rotation_gauche = self.commande.vitesse_rotation_gauche
+        self.roues.vitesse_rotation_droite = self.commande.vitesse_rotation_droite
 
-        # 2. Mise à jour de l'état des roues
+        # Mise a jour de l'etat des roues
         self.roues.rotation_totale_gauche += self.roues.vitesse_rotation_gauche * dt
         self.roues.rotation_totale_droite += self.roues.vitesse_rotation_droite * dt
 
-        # 3. Calcul de la nouvelle position théorique
+        # Calcul de la nouvelle position possible
         vitesse_avant, vitesse_rotation = self.modele_mouvement.vitesses_robot_depuis_roues(
             self.roues.vitesse_rotation_gauche,
             self.roues.vitesse_rotation_droite
         )
         pos_suiv = self.modele_mouvement.avance_pos(self.pos, vitesse_avant, vitesse_rotation, dt)
         
-        # 4. Application du mouvement avec sécurité
-        # On vérifie la collision AVANT d'appliquer la position, même si on recule
-        if monde.collision(pos_suiv):
-            # Collision ! On ne bouge pas (on garde self.pos actuel)
-            self.en_collision = True
-            # On déclenche la séquence d'évitement (Reculade puis Rotation)
-            self.temps_reculade = self.TEMPS_RECULADE
-            self.temps_rotation = 0.0 # Reset de la rotation pour forcer la reculade d'abord
-        else:
-            # Voie libre : on applique la nouvelle position
+        self.en_collision = monde.collision(pos_suiv)
+        if not self.en_collision:
             self.pos = pos_suiv
 
         # Normaliser l'orientation dans [-pi, +pi] 
