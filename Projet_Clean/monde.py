@@ -69,62 +69,63 @@ class Monde:
             orientation=0.0  # Pas d'orientation pour les obstacles ajoutés manuellement
         ))
     
-    def collisions_robot(self, pos_robot):
+    def collision(self, pos_robot):
         """
-        Détecte si le robot touche un obstacle
-        
-        MÉTHODE SIMPLE:
-        1. Calculer les 4 coins du robot (avec rotation)
-        2. Pour chaque obstacle, vérifier si un coin est dedans
+        Detecte collision du robot avec :
+        - obstacles
+        - bordures du monde
         """
-        # Position et angle du robot
+
         rx, ry, theta = pos_robot.x, pos_robot.y, pos_robot.orientation
-        
-        # Demi-dimensions du robot
+
         demi_longueur = cfg.ROBOT_LONGUEUR / 2
         demi_largeur = cfg.ROBOT_LARGEUR / 2
-        
-        # Pré-calculer cos et sin (pour éviter de recalculer)
+
         cos_robot = math.cos(theta)
         sin_robot = math.sin(theta)
-        
-        # --- CALCULER LES 4 COINS DU ROBOT ---
+
+        # Calcul des 4 coins du robot
         coins_robot = []
-        for dx, dy in [(demi_longueur, demi_largeur), (demi_longueur, -demi_largeur),
-                       (-demi_longueur, demi_largeur), (-demi_longueur, -demi_largeur)]:
-            # Formule de rotation : (x', y') = rotation de (dx, dy)
+
+        for dx, dy in [
+            ( demi_longueur,  demi_largeur),
+            ( demi_longueur, -demi_largeur),
+            (-demi_longueur,  demi_largeur),
+            (-demi_longueur, -demi_largeur),
+        ]:
             coin_x = rx + dx * cos_robot - dy * sin_robot
             coin_y = ry + dx * sin_robot + dy * cos_robot
             coins_robot.append((coin_x, coin_y))
-        
-        # --- TESTER CHAQUE OBSTACLE ---
+
+        # Collision avec bordures
+        for coin_x, coin_y in coins_robot:
+            if (coin_x < 0 or coin_x > cfg.LONGUEUR_MONDE or
+                coin_y < 0 or coin_y > cfg.LARGEUR_MONDE):
+                return True
+
+        # Collision avec obstacles
         for obs in self.liste_obstacles:
-            
-            # Pré-calculer cos et sin de l'obstacle
+
             cos_obs = math.cos(obs.orientation)
             sin_obs = math.sin(obs.orientation)
-            
-            # Tester si un coin du robot est dans l'obstacle
+
             for coin_x, coin_y in coins_robot:
-                
-                # Transformer le coin dans le repère de l'obstacle
-                # (pour que l'obstacle devienne un rectangle simple)
+
                 dx = coin_x - obs.x
                 dy = coin_y - obs.y
-                
-                # Rotation inverse
+
+                # transformation dans le repère obstacle
                 local_x = dx * cos_obs + dy * sin_obs
                 local_y = -dx * sin_obs + dy * cos_obs
-                
-                # Test simple : le point est-il dans le rectangle ?
-                if (abs(local_x) <= obs.longueur/2 and 
-                    abs(local_y) <= obs.largeur/2):
-                    return True  # COLLISION !
-        
-        return False  # Pas de collision
+
+                if (abs(local_x) <= obs.longueur / 2 and
+                    abs(local_y) <= obs.largeur / 2):
+                    return True
+
+        return False
+
         
    
-
     def lire_distance_devant(self, pos_robot, portee_max=2.0):
         """
         Mesure la distance jusqu'au premier obstacle devant le robot
@@ -160,34 +161,4 @@ class Monde:
                     return d  # Retourner la distance
         
         return portee_max  # Rien trouvé
-    
-    def est_hors_limites(self, pos_robot):
-        """Vérifie si le robot sort de l'écran"""
-        x, y = pos_robot.x, pos_robot.y
-        marge = 0.2  # 20cm de marge
-        
-        # Sortie à gauche ou à droite ?
-        if x < marge or x > cfg.LONGUEUR_MONDE - marge:
-            return True
-        
-        # Sortie en haut ou en bas ?
-        if y < marge or y > cfg.LARGEUR_MONDE - marge:
-            return True
-        
-        return False
-    
-    def ramener_dans_limites(self, pos_robot):
-        """Ramène le robot dans l'écran s'il sort"""
-        marge = 0.2  # 20cm de marge
-        
-        # Bloquer X dans les limites
-        if pos_robot.x < marge:
-            pos_robot.x = marge
-        if pos_robot.x > cfg.LONGUEUR_MONDE - marge:
-            pos_robot.x = cfg.LONGUEUR_MONDE - marge
-        
-        # Bloquer Y dans les limites
-        if pos_robot.y < marge:
-            pos_robot.y = marge
-        if pos_robot.y > cfg.LARGEUR_MONDE - marge:
-            pos_robot.y = cfg.LARGEUR_MONDE - marge
+

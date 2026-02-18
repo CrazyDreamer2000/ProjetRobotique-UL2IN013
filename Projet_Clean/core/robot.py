@@ -121,7 +121,7 @@ class Robot:
         
         # 4. Application du mouvement avec sécurité
         # On vérifie la collision AVANT d'appliquer la position, même si on recule
-        if monde is not None and monde.collisions_robot(pos_suiv):
+        if monde.collision(pos_suiv):
             # Collision ! On ne bouge pas (on garde self.pos actuel)
             self.en_collision = True
             # On déclenche la séquence d'évitement (Reculade puis Rotation)
@@ -130,15 +130,6 @@ class Robot:
         else:
             # Voie libre : on applique la nouvelle position
             self.pos = pos_suiv
-            
-            # Vérifier si le robot sort de l'écran
-            if monde is not None and monde.est_hors_limites(self.pos):
-                # Ramener dans les limites
-                monde.ramener_dans_limites(self.pos)
-                # Déclencher l'évitement comme pour une collision
-                self.en_collision = True
-                self.temps_reculade = self.TEMPS_RECULADE
-                self.temps_rotation = 0.0
 
         # Normaliser l'orientation dans [-pi, +pi] 
         self.pos.orientation = (self.pos.orientation + math.pi) % (2 * math.pi) - math.pi

@@ -5,6 +5,7 @@ from core.robot import Robot
 from monde import Obstacle, Monde
 from controle.AlgoCarre import AlgoCarre
 from controle.AlgoTournerSurPlace import AlgoTournerSurPlace
+from controle.AlgoAvancer import AlgoAvancer
 from affichage.pygame_view import dessiner_robot, dessiner_obstacles
 
 parser = argparse.ArgumentParser()
@@ -13,7 +14,7 @@ parser.add_argument(
     "--algo",
     type=str,
     default="carre",
-    choices=["carre", "tourner"],
+    choices=["carre", "tourner", "avancer"],
     help="Nom de l'algorithme (carre, tourner)"
 )
 parser.add_argument(
@@ -33,8 +34,9 @@ args = parser.parse_args()
 
 # Algorithmes
 ALGOS = {
+            "avancer" : AlgoAvancer,
             "tourner" : AlgoTournerSurPlace,
-            "carre" : AlgoCarre,
+            "carre" : AlgoCarre
         }
 
 pygame.init()
