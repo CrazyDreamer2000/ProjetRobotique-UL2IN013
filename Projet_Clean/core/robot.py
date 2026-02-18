@@ -130,6 +130,15 @@ class Robot:
         else:
             # Voie libre : on applique la nouvelle position
             self.pos = pos_suiv
+            
+            # Vérifier si le robot sort de l'écran
+            if monde is not None and monde.est_hors_limites(self.pos):
+                # Ramener dans les limites
+                monde.ramener_dans_limites(self.pos)
+                # Déclencher l'évitement comme pour une collision
+                self.en_collision = True
+                self.temps_reculade = self.TEMPS_RECULADE
+                self.temps_rotation = 0.0
 
         # Normaliser l'orientation dans [-pi, +pi] 
         self.pos.orientation = (self.pos.orientation + math.pi) % (2 * math.pi) - math.pi
