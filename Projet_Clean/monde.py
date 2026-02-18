@@ -67,8 +67,33 @@ class Monde:
             cfg.TAILLE_OBSTACLE,
             orientation=0.0  # Pas d'orientation pour les obstacles ajoutés manuellement
         ))
+
+    def collision(self, x, y):
+        # Collision avec bordures
+        if (x < 0 or x > cfg.LONGUEUR_MONDE or
+            y < 0 or y > cfg.LARGEUR_MONDE):
+            return True
+
+        # Collision avec obstacles
+        for obs in self.liste_obstacles:
+
+            cos_obs = math.cos(obs.orientation)
+            sin_obs = math.sin(obs.orientation)
+
+            dx = x - obs.x
+            dy = y - obs.y
+
+            # transformation dans le repère obstacle
+            local_x = dx * cos_obs + dy * sin_obs
+            local_y = -dx * sin_obs + dy * cos_obs
+
+            if (abs(local_x) <= obs.longueur / 2 and
+                abs(local_y) <= obs.largeur / 2):
+                return True
+
+        return False
     
-    def collision(self, pos_robot):
+    def collision_robot(self, pos_robot):
         """
         Detecte collision du robot avec :
         - obstacles
@@ -96,38 +121,15 @@ class Monde:
             coin_y = ry + dx * sin_robot + dy * cos_robot
             coins_robot.append((coin_x, coin_y))
 
-        # Collision avec bordures
         for coin_x, coin_y in coins_robot:
-            if (coin_x < 0 or coin_x > cfg.LONGUEUR_MONDE or
-                coin_y < 0 or coin_y > cfg.LARGEUR_MONDE):
+            if self.collision(coin_x, coin_y):
                 return True
-
-        # Collision avec obstacles
-        for obs in self.liste_obstacles:
-
-            cos_obs = math.cos(obs.orientation)
-            sin_obs = math.sin(obs.orientation)
-
-            for coin_x, coin_y in coins_robot:
-
-                dx = coin_x - obs.x
-                dy = coin_y - obs.y
-
-                # transformation dans le repère obstacle
-                local_x = dx * cos_obs + dy * sin_obs
-                local_y = -dx * sin_obs + dy * cos_obs
-
-                if (abs(local_x) <= obs.longueur / 2 and
-                    abs(local_y) <= obs.largeur / 2):
-                    return True
-
         return False
   
     def lire_distance_devant(self, pos_robot, portee_max=2.0):
         """
-        Mesure la distance jusqu'au premier obstacle devant le robot
-        
-        MÉTHODE : On teste des points tous les 2cm devant le robot
+        Mesure la distance jusqu'au premier obstacle devant le robot.
+        -> Teste des points tous les 2cm devant le robot et renvoie la distance si le point est sur un obstacle
         """
         x, y = pos_robot.x, pos_robot.y
         angle = pos_robot.orientation
@@ -140,22 +142,8 @@ class Monde:
             test_x = x + d * math.cos(angle)
             test_y = y + d * math.sin(angle)
             
-            # Vérifier si ce point touche un obstacle
-            for obs in self.liste_obstacles:
-                # Transformer dans le repère de l'obstacle
-                dx = test_x - obs.x
-                dy = test_y - obs.y
-                
-                cos_obs = math.cos(obs.orientation)
-                sin_obs = math.sin(obs.orientation)
-                
-                local_x = dx * cos_obs + dy * sin_obs
-                local_y = -dx * sin_obs + dy * cos_obs
-                
-                # Point dans l'obstacle ?
-                if (abs(local_x) < obs.longueur/2 and 
-                    abs(local_y) < obs.largeur/2):
-                    return d  # Retourner la distance
+            if self.collision(test_x, test_y):
+                return d
         
         return portee_max  # Rien trouvé
 

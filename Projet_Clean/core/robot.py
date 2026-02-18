@@ -45,12 +45,12 @@ class Robot:
            accel = (vitesse_actuelle - self.vitesse_precedante) / dt
         self.vitesse_precedante = vitesse_actuelle
 
-         #Initialiser la distance
+        #Initialiser la distance
 
         if monde is not None:
             self.dist_obstacle = monde.lire_distance_devant(self.pos)
             dist = self.dist_obstacle
-            #print(dist)  #pour tester
+            print(dist)  #pour tester
         self.capteurs.accelerometre = accel
         self.capteurs.capteur_distance = dist
 
@@ -89,7 +89,7 @@ class Robot:
         )
         pos_suiv = self.modele_mouvement.avance_pos(self.pos, vitesse_avant, vitesse_rotation, dt)
         
-        self.en_collision = monde.collision(pos_suiv)
+        self.en_collision = monde.collision_robot(pos_suiv)
         if not self.en_collision:
             self.pos = pos_suiv
 
