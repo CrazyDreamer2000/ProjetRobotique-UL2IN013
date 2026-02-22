@@ -13,7 +13,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument(
     "--algo",
     type=str,
-    default="carre",
+    default="eviter",
     choices=["carre", "tourner", "eviter"],
     help="Nom de l'algorithme (carre, tourner)"
 )
