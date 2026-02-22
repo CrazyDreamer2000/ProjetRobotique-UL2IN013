@@ -4,7 +4,7 @@ from dataclasses import dataclass
 import config as cfg
 import math
 import random  # Pour générer des positions aléatoires
-from core.geom import coins_rectangle_dans_monde
+from core.geom import coins_rect_dans_monde
 from core.types import Pos2D
 
 @dataclass
@@ -12,7 +12,7 @@ class Obstacle:
     """
     Classe qui représente un obstacle rectangulaire.
     """
-    pos: Pos2D()
+    pos: Pos2D
     largeur: float # Largeur en mètres
     longueur: float # Longueur en mètres
 
@@ -55,7 +55,7 @@ class Monde:
             largeur = random.uniform(0.15, 0.25) # 15-25 cm
             
             # Créer l'obstacle
-            obstacle = Obstacle(x, y, largeur, longueur, orientation)
+            obstacle = Obstacle(Pos2D(x,y,orientation), largeur, longueur)
             self.liste_obstacles.append(obstacle)
             
             print(f"✅ Obstacle {i+1} : {nom} ({x:.2f}, {y:.2f}) angle={math.degrees(orientation):.0f}°")
@@ -83,11 +83,11 @@ class Monde:
         # Collision avec obstacles
         for obs in self.liste_obstacles:
 
-            cos_obs = math.cos(obs.orientation)
-            sin_obs = math.sin(obs.orientation)
+            cos_obs = math.cos(obs.pos.orientation)
+            sin_obs = math.sin(obs.pos.orientation)
 
-            dx = x - obs.x
-            dy = y - obs.y
+            dx = x - obs.pos.x
+            dy = y - obs.pos.y
 
             # transformation dans le repère obstacle
             local_x = dx * cos_obs + dy * sin_obs
@@ -105,7 +105,7 @@ class Monde:
         - obstacles
         - bordures du monde
         """
-        for coin_x, coin_y in coins_rectangle_dans_monde(pos.x, pos.y, pos.orientation, cfg.ROBOT_LONGUEUR, cfg.ROBOT_LARGEUR):
+        for coin_x, coin_y in coins_rect_dans_monde(pos.x, pos.y, pos.orientation, cfg.ROBOT_LONGUEUR, cfg.ROBOT_LARGEUR):
             if self.collision(coin_x, coin_y):
                 return True
         return False
