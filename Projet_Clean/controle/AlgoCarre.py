@@ -1,8 +1,7 @@
-import math
+# CONTROLE
 
-def normaliser_angle(angle):
-    """Ramène un angle dans [-pi, pi]"""
-    return (angle + math.pi) % (2 * math.pi) - math.pi
+import math
+from core.geom import normaliser_angle
 
 class AlgoCarre:
     """

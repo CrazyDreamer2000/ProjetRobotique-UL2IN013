@@ -1,3 +1,5 @@
+# SIMULATION
+
 import pygame
 import argparse
 import config as cfg
@@ -6,7 +8,7 @@ from monde import Obstacle, Monde
 from controle.AlgoCarre import AlgoCarre
 from controle.AlgoTournerSurPlace import AlgoTournerSurPlace
 from controle.AlgoEviter import AlgoEviter
-from affichage.pygame_view import dessiner_robot, dessiner_obstacles
+from affichage.pygame_view import affichage
 
 parser = argparse.ArgumentParser()
 
@@ -80,8 +82,9 @@ while running:
     robot.maj_capteurs(dt, monde, robot.vitesse_linaire_actuellement)  
 
     screen.fill((240, 240, 240))
-    dessiner_robot(screen, robot)
-    dessiner_obstacles(screen, monde)
+
+    affichage(screen, robot, monde)
+
     pygame.display.flip()
 
 pygame.quit()

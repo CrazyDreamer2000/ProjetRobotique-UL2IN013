@@ -1,6 +1,8 @@
 import math
 from .types import Pos2D, CommandeRoues, EtatRoues, Capteurs
 from .cinematique import CinematiqueDeuxRoues
+from .geom import normaliser_angle
+
 
 ORIENTATIONS = {
                 "droite" : 0,
@@ -94,6 +96,6 @@ class Robot:
             self.pos = pos_suiv
 
         # Normaliser l'orientation dans [-pi, +pi] 
-        self.pos.orientation = (self.pos.orientation + math.pi) % (2 * math.pi) - math.pi
+        self.pos.orientation = normaliser_angle(self.pos.orientation)
 
         self.vitesse_linaire_actuellement = vitesse_avant # utiliser le v pour calculer acceleration

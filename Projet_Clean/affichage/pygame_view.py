@@ -1,55 +1,29 @@
+# SIMULATION
+
 import pygame
 import math
 import config as cfg
+from core.geom import coins_rect_dans_monde, transformer_point_local_vers_monde
 
-def transformer_point(x, y, cx, cy, angle):
-    """Transforme position des points du robot en points sur le repère
-    x, y: Coordonnées d'un point dans le repère du robot en pixels (ex: (x=20, y=10) = 20 pixels devant le robot, 10 pixels à gauche)
-    cx, cy: Coordonnées du centre du robot dans le monde (pixels)
-    xr, yr: x et y après rotation (pixels)"""
-    xr = x * math.cos(angle) - y * math.sin(angle) # Formule de rotation de points en maths
-    yr = x * math.sin(angle) + y * math.cos(angle) #
-    return cx + xr, cy + yr
+def affichage(screen, robot, monde):
+    dessiner_robot(screen, robot)
+    dessiner_obstacles(screen, monde)
 
 def dessiner_robot(screen, robot):
-    """Affiche le robot sur pygame"""
-    cx = robot.pos.x * cfg.SCALE # pixels (mètres -> pixels avec *SCALE)
-    cy = robot.pos.y * cfg.SCALE # pixels
-    ori = robot.pos.orientation
+    """
+    Affiche le robot sur la fenêtre pygame
+    """
+    cx, cy, ori = robot.pos.x*cfg.SCALE, robot.pos.y*cfg.SCALE, robot.pos.orientation
 
-    L = cfg.ROBOT_LONGUEUR * cfg.SCALE / 2 # pixels (mètres -> pixels avec *SCALE), puis /2 pour ensuite définir les coins
-    l = cfg.ROBOT_LARGEUR * cfg.SCALE / 2 #
-
-    coins = [(-L, -l), (L, -l), (L, l), (-L, l)] # pixels (repère robot)
-    points = [transformer_point(x, y, cx, cy, ori) for x, y in coins]  # pixels (repère écran)
-
-    pygame.draw.polygon(screen, (80, 130, 200), points) # pour dessiner le robot sur pygame
-                                                        # on utilise polygon et pas rect pour afficher un rectangle pas forcemment aligné à l'écran
-    # direction avant
-    fx, fy = transformer_point(L, 0, cx, cy, ori) # pixels (devant du robot)
-    pygame.draw.line(screen, (255, 0, 0), (cx, cy), (fx, fy), 2) # dessiner la direction de l'ecran
+    # Corps du robot
+    pygame.draw.polygon(screen, (80, 130, 200), coins_rect_dans_monde(cx, cy, ori, cfg.ROBOT_LONGUEUR*cfg.SCALE, cfg.ROBOT_LARGEUR*cfg.SCALE))
+    # "Fleche" du robot
+    pygame.draw.line(screen, (255, 0, 0), (cx, cy), transformer_point_local_vers_monde(cfg.ROBOT_LONGUEUR/2*cfg.SCALE, 0, cx, cy, ori), 2)
 
 def dessiner_obstacles(screen, monde, couleur=cfg.COULEUR_OBSTACLE):
-    """Dessine tous les obstacles sur l'écran"""
-
+    """
+    Affiche tous les obstacles sur la fenêtre pygame
+    """
     for obs in monde.liste_obstacles:
-
-        # Position du centre de l'obstacle en pixels
-        cx = obs.x * cfg.SCALE
-        cy = obs.y * cfg.SCALE
-        
-        # Demi-dimensions (en pixels)
-        L = obs.longueur * cfg.SCALE / 2
-        l = obs.largeur * cfg.SCALE / 2
-        
-        # Les 4 coins dans le repere local de l'obstacle
-        coins_locaux = [(-L, -l), (L, -l), (L, l), (-L, l)]
-        
-        # Transformer chaque coin selon l'orientation de l'obstacle
-        points = [
-            transformer_point(x, y, cx, cy, obs.orientation) 
-            for x, y in coins_locaux
-        ]
-        
-        pygame.draw.polygon(screen, couleur, points)
-        
+        pygame.draw.polygon(screen, couleur, coins_rect_dans_monde(obs.pos.x*cfg.SCALE, obs.pos.y*cfg.SCALE, obs.pos.orientation, cfg.TAILLE_OBSTACLE*cfg.SCALE, cfg.TAILLE_OBSTACLE*cfg.SCALE))
+                

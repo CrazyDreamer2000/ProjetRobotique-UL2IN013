@@ -1,26 +1,28 @@
-# On pourrait mettre ici tout ce qui concerne l'interface, les obstacles, etc
+# SIMULATION
+
 from dataclasses import dataclass
 import config as cfg
 import math
 import random  # Pour générer des positions aléatoires
+from core.geom import coins_rectangle_dans_monde
+from core.types import Pos2D
 
 @dataclass
 class Obstacle:
     """
-    Classe qui représente un obstacle rectangulaire
+    Classe qui représente un obstacle rectangulaire.
     """
-    x: float # Position X en mètres
-    y: float # Position Y en mètres
+    pos: Pos2D()
     largeur: float # Largeur en mètres
     longueur: float # Longueur en mètres
-    orientation: float # Angle de rotation en radians (0 = horizontal)
-
 
 class Monde:
-    """Représente l'environnement avec les obstacles"""
-    
+    """
+    Simulation de l'environnement réel du robot.
+    """
     def __init__(self):
         self.liste_obstacles = []
+
         # Créer des obstacles aléatoires dès le départ
         self.creer_obstacles_aleatoires()
     
@@ -57,15 +59,19 @@ class Monde:
             self.liste_obstacles.append(obstacle)
             
             print(f"✅ Obstacle {i+1} : {nom} ({x:.2f}, {y:.2f}) angle={math.degrees(orientation):.0f}°")
-    
+
     def ajouter_obstacle(self, x, y):
-        """Ajoute un obstacle au monde (quand on clique avec la souris)"""
+        """
+        Ajoute un obstacle au monde aux coordonnées (x,y)
+
+        Paramètres:
+            x : abscisse du nouvel obstacle (pixels)
+            y : ordonnée du nouvel obstacle (pixels)
+        """
         self.liste_obstacles.append(Obstacle(
-            x/cfg.SCALE, 
-            y/cfg.SCALE, 
+            Pos2D(x/cfg.SCALE, y/cfg.SCALE, orientation=0.0),
             cfg.TAILLE_OBSTACLE, 
             cfg.TAILLE_OBSTACLE,
-            orientation=0.0  # Pas d'orientation pour les obstacles ajoutés manuellement
         ))
 
     def collision(self, x, y):
@@ -93,35 +99,13 @@ class Monde:
 
         return False
     
-    def collision_robot(self, pos_robot):
+    def collision_robot(self, pos):
         """
         Detecte collision du robot avec :
         - obstacles
         - bordures du monde
         """
-
-        rx, ry, theta = pos_robot.x, pos_robot.y, pos_robot.orientation
-
-        demi_longueur = cfg.ROBOT_LONGUEUR / 2
-        demi_largeur = cfg.ROBOT_LARGEUR / 2
-
-        cos_robot = math.cos(theta)
-        sin_robot = math.sin(theta)
-
-        # Calcul des 4 coins du robot
-        coins_robot = []
-
-        for dx, dy in [
-            ( demi_longueur,  demi_largeur),
-            ( demi_longueur, -demi_largeur),
-            (-demi_longueur,  demi_largeur),
-            (-demi_longueur, -demi_largeur),
-        ]:
-            coin_x = rx + dx * cos_robot - dy * sin_robot
-            coin_y = ry + dx * sin_robot + dy * cos_robot
-            coins_robot.append((coin_x, coin_y))
-
-        for coin_x, coin_y in coins_robot:
+        for coin_x, coin_y in coins_rectangle_dans_monde(pos.x, pos.y, pos.orientation, cfg.ROBOT_LONGUEUR, cfg.ROBOT_LARGEUR):
             if self.collision(coin_x, coin_y):
                 return True
         return False
