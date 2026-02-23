@@ -4,10 +4,12 @@ import pygame
 import argparse
 import config as cfg
 from core.robot import Robot
-from monde import Obstacle, Monde
+from monde import Monde
 from controle.AlgoCarre import AlgoCarre
 from controle.AlgoTournerSurPlace import AlgoTournerSurPlace
 from controle.AlgoEviter import AlgoEviter
+from controle.AlgoArretDevantObstacle import AlgoArretDevantObstacle
+from controle.AlgoReculeTourneContact import AlgoReculeTourneContact
 from affichage.pygame_view import affichage
 
 parser = argparse.ArgumentParser()
@@ -16,8 +18,8 @@ parser.add_argument(
     "--algo",
     type=str,
     default="eviter",
-    choices=["carre", "tourner", "eviter"],
-    help="Nom de l'algorithme (carre, tourner)"
+    choices=["carre", "tourner", "eviter", "arret", "contact"],
+    help="Nom de l'algorithme (carre, tourner, eviter, arret, contact)"
 )
 parser.add_argument(
     "--vitesse_roues",
@@ -32,14 +34,43 @@ parser.add_argument(
     choices=["droite", "haut", "gauche", "bas"],
     help="Orientation initiale du robot (gauche, droite, haut, bas)"
 )
+parser.add_argument(
+    "--forme_robot",
+    type=str,
+    default="rectangle",
+    choices=["rectangle", "triangle", "cercle"],
+    help="Forme de collision du robot (rectangle, triangle, cercle)"
+)
+parser.add_argument(
+    "--longueur_robot",
+    type=float,
+    default=cfg.ROBOT_LONGUEUR,
+    help="Longueur de référence du robot en mètres"
+)
+parser.add_argument(
+    "--largeur_robot",
+    type=float,
+    default=cfg.ROBOT_LARGEUR,
+    help="Largeur de référence du robot en mètres"
+)
 args = parser.parse_args()
 
 # Algorithmes
 ALGOS = {
-            "eviter" : AlgoEviter,
+            "carre" : AlgoCarre,
             "tourner" : AlgoTournerSurPlace,
-            "carre" : AlgoCarre
+            "eviter" : AlgoEviter,
+            "arret" : AlgoArretDevantObstacle,
+            "contact" : AlgoReculeTourneContact
         }
+
+
+def calculer_commande_selon_algo(nom_algo, algo, robot, dt, monde):
+    if nom_algo in ["arret", "contact"]:
+        return algo.calculer_commande(robot, dt, monde)
+    if nom_algo == "tourner":
+        return algo.calculer_commande(robot)
+    return algo.calculer_commande(robot, dt)
 
 pygame.init()
 screen = pygame.display.set_mode((cfg.LONGUEUR_MONDE * cfg.SCALE, cfg.LARGEUR_MONDE * cfg.SCALE))
@@ -48,9 +79,9 @@ clock = pygame.time.Clock()
 robot = Robot(cfg.RAYON_ROUE, cfg.ECARTEMENT_ROUES, args.orientation, cfg.LONGUEUR_MONDE / 2, cfg.LARGEUR_MONDE / 2)
 
 monde = Monde()
+monde.definir_collision_robot(args.forme_robot, args.longueur_robot, args.largeur_robot)
 algo = ALGOS[args.algo](args.vitesse_roues)
 
-etait_en_collision = False # Pour détecter le début d'un choc
 running = True
 while running:
     dt = clock.tick(60) / 1000.0 # on divise par 1000 pour avoir la valeur en secondes (milisecondes -> secondes)
@@ -67,15 +98,11 @@ while running:
             if event.key == pygame.K_r:
                 robot = Robot(cfg.RAYON_ROUE, cfg.ECARTEMENT_ROUES, args.orientation, cfg.LONGUEUR_MONDE / 2, cfg.LARGEUR_MONDE / 2)
                 monde = Monde() # On vide aussi les obstacles pour repartir à zéro
+                monde.definir_collision_robot(args.forme_robot, args.longueur_robot, args.largeur_robot)
                 algo = ALGOS[args.algo](args.vitesse_roues)
         
-    v_r_g, v_r_d = algo.calculer_commande(robot, dt)
-
-    # on verifie s'il y a un obstacle proche , si oui robot arret de marcher
-    if monde.arreter_avant_obstacle(robot.pos, distance_securite=0.2):
-        robot.definir_commande_roues(0, 0)  # robot s'arrete
-    else:
-        robot.definir_commande_roues(v_r_g, v_r_d)
+    v_r_g, v_r_d = calculer_commande_selon_algo(args.algo, algo, robot, dt, monde)
+    robot.definir_commande_roues(v_r_g, v_r_d)
 
     robot.step(dt, monde)
 
