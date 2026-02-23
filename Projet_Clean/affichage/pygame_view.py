@@ -6,19 +6,27 @@ import config as cfg
 from core.geom import coins_rect_dans_monde, transformer_point_local_vers_monde
 
 def affichage(screen, robot, monde):
-    dessiner_robot(screen, robot)
+    dessiner_robot(screen, robot, monde)
     dessiner_obstacles(screen, monde)
 
-def dessiner_robot(screen, robot):
+def dessiner_robot(screen, robot, monde):
     """
     Affiche le robot sur la fenêtre pygame
     """
     cx, cy, ori = robot.pos.x*cfg.SCALE, robot.pos.y*cfg.SCALE, robot.pos.orientation
 
-    # Corps du robot
-    pygame.draw.polygon(screen, (80, 130, 200), coins_rect_dans_monde(cx, cy, ori, cfg.ROBOT_LONGUEUR*cfg.SCALE, cfg.ROBOT_LARGEUR*cfg.SCALE))
+    points_locaux = monde.robot_forme_locale
+    points_monde = [
+        transformer_point_local_vers_monde(px * cfg.SCALE, py * cfg.SCALE, cx, cy, ori)
+        for px, py in points_locaux
+    ]
+
+    # Corps du robot (même forme que la hitbox de collision)
+    pygame.draw.polygon(screen, (80, 130, 200), points_monde)
+
+    longueur_fleche = max(px for px, _ in points_locaux) * cfg.SCALE
     # "Fleche" du robot
-    pygame.draw.line(screen, (255, 0, 0), (cx, cy), transformer_point_local_vers_monde(cfg.ROBOT_LONGUEUR/2*cfg.SCALE, 0, cx, cy, ori), 2)
+    pygame.draw.line(screen, (255, 0, 0), (cx, cy), transformer_point_local_vers_monde(longueur_fleche, 0, cx, cy, ori), 2)
 
 def dessiner_obstacles(screen, monde, couleur=cfg.COULEUR_OBSTACLE):
     """
