@@ -16,8 +16,8 @@ parser.add_argument(
     "--algo",
     type=str,
     default="eviter",
-    choices=["carre", "tourner", "eviter"],
-    help="Nom de l'algorithme (carre, tourner)"
+    choices=["carre", "tourner", "eviter", "arret", "contact"],
+    help="Nom de l'algorithme (carre, tourner, eviter, arret, contact)"
 )
 parser.add_argument(
     "--vitesse_roues",
@@ -32,23 +32,54 @@ parser.add_argument(
     choices=["droite", "haut", "gauche", "bas"],
     help="Orientation initiale du robot (gauche, droite, haut, bas)"
 )
+parser.add_argument(
+    "--forme_robot",
+    type=str,
+    default="rectangle",
+    choices=["rectangle", "triangle", "cercle"],
+    help="Forme de collision du robot (rectangle, triangle, cercle)"
+)
+parser.add_argument(
+    "--longueur_robot",
+    type=float,
+    default=cfg.ROBOT_LONGUEUR,
+    help="Longueur de référence du robot en mètres"
+)
+parser.add_argument(
+    "--largeur_robot",
+    type=float,
+    default=cfg.ROBOT_LARGEUR,
+    help="Largeur de référence du robot en mètres"
+)
 args = parser.parse_args()
 
 # Algorithmes
 ALGOS = {
-            "eviter" : AlgoEviter,
+            "carre" : AlgoCarre,
             "tourner" : AlgoTournerSurPlace,
-            "carre" : AlgoCarre
+            "eviter" : AlgoEviter,
+            "arret" : AlgoArretDevantObstacle,
+            "contact" : AlgoReculeTourneContact
         }
+
+
+def calculer_commande_selon_algo(nom_algo, algo, robot, dt, monde):
+    if nom_algo in ["arret", "contact"]:
+        return algo.calculer_commande(robot, dt, monde)
+    if nom_algo == "tourner":
+        return algo.calculer_commande(robot)
+    return algo.calculer_commande(robot, dt)
 
 pygame.init()
 screen = pygame.display.set_mode((cfg.LONGUEUR_MONDE * cfg.SCALE, cfg.LARGEUR_MONDE * cfg.SCALE))
 clock = pygame.time.Clock()
 
 robot = Robot(cfg.RAYON_ROUE, cfg.ECARTEMENT_ROUES, args.orientation, cfg.LONGUEUR_MONDE / 2, cfg.LARGEUR_MONDE / 2)
+
 monde = Monde()
 algo = ALGOS[args.algo](args.vitesse_roues)
 
+etait_en_collision = False # Pour détecter le début d'un choc
 running = True
 while running:
     dt = clock.tick(60) / 1000.0 # on divise par 1000 pour avoir la valeur en secondes (milisecondes -> secondes)
@@ -69,7 +100,11 @@ while running:
         
     v_r_g, v_r_d = algo.calculer_commande(robot, dt)
 
-    robot.definir_commande_roues(v_r_g, v_r_d)
+    # on verifie s'il y a un obstacle proche , si oui robot arret de marcher
+    if monde.arreter_avant_obstacle(robot.pos, distance_securite=0.2):
+        robot.definir_commande_roues(0, 0)  # robot s'arrete
+    else:
+        robot.definir_commande_roues(v_r_g, v_r_d)
 
     robot.step(dt, monde)
 

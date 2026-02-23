@@ -4,7 +4,7 @@ from dataclasses import dataclass
 import config as cfg
 import math
 import random  # Pour générer des positions aléatoires
-from core.geom import coins_rect_dans_monde
+from gestion_collisions import creer_forme_robot_locale, collision_robot_avec_monde
 from core.types import Pos2D
 
 @dataclass
@@ -23,8 +23,24 @@ class Monde:
     def __init__(self):
         self.liste_obstacles = []
 
+        # Zone de collision du robot (forme invisible utilisée pour détecter les contacts)
+        # Modifiable depuis main.py (rectangle, triangle, cercle + taille).
+        self.robot_forme_locale = creer_forme_robot_locale(
+            "rectangle",
+            cfg.ROBOT_LONGUEUR,
+            cfg.ROBOT_LARGEUR,
+        )
+
         # Créer des obstacles aléatoires dès le départ
         self.creer_obstacles_aleatoires()
+
+    def definir_collision_robot(self, forme="rectangle", longueur=cfg.ROBOT_LONGUEUR, largeur=cfg.ROBOT_LARGEUR):
+        """Configure la zone de collision du robot selon la forme et la taille."""
+        self.robot_forme_locale = creer_forme_robot_locale(forme, longueur, largeur)
+
+    def definir_collision_robot_polygone(self, points_locaux):
+        """Configure une zone de collision polygonale du robot dans son repère local."""
+        self.robot_forme_locale = list(points_locaux)
     
     def creer_obstacles_aleatoires(self):
         """
@@ -105,10 +121,13 @@ class Monde:
         - obstacles
         - bordures du monde
         """
-        for coin_x, coin_y in coins_rect_dans_monde(pos.x, pos.y, pos.orientation, cfg.ROBOT_LONGUEUR, cfg.ROBOT_LARGEUR):
-            if self.collision(coin_x, coin_y):
-                return True
-        return False
+        return collision_robot_avec_monde(
+            pos,
+            self.robot_forme_locale,
+            self.liste_obstacles,
+            cfg.LONGUEUR_MONDE,
+            cfg.LARGEUR_MONDE,
+        )
   
     def lire_distance_devant(self, pos_robot, portee_max=2.0):
         """
