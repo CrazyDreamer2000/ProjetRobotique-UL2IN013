@@ -34,11 +34,9 @@ class Monde:
         # Créer des obstacles aléatoires dès le départ
         self.creer_obstacles_aleatoires()
 
-    def definir_collision_robot(self, forme="rectangle", longueur=None, largeur=None):
+    def definir_collision_robot(self, forme="rectangle", longueur=cfg.ROBOT_LONGUEUR, largeur=cfg.ROBOT_LARGEUR):
         """Configure la zone de collision du robot selon la forme et la taille."""
-        longueur_ref = cfg.ROBOT_LONGUEUR if longueur is None else longueur
-        largeur_ref = cfg.ROBOT_LARGEUR if largeur is None else largeur
-        self.robot_forme_locale = creer_forme_robot_locale(forme, longueur_ref, largeur_ref)
+        self.robot_forme_locale = creer_forme_robot_locale(forme, longueur, largeur)
 
     def definir_collision_robot_polygone(self, points_locaux):
         """Configure une zone de collision polygonale du robot dans son repère local."""
