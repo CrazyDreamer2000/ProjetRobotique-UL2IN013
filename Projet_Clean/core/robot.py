@@ -47,12 +47,9 @@ class Robot:
            accel = (vitesse_actuelle - self.vitesse_precedante) / dt
         self.vitesse_precedante = vitesse_actuelle
 
-        #Initialiser la distance
-
-        if monde is not None:
-            self.dist_obstacle = monde.lire_distance_devant(self.pos)
-            dist = self.dist_obstacle
-            print(dist)  #pour tester
+        self.dist_obstacle = monde.lire_distance_devant(self.pos)
+        dist = self.dist_obstacle
+        print(dist)  #pour tester
         self.capteurs.accelerometre = accel
         self.capteurs.capteur_distance = dist
 
@@ -60,7 +57,7 @@ class Robot:
     def definir_commande_roues(self, vitesse_rotation_gauche: float, vitesse_rotation_droite: float):
         self.commande = CommandeRoues(vitesse_rotation_gauche, vitesse_rotation_droite)
 
-    def step(self, dt: float, monde=None):
+    def step(self, dt: float, monde):
         """
         Avance la simulation de dt secondes
         - met à jour les roues
@@ -70,7 +67,7 @@ class Robot:
         
         Paramètres:
             dt: Temps écoulé en secondes
-            monde: Instance de Monde pour vérifier les collisions (optionnel)
+            monde: Instance de Monde pour vérifier les collisions
         """
 
         if dt<0:
