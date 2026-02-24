@@ -268,17 +268,20 @@ class Monde:
         angle = pos_robot.orientation
         
         # Tester tous les 2cm
-        for distance in range(1, int(portee_max / 0.02)):
-            d = distance * 0.02  # Distance actuelle
-            
+        pas = 0.02
+        dist_head = portee_max
+        dist_tail = 0
+        while dist_head - dist_tail > pas:
+            mid = (dist_tail + dist_head) / 2
             # Position du point de test
-            test_x = x + d * math.cos(angle)
-            test_y = y + d * math.sin(angle)
+            test_x = x + (mid + cfg.ROBOT_LONGUEUR / 2) * math.cos(angle)
+            test_y = y + (mid + cfg.ROBOT_LARGEUR / 2) * math.sin(angle)
             
             if self.collision(test_x, test_y):
-                return d
-        
-        return portee_max  # Rien trouvé
+                dist_head = mid
+            else:
+                dist_tail = mid
+        return dist_head  
 
     
     def arreter_avant_obstacle(self, pos_robot, distance_securite=0.3):
