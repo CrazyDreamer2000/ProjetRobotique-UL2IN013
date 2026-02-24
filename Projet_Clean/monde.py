@@ -79,7 +79,7 @@ class Monde:
         
    
 
-    def lire_distance_devant(self, pos_robot, portee_max=2.0):
+    def lire_distance_devant(self, pos_robot, portee_max = 2.0):
         """
         Capteur radar ultrasonique analogique
         """
@@ -88,8 +88,10 @@ class Monde:
         
         # check pour chaque 0.05 metre
         pas = 0.02 
-        for d in range(1, int(portee_max / pas)):
-            dist_test = d * pas 
+        dist_test = portee_max / 2
+        dist = portee_max / 2
+        while dist > pas:
+            dist =  dist / 2
             
              # Calculer les coordonnées (en mètres) du point de détection.
             test_x_m = x_m + (dist_test + cfg.ROBOT_LONGUEUR / 2 )* math.cos(ori)
@@ -103,9 +105,11 @@ class Monde:
                 obs_l = obs.largeur  / 2
                 
                 # Détection de collision
-                if (abs(test_x_m - obs.x) < obs_L and 
-                    abs(test_y_m - obs.y) < obs_l):
-                    print(dist_test)
+                if  abs(test_x_m - obs.x)< obs_L and  abs(test_y_m - obs.y) < obs_l:
+                    dist_test = dist_test + dist
+                elif  abs(test_x_m - obs.x)< obs_L and  abs(test_y_m - obs.y) < obs_l:
+                    dist_test = dist_test - dist
+                    #print(dist_test)
                     return dist_test
                     
         return portee_max # Si aucun obstacle n'est détecté, revenir à la pleine échelle.
