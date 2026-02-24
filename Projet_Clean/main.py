@@ -41,18 +41,6 @@ parser.add_argument(
     choices=["rectangle", "triangle", "cercle"],
     help="Forme de collision du robot (rectangle, triangle, cercle)"
 )
-parser.add_argument(
-    "--longueur_robot",
-    type=float,
-    default=cfg.ROBOT_LONGUEUR,
-    help="Longueur de référence du robot en mètres"
-)
-parser.add_argument(
-    "--largeur_robot",
-    type=float,
-    default=cfg.ROBOT_LARGEUR,
-    help="Largeur de référence du robot en mètres"
-)
 args = parser.parse_args()
 
 # Algorithmes
@@ -79,7 +67,7 @@ clock = pygame.time.Clock()
 robot = Robot(cfg.RAYON_ROUE, cfg.ECARTEMENT_ROUES, args.orientation, cfg.LONGUEUR_MONDE / 2, cfg.LARGEUR_MONDE / 2)
 
 monde = Monde()
-monde.definir_collision_robot(args.forme_robot, args.longueur_robot, args.largeur_robot)
+monde.definir_collision_robot(args.forme_robot, cfg.ROBOT_LONGUEUR, cfg.ROBOT_LARGEUR)
 algo = ALGOS[args.algo](args.vitesse_roues)
 
 running = True
@@ -98,7 +86,7 @@ while running:
             if event.key == pygame.K_r:
                 robot = Robot(cfg.RAYON_ROUE, cfg.ECARTEMENT_ROUES, args.orientation, cfg.LONGUEUR_MONDE / 2, cfg.LARGEUR_MONDE / 2)
                 monde = Monde() # On vide aussi les obstacles pour repartir à zéro
-                monde.definir_collision_robot(args.forme_robot, args.longueur_robot, args.largeur_robot)
+                monde.definir_collision_robot(args.forme_robot, cfg.ROBOT_LONGUEUR, cfg.ROBOT_LARGEUR)
                 algo = ALGOS[args.algo](args.vitesse_roues)
         
     v_r_g, v_r_d = calculer_commande_selon_algo(args.algo, algo, robot, dt, monde)
