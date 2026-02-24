@@ -12,6 +12,7 @@ class CinematiqueDeuxRoues:
     def vitesses_robot_depuis_roues(self, vitesse_rotation_gauche: float, vitesse_rotation_droite: float) -> tuple[float, float]:
         """
         Prends en paramètre les vitesses de rotation des roues et renvoie la vitesse avant (m/s) et la vitesse de rotation (rad/s) du robot
+        Renvoie la vitesse avant et la vitesse de rotation du robot.
         """
         vitesse_lineaire_gauche = self.rayon_roue * vitesse_rotation_gauche # mètres/s
         vitesse_lineaire_droite = self.rayon_roue * vitesse_rotation_droite #
@@ -23,7 +24,8 @@ class CinematiqueDeuxRoues:
 
     def avance_pos(self, pos, vitesse_avant: float, vitesse_rotation: float, dt: float):
         """
-        Prend en paramètre la position, vitesse avant, et vitesse de rotation du robot ainsi qu'une marge de temps (en secondes) et calcule la nouvelle position du robot à partir des paramètres.
+        Prend en paramètre la position, vitesse avant, et vitesse de rotation du robot ainsi qu'une marge de temps (en secondes)
+        Calcule la nouvelle position du robot à partir des paramètres.
         """
         x, y, ori = pos.x, pos.y, pos.orientation
 
