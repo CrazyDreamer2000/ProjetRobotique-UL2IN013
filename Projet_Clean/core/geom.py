@@ -42,3 +42,11 @@ def coins_rect_dans_monde(cx: float, cy: float, ori: float, longueur_m: float, l
 
     # Conversion coin par coin vers le monde
     return [transformer_point_local_vers_monde(x, y, cx, cy, ori) for x, y in coins]
+
+
+def polygone_local_vers_monde(points_locaux, x: float, y: float, orientation: float):
+    """Transforme des points locaux vers le repère monde."""
+    return [
+        transformer_point_local_vers_monde(point_x_local, point_y_local, x, y, orientation)
+        for point_x_local, point_y_local in points_locaux
+    ]
