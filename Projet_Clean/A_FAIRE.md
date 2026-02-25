@@ -6,3 +6,24 @@
 Comment modifier code pour avoir tous les changements nécessaires/benefiques du cours 4 ?
 modifier structure algos (cours 4)
 THREADING pour l'affichage ?
+
+
+
+--- 24/02 ---
+
+
+- on a besoin d'un code MINIMAL et SIMPLE
+- controlleur qui controlle tout: réutilisable dans le vrai robot (regarder Strategie: bonne solution dans cours4 / Strategie sequentielle dans Mix)
+- stratégie séquentielle / mixer strategies (avec conditionnelle) pour interruptions de strategie
+    - a chaque itération du controlleur (a voir), tester conditions pour autres stratégies, utiliser des LOCK pour interrompre d'autres strategies 
+- ON A une API donné par le PROF
+- DANS ALGOS: UTILISER LES FONCTIONS DE L'API ET FAIRE UN TRADUCTEUR POUR QUE LA SIMULATION ET LE ROBOT COMPRENNE  (Traducteur = proxy)
+    - avoir mêmes signatures / fonctions pour simu et irl ne sert a rien (prof) ...
+    - traducteur sim  et  traducteur irl  (avec mêmes signatures de fonctions, d'apres prof)
+- definir blocs de base stratégie:
+    - StratAvancer, StratTourner, Strat... (-> langage de haut niveau)
+    - ./algos et ./stratégies ?
+
+Idées pour la prochaine fois (bonus)
+- afficher roues sur simulateur
+- utiliser config du prof

@@ -99,6 +99,9 @@ class Monde:
         # Collision avec obstacles
         for obs in self.liste_obstacles:
 
+            def transformer_point_local_vers_monde(x: float, y: float, cx: float, cy: float, ori: float) -> tuple[float, float]:
+
+
             cos_obs = math.cos(obs.pos.orientation)
             sin_obs = math.sin(obs.pos.orientation)
 
@@ -128,6 +131,8 @@ class Monde:
             cfg.LONGUEUR_MONDE,
             cfg.LARGEUR_MONDE,
         )
+    
+
   
     def lire_distance_devant(self, pos_robot, portee_max=2.0):
         """
