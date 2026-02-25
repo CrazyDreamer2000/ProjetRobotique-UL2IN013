@@ -67,6 +67,7 @@ clock = pygame.time.Clock()
 
 robot = Robot(cfg.RAYON_ROUE, cfg.ECARTEMENT_ROUES, args.orientation, cfg.LONGUEUR_MONDE / 2, cfg.LARGEUR_MONDE / 2)
 monde = Monde()
+monde.definir_collision_robot(args.forme_robot, args.longueur_robot, args.largeur_robot)
 algo = ALGOS[args.algo](args.vitesse_roues)
 
 """ ON SEN SERT MEME PAS
@@ -87,6 +88,7 @@ while running:
             if event.key == pygame.K_r:
                 robot = Robot(cfg.RAYON_ROUE, cfg.ECARTEMENT_ROUES, args.orientation, cfg.LONGUEUR_MONDE / 2, cfg.LARGEUR_MONDE / 2)
                 monde = Monde() # On vide aussi les obstacles pour repartir à zéro
+                monde.definir_collision_robot(args.forme_robot, args.longueur_robot, args.largeur_robot)
                 algo = ALGOS[args.algo](args.vitesse_roues)
         
     v_r_g, v_r_d = algo.calculer_commande(robot, dt)
