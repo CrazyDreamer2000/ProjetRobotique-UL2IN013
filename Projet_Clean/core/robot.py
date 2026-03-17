@@ -89,7 +89,7 @@ class Robot:
         )
         pos_suiv = self.modele_mouvement.avance_pos(self.pos, vitesse_avant, vitesse_rotation, dt)
         
-        self.en_collision = monde.collision_robot(pos_suiv)
+        self.en_collision = monde.collision(pos_suiv)
         if not self.en_collision:
             self.pos = pos_suiv
 

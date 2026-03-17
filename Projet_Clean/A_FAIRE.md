@@ -9,7 +9,7 @@ THREADING pour l'affichage ?
 
 
 
---- 24/02 ---
+--- NOTES DU 24/02 ---
 
 
 - on a besoin d'un code MINIMAL et SIMPLE
@@ -27,3 +27,7 @@ THREADING pour l'affichage ?
 Idées pour la prochaine fois (bonus)
 - afficher roues sur simulateur
 - utiliser config du prof
+
+
+--- pour après les vacances ---
+
