@@ -40,7 +40,7 @@ class Monde:
             y : ordonnée du nouvel obstacle (pixels)
         """
         self.liste_obstacles.append(Obstacle(
-            Pos2D(x/cfg.SCALE, y/cfg.SCALE, orientation=0.0),
+            Pos2D(x/cfg.SCALE, y/cfg.SCALE, orientation=random.uniform(0, 2 * math.pi)),
             longueur, 
             largeur,
             polygone_rectangle_local(longueur, largeur)
