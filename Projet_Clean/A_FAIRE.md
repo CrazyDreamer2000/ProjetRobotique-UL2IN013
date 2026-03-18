@@ -31,3 +31,37 @@ Idées pour la prochaine fois (bonus)
 
 --- pour après les vacances ---
 
+
+
+
+---- NOTES DU 18/03 -----
+
+- dt:
+    - dt defini selon secondes, pas clock tick
+    - Rendre le dt local à la fonction (step)
+- main:
+    - 3/4 du code dans main doit etre ailleurs
+    - dict algo a reporter dans module controle / init
+    - pygame init etc dans init de l'affichage
+    - creation monde pq pas 
+    - event pygame autre part
+    - display fait partie de l'affichage
+- affichage:
+    - affichage pas besoin de passer screen monde etc en param
+- algos:
+    - algo.step envoie direct au robot les commandes
+    - ne pas passer monde dans robot + dt pas la peine (calculé localement)
+    - lors de init algo mettre robot , pas robot dans param a chaque fois
+    - start prend rien, step prend rien (algo base)
+    - stop (algo/prim) qui teste conditions d'arret des primitives
+    - plus de retour dans start step 
+- general:
+    - monde.step pas robot.step ( mieux  robot step dans monde + maj capteur)
+    - obligé de créer une classe qui herite de screen (heritGe de la fenetre et toutes les methodes quon veut a l'interieur) -> ?
+- traducteurs: notes
+    - traducteurs: partour ou ya attribut ya fonction du traducteur (pas de difference traducteur / robot) juste au niveau de strategie
+    - traducteur lui pourra accéder aux attributs reels
+    - classe abstraite traducteur
+    - traducteur parle au controlleur ( get distance, etc)
+
+Tout ca pour la semaine prochaine !

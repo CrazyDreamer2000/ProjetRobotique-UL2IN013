@@ -11,6 +11,7 @@ from controle.AlgoArretDevantObstacle import AlgoArretDevantObstacle
 from controle.AlgoReculeTourneContact import AlgoReculeTourneContact
 from controle.AlgoEviter import AlgoEviter
 from controle.primitives import AvancerDistance
+from controle.algo_carre import
 from affichage.pygame_view import affichage
 
 parser = argparse.ArgumentParser()
