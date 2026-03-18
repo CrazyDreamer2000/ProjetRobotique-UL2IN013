@@ -10,6 +10,7 @@ from controle.AlgoTournerSurPlace import AlgoTournerSurPlace
 from controle.AlgoArretDevantObstacle import AlgoArretDevantObstacle
 from controle.AlgoReculeTourneContact import AlgoReculeTourneContact
 from controle.AlgoEviter import AlgoEviter
+from controle.primitives import AvancerDistance
 from affichage.pygame_view import affichage
 
 parser = argparse.ArgumentParser()
@@ -51,7 +52,9 @@ clock = pygame.time.Clock()
 
 robot = Robot(cfg.RAYON_ROUE, cfg.ECARTEMENT_ROUES, args.orientation, cfg.LONGUEUR_MONDE / 2, cfg.LARGEUR_MONDE / 2)
 monde = Monde()
-algo = ALGOS[args.algo](args.vitesse_roues)
+#algo = ALGOS[args.algo](args.vitesse_roues)
+algo = AvancerDistance(1, 10)
+algo.start(robot, monde)
 
 etait_en_collision = False # Pour détecter le début d'un choc
 running = True
@@ -72,7 +75,7 @@ while running:
                 monde = Monde() # On vide aussi les obstacles pour repartir à zéro
                 algo = ALGOS[args.algo](args.vitesse_roues)
         
-    v_r_g, v_r_d = algo.calculer_commande(robot, dt)
+    v_r_g, v_r_d = algo.step(robot, monde, dt)
  
     robot.definir_commande_roues(v_r_g, v_r_d)
 
