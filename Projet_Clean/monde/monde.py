@@ -77,7 +77,7 @@ class Monde:
             # Créer l'obstacle
             self.ajouter_obstacle(x * cfg.SCALE, y * cfg.SCALE, longueur, largeur) # multiplication par scale est temporaire
             
-            print(f"✅ Obstacle {i+1} : {nom} ({x:.2f}, {y:.2f}) angle={math.degrees(orientation):.0f}°")
+            print(f" Obstacle {i+1} : {nom} ({x:.2f}, {y:.2f}) angle={math.degrees(orientation):.0f}°")
 
     def _point_hors_monde(self, x: float, y: float) -> bool:
         return (
