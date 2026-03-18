@@ -40,7 +40,7 @@ class Monde:
             y : ordonnée du nouvel obstacle (pixels)
         """
         self.liste_obstacles.append(Obstacle(
-            Pos2D(x/cfg.SCALE, y/cfg.SCALE, orientation=0.0),
+            Pos2D(x/cfg.SCALE, y/cfg.SCALE, orientation=random.uniform(0, 2 * math.pi)),
             longueur, 
             largeur,
             polygone_rectangle_local(longueur, largeur)
@@ -77,7 +77,7 @@ class Monde:
             # Créer l'obstacle
             self.ajouter_obstacle(x * cfg.SCALE, y * cfg.SCALE, longueur, largeur) # multiplication par scale est temporaire
             
-            print(f"✅ Obstacle {i+1} : {nom} ({x:.2f}, {y:.2f}) angle={math.degrees(orientation):.0f}°")
+            print(f" Obstacle {i+1} : {nom} ({x:.2f}, {y:.2f}) angle={math.degrees(orientation):.0f}°")
 
     def _point_hors_monde(self, x: float, y: float) -> bool:
         return (
