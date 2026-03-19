@@ -59,7 +59,7 @@ Idées pour la prochaine fois (bonus)
     - monde.step pas robot.step ( mieux  robot step dans monde + maj capteur)
     - obligé de créer une classe qui herite de screen (heritGe de la fenetre et toutes les methodes quon veut a l'interieur) -> ?
 - traducteurs: notes
-    - traducteurs: partour ou ya attribut ya fonction du traducteur (pas de difference traducteur / robot) juste au niveau de strategie
+    - traducteurs: partout ou ya attribut ya fonction du traducteur (pas de difference traducteur / robot) juste au niveau de strategie
     - traducteur lui pourra accéder aux attributs reels
     - classe abstraite traducteur
     - traducteur parle au controlleur ( get distance, etc)
