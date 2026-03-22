@@ -6,13 +6,23 @@ import config as cfg
 from core.robot import Robot
 from monde.monde import Obstacle, Monde
 from controle.AlgoCarre import AlgoCarre
+import pygame
+import argparse
+import config as cfg
+from core.robot import Robot
+from monde.monde import Obstacle, Monde
+from controle.AlgoCarre import AlgoCarre
 from controle.AlgoTournerSurPlace import AlgoTournerSurPlace
 from controle.AlgoArretDevantObstacle import AlgoArretDevantObstacle
 from controle.AlgoReculeTourneContact import AlgoReculeTourneContact
 from controle.AlgoEviter import AlgoEviter
 from controle.primitives import AvancerDistance
 from controle.algo_carre import AlgoCarre
-from affichage.pygame_view import affichage
+# RLock = verrou partage entre le thread principal et l'affichage.
+from threading import RLock
+# Classe du thread qui gere la fenetre et le rendu.
+from affichage.Affichage import Affichage # Ta nouvelle classe threadée
+
 
 parser = argparse.ArgumentParser()
 
@@ -47,47 +57,47 @@ ALGOS = {
             "contact" : AlgoReculeTourneContact
         }
 
-pygame.init()
-screen = pygame.display.set_mode((cfg.LONGUEUR_MONDE * cfg.SCALE, cfg.LARGEUR_MONDE * cfg.SCALE))
-clock = pygame.time.Clock()
-
+# Creation du robot au centre du monde.
 robot = Robot(cfg.RAYON_ROUE, cfg.ECARTEMENT_ROUES, args.orientation, cfg.LONGUEUR_MONDE / 2, cfg.LARGEUR_MONDE / 2)
-monde = Monde()
-#algo = ALGOS[args.algo](args.vitesse_roues)
-algo = AlgoCarre(10, 0.5)
-algo.start(robot, monde)
+# Creation de l'environnement (obstacles, collisions)
+monde = Monde() 
+algo = AlgoCarre(10, 0.5) # Algo choisi par defaut dans code actuel.
+algo.start(robot, monde) # Init de l'algo avant la boucle principale.
 
-etait_en_collision = False # Pour détecter le début d'un choc
-running = True
+lock = RLock() # Verrou partage entre simulation (main) et rendu (thread affichage).
+
+vue = Affichage(robot, monde, lock) # On cree l'affichage en lui donnant robot/monde/lock.
+vue.start() # Demarre le thread d'affichage en parallele du main.
+
+
+clock = pygame.time.Clock() # Horloge pygame: sert a calculer le temps ecoule entre 2 tours.
+
+
+running = True # Flag principal pour continuer/arreter la simulation.
+
+etait_en_collision = False # Variable pour gerer les colisions ).
+
+# Boucle principale de simulation.
 while running:
-    dt = clock.tick(60) / 1000.0 # on divise par 1000 pour avoir la valeur en secondes (milisecondes -> secondes)
+    dt = clock.tick(100) / 1000.0 # dt = temps ecoule depuis le dernier tour (en secondes).
+    
+    if not vue.running:     # Si l'utilisateur ferme la fenetre dans le thread affichage, on stoppe ici aussi.
+        running = False
 
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-            obs_mousex,obs_mousey= pygame.mouse.get_pos()
-            monde.ajouter_obstacle(obs_mousex,obs_mousey)
+    # on protege l'acces aux donnees partagees.
+    with lock:
+        v_r_g, v_r_d = algo.step(robot, monde, dt) #L'algo decide les vitesses des deux roues.
+        robot.definir_commande_roues(v_r_g, v_r_d) # On applique cette commande au robot.
+        robot.step(dt, monde)  # On avance la physique du robot de dt secondes.
+        robot.maj_capteurs(dt, monde, robot.vitesse_linaire_actuellement) # On met a jour les capteurs pour le cycle suivant.
 
-        # Réinitialisation avec la touche R
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_r:
-                robot = Robot(cfg.RAYON_ROUE, cfg.ECARTEMENT_ROUES, args.orientation, cfg.LONGUEUR_MONDE / 2, cfg.LARGEUR_MONDE / 2)
-                monde = Monde() # On vide aussi les obstacles pour repartir à zéro
-                algo = ALGOS[args.algo](args.vitesse_roues)
-        
-    v_r_g, v_r_d = algo.step(robot, monde, dt)
- 
-    robot.definir_commande_roues(v_r_g, v_r_d)
 
-    robot.step(dt, monde)
+# Fin de boucle: on demande au thread d'affichage de s'arreter.
+vue.running = False
+# Puis on attend sa fin pour une fermeture propre.
+vue.join(timeout=1.0)
 
-    robot.maj_capteurs(dt, monde, robot.vitesse_linaire_actuellement)  
-
-    screen.fill((240, 240, 240))
-
-    affichage(screen, robot, monde)
-
-    pygame.display.flip()
-
+# Ferme pygame proprement.
 pygame.quit()
+
+
