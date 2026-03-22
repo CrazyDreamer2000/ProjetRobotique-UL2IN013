@@ -6,12 +6,6 @@ import config as cfg
 from core.robot import Robot
 from monde.monde import Obstacle, Monde
 from controle.AlgoCarre import AlgoCarre
-import pygame
-import argparse
-import config as cfg
-from core.robot import Robot
-from monde.monde import Obstacle, Monde
-from controle.AlgoCarre import AlgoCarre
 from controle.AlgoTournerSurPlace import AlgoTournerSurPlace
 from controle.AlgoArretDevantObstacle import AlgoArretDevantObstacle
 from controle.AlgoReculeTourneContact import AlgoReculeTourneContact
