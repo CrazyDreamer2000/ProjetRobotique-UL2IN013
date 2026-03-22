@@ -17,7 +17,6 @@ from threading import RLock
 # Classe du thread qui gere la fenetre et le rendu.
 from affichage.Affichage import Affichage # Ta nouvelle classe threadée
 
-
 parser = argparse.ArgumentParser()
 
 parser.add_argument(
@@ -27,6 +26,7 @@ parser.add_argument(
     choices=["carre", "tourner", "eviter", "arret", "contact"],
     help="Nom de l'algorithme (carre, tourner, eviter, arret, contact)"
 )
+# Argument: vitesse des roues
 parser.add_argument(
     "--vitesse_roues",
     type=float,
@@ -50,6 +50,7 @@ ALGOS = {
             "arret" : AlgoArretDevantObstacle,
             "contact" : AlgoReculeTourneContact
         }
+
 
 # Creation du robot au centre du monde.
 robot = Robot(cfg.RAYON_ROUE, cfg.ECARTEMENT_ROUES, args.orientation, cfg.LONGUEUR_MONDE / 2, cfg.LARGEUR_MONDE / 2)
@@ -93,5 +94,3 @@ vue.join(timeout=1.0)
 
 # Ferme pygame proprement.
 pygame.quit()
-
-
