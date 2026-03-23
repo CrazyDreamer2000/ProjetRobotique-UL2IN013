@@ -12,7 +12,6 @@ from controle.AlgoReculeTourneContact import AlgoReculeTourneContact
 from controle.AlgoEviter import AlgoEviter
 from controle.primitives import AvancerDistance
 from controle.algo_carre import AlgoCarre
-from controle.algo_carre_safe import AlgoCarreSafe
 from affichage.pygame_view import affichage
 
 parser = argparse.ArgumentParser()
@@ -55,7 +54,7 @@ clock = pygame.time.Clock()
 robot = Robot(cfg.RAYON_ROUE, cfg.ECARTEMENT_ROUES, args.orientation, cfg.LONGUEUR_MONDE / 2, cfg.LARGEUR_MONDE / 2)
 monde = Monde()
 #algo = ALGOS[args.algo](args.vitesse_roues)
-algo = AlgoCarreSafe(10, 0.5)
+algo = AlgoCarre(10, 0.5)
 algo.start(robot, monde)
 
 etait_en_collision = False # Pour détecter le début d'un choc
