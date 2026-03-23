@@ -98,3 +98,6 @@ class Robot:
                                                 )
 
         self.vitesse_linaire_actuellement = vitesse_avant # utiliser le v pour calculer acceleration
+
+
+        print(self.en_collision)
