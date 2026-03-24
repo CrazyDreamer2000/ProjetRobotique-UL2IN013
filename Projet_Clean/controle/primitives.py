@@ -83,3 +83,38 @@ class TournerAngle(AlgoBase):
             return -v, v
         else:
             return v, -v
+        
+
+class EviterCollision(AlgoBase):
+    """
+    Réagit à une collision:
+    - recule
+    - tourne
+    """
+    def __init__(self, vitesse):
+        self.v = vitesse
+        self.timer = 0.0
+        self.phase = "recule"
+        self.fini = False
+
+    def start(self, robot, monde):
+        self.timer = 0.0
+        self.phase = "recule"
+        self.fini = False
+    
+    def step(self, robot, monde, dt):
+        self.timer += dt
+
+        if self.phase == "recule":
+            if self.timer > 1:
+                self.phase = "tourne"
+                self.timer = 0.0
+            return -self.v, -self.v
+        
+        elif self.phase == "tourne":
+            if self.timer > 1:
+                self.fini = True
+                return 0.0, 0.0
+            return -0.5*self.v, 0.5*self.v
+        
+        return 0.0, 0.0
