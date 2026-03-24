@@ -115,6 +115,6 @@ class EviterCollision(AlgoBase):
             if self.timer > 1:
                 self.fini = True
                 return 0.0, 0.0
-            return -self.v, self.v
+            return -0.5*self.v, 0.5*self.v
         
         return 0.0, 0.0

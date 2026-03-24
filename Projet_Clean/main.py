@@ -12,6 +12,7 @@ from controle.AlgoReculeTourneContact import AlgoReculeTourneContact
 from controle.AlgoEviter import AlgoEviter
 from controle.primitives import AvancerDistance
 from controle.algo_carre import AlgoCarre
+from controle.algo_carre_safe import AlgoCarreSafe
 # RLock = verrou partage entre le thread principal et l'affichage.
 from threading import RLock
 # Classe du thread qui gere la fenetre et le rendu.
@@ -56,7 +57,7 @@ ALGOS = {
 robot = Robot(cfg.RAYON_ROUE, cfg.ECARTEMENT_ROUES, args.orientation, cfg.LONGUEUR_MONDE / 2, cfg.LARGEUR_MONDE / 2)
 # Creation de l'environnement (obstacles, collisions)
 monde = Monde() 
-algo = AlgoCarre(10, 0.5) # Algo choisi par defaut dans code actuel.
+algo = AlgoCarreSafe(10, 0.5) # Algo choisi par defaut dans code actuel.
 algo.start(robot, monde) # Init de l'algo avant la boucle principale.
 
 lock = RLock() # Verrou partage entre simulation (main) et rendu (thread affichage).
