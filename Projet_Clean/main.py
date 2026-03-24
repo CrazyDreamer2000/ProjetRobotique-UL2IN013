@@ -3,16 +3,10 @@
 import pygame
 import argparse
 import config as cfg
+from controle import ALGOS
 from core.robot import Robot
 from monde.monde import Obstacle, Monde
-from controle.AlgoCarre import AlgoCarre
-from controle.AlgoTournerSurPlace import AlgoTournerSurPlace
-from controle.AlgoArretDevantObstacle import AlgoArretDevantObstacle
-from controle.AlgoReculeTourneContact import AlgoReculeTourneContact
-from controle.AlgoEviter import AlgoEviter
-from controle.primitives import AvancerDistance
-from controle.algo_carre import AlgoCarre
-from controle.algo_carre_safe import AlgoCarreSafe
+
 # RLock = verrou partage entre le thread principal et l'affichage.
 from threading import RLock
 # Classe du thread qui gere la fenetre et le rendu.
@@ -23,9 +17,9 @@ parser = argparse.ArgumentParser()
 parser.add_argument(
     "--algo",
     type=str,
-    default="eviter",
-    choices=["carre", "tourner", "eviter", "arret", "contact"],
-    help="Nom de l'algorithme (carre, tourner, eviter, arret, contact)"
+    default="carresafe",
+    choices=["carre", "carresafe", "tourner", "eviter", "arret", "contact"],
+    help="Nom de l'algorithme (carre, carresafe, tourner, eviter, arret, contact)"
 )
 # Argument: vitesse des roues
 parser.add_argument(
@@ -43,21 +37,12 @@ parser.add_argument(
 )
 args = parser.parse_args()
 
-# Algorithmes
-ALGOS = {
-            "carre" : AlgoCarre,
-            "tourner" : AlgoTournerSurPlace,
-            "eviter" : AlgoEviter,
-            "arret" : AlgoArretDevantObstacle,
-            "contact" : AlgoReculeTourneContact
-        }
-
 
 # Creation du robot au centre du monde.
 robot = Robot(cfg.RAYON_ROUE, cfg.ECARTEMENT_ROUES, args.orientation, cfg.LONGUEUR_MONDE / 2, cfg.LARGEUR_MONDE / 2)
 # Creation de l'environnement (obstacles, collisions)
 monde = Monde() 
-algo = AlgoCarreSafe(10, 0.5) # Algo choisi par defaut dans code actuel.
+algo = ALGOS[args.algo](10, 0.5) # Algo choisi par defaut dans code actuel.
 algo.start(robot, monde) # Init de l'algo avant la boucle principale.
 
 lock = RLock() # Verrou partage entre simulation (main) et rendu (thread affichage).
@@ -65,18 +50,17 @@ lock = RLock() # Verrou partage entre simulation (main) et rendu (thread afficha
 vue = Affichage(robot, monde, lock) # On cree l'affichage en lui donnant robot/monde/lock.
 vue.start() # Demarre le thread d'affichage en parallele du main.
 
-
-clock = pygame.time.Clock() # Horloge pygame: sert a calculer le temps ecoule entre 2 tours.
-
+clock = pygame.time.Clock()
 
 running = True # Flag principal pour continuer/arreter la simulation.
 
 etait_en_collision = False # Variable pour gerer les colisions ).
 
 # Boucle principale de simulation.
-while running:
-    dt = clock.tick(100) / 1000.0 # dt = temps ecoule depuis le dernier tour (en secondes).
-    
+while running:    
+
+    dt = clock.tick(60) / 1000.0
+
     if not vue.running:     # Si l'utilisateur ferme la fenetre dans le thread affichage, on stoppe ici aussi.
         running = False
 
