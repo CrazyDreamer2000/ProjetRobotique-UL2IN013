@@ -4,6 +4,7 @@ import pygame
 import argparse
 import config as cfg
 from controle import ALGOS
+from controle.traducteur import TraducteurSimu
 from core.robot import Robot
 from monde.monde import Obstacle, Monde
 
@@ -42,8 +43,11 @@ args = parser.parse_args()
 robot = Robot(cfg.RAYON_ROUE, cfg.ECARTEMENT_ROUES, args.orientation, cfg.LONGUEUR_MONDE / 2, cfg.LARGEUR_MONDE / 2)
 # Creation de l'environnement (obstacles, collisions)
 monde = Monde() 
-algo = ALGOS[args.algo](10, 0.5) # Algo choisi par defaut dans code actuel.
-algo.start(robot, monde) # Init de l'algo avant la boucle principale.
+
+trad = TraducteurSimu(robot, monde)
+
+algo = ALGOS[args.algo](trad, 10, 0.5) # Algo choisi par defaut dans code actuel.
+algo.start() # Init de l'algo avant la boucle principale.
 
 lock = RLock() # Verrou partage entre simulation (main) et rendu (thread affichage).
 
@@ -66,8 +70,7 @@ while running:
 
     # on protege l'acces aux donnees partagees.
     with lock:
-        v_r_g, v_r_d = algo.step(robot, monde, dt) #L'algo decide les vitesses des deux roues.
-        robot.definir_commande_roues(v_r_g, v_r_d) # On applique cette commande au robot.
+        algo.step()
         robot.step(dt, monde)  # On avance la physique du robot de dt secondes.
         robot.maj_capteurs(dt, monde, robot.vitesse_linaire_actuellement) # On met a jour les capteurs pour le cycle suivant.
 

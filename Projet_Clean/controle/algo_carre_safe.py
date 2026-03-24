@@ -8,20 +8,30 @@ class AlgoCarreSafe(AlgoBase):
     """
     Carré + réaction aux collisions
     """
-    def __init__(self, vitesse_roues, longueur_cote=0.5):
+    def __init__(self, traducteur, vitesse_roues, longueur_cote=0.5):
+        super().__init__(traducteur)
         self.vitesse = vitesse_roues
         self.strategie = None
     
-    def start(self, robot, monde):
-        carre = AlgoCarre(self.vitesse)
-        eviter = EviterCollision(self.vitesse)
+    def start(self):
+        super().start()
+        carre = AlgoCarre(self.trad, self.vitesse)
+        eviter = EviterCollision(self. trad, self.vitesse)
 
-        self.strategie = InterruptionCollision(carre, eviter)
+        self.strategie = InterruptionCollision(self.trad, carre, eviter)
 
-        self.strategie.start(robot, monde)
+        self.strategie.start()
     
-    def step(self, robot, monde, dt):
-        return self.strategie.step(robot, monde, dt)
+    def step(self):
+        if self.stop():
+            self.trad.set_vitesse(0.0, 0.0)
+        self.strategie.step()
     
-    def stop(self, robot, monde):
-        return 0.0, 0.0
+    def stop(self):
+        if self.fini:
+            return True
+
+        if self.strategie.stop():
+            self.fini = True
+        
+        return self.fini

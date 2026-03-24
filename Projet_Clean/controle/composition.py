@@ -2,39 +2,46 @@ from controle.algo_base import AlgoBase
 
 class Sequence(AlgoBase):
     """
-    Exécute plusieurs stratégies l'une après l'autre
+    Exécute plusieurs stratégies/primitives l'une après l'autre
     """
-    def __init__(self, etapes):
+    def __init__(self, traducteur, etapes, dt=0.05):
+        super().__init__(traducteur)
         self.etapes = etapes
         self.index = 0
-        self.fini = False
+        self.dt = dt
 
-    def start(self, robot, monde):
+    def start(self):
+        super().start()
         self.index = 0
-        self.fini = False
 
         if len(self.etapes) == 0:
             self.fini = True
         else:
-            self.etapes[0].start(robot, monde)
+            self.etapes[0].start()
     
-    def step(self, robot, monde, dt):
-        if self.fini:
-            return 0.0, 0.0
+    def step(self):
+        if self.stop():
+            self.trad.set_vitesse(0.0, 0.0)
         
         etape = self.etapes[self.index]
-        vg, vd = etape.step(robot, monde, dt)
+        etape.step()
 
-        if getattr(etape, "fini", False):
+        if etape.stop():
             self.index += 1
 
-            if self.index >= len(self.etapes):
-                self.fini = True
-                return 0.0, 0.0
+            if self.stop():
+                self.trad.set_vitesse(0.0, 0.0)
             
-            self.etapes[self.index].start(robot, monde)
+            self.etapes[self.index].start()
         
-        return vg, vd
+    def stop(self):
+        if self.fini:
+            return True
+        
+        if self.index >= len(self.etapes):
+            self.fini = True
+        
+        return self.fini
 
 
 class InterruptionCollision(AlgoBase):
@@ -43,33 +50,37 @@ class InterruptionCollision(AlgoBase):
     Si collision, lance une stratégie d'évitement et la garde jusqu'à ce qu'elle soit terminée
     """
 
-    def __init__(self, strategie_normale, strategie_collision):
+    def __init__(self, traducteur, strategie_normale, strategie_collision):
+        super().__init__(traducteur)
         self.normale = strategie_normale
         self.collision = strategie_collision
         self.mode = "normal"
 
-    def start(self, robot, monde):
+    def start(self):
+        super().start()
         self.mode = "normal"
-        self.normale.start(robot, monde)
+        self.normale.start()
 
-    def step(self, robot, monde, dt):
+    def step(self):
+        if self.stop():
+            self.trad.set_vitesse(0.0, 0.0)
+
         if self.mode == "normal":
-            if robot.en_collision:
+            if self.trad.est_en_collision():
                 self.mode = "collision"
-                self.collision.start(robot, monde)
-                return self.collision.step(robot, monde, dt)
+                self.collision.start()
+                self.collision.step()
 
-            return self.normale.step(robot, monde, dt)
+            self.normale.step()
 
         elif self.mode == "collision":
-            vg, vd = self.collision.step(robot, monde, dt)
-
-            if getattr(self.collision, "fini", False):
+            if self.collision.stop():
                 self.mode = "normal"
+                self.normale.start()
+                self.normale.step()
 
-            return vg, vd
+            self.collision.step()
 
-        return 0.0, 0.0
-
-    def stop(self, robot, monde):
-        return 0.0, 0.0
+    def stop(self):
+        if self.fini:
+            return True

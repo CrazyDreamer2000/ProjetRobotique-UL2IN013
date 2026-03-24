@@ -2,7 +2,7 @@
 
 class AlgoBase:
     """
-    Contrat minimal de toute stratégie / controleur
+    Classe de base pour toutes les stratégies / primitives
     """
     def __init__(self, traducteur):
         # Le traducteur est injecté à l'initialisation.
@@ -10,13 +10,20 @@ class AlgoBase:
         self.fini = False
 
     def start(self):
-        """Initialisation avant le premier step"""
+        """
+        Initialise ou réinitialise la stratégie
+        """
         self.fini = False
 
-    def step(self, dt: float):
-        """Retourne (vg, vd), vitesses de rotation des roues en rad/s"""
+    def step(self):
+        """
+        Exécute une étape de controle.
+        Cette méthode envoie directement les commandes au robot.
+        """
         pass
     
     def stop(self):
-        """Commande d'arrêt / nettoyage"""
-        self.trad.set_vitesse(0.0, 0.0)
+        """
+        Retourne True si la stratégie doit s'arrêter / est terminée, False sinon (?)
+        """
+        return self.fini
