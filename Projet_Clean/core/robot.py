@@ -36,6 +36,8 @@ class Robot:
         self.capteurs = Capteurs(accelerometre=0.0, capteur_distance=0.0)
 
         self.en_collision = False
+
+        self.vitesse_linaire_actuellement = 0
     
     def maj_capteurs(self, dt, monde, vitesse_actuelle):
         """Mettre à jour l'état du capteur du robot"""
@@ -52,7 +54,6 @@ class Robot:
         print(dist)  #pour tester
         self.capteurs.accelerometre = accel
         self.capteurs.capteur_distance = dist
-
 
     def definir_commande_roues(self, vitesse_rotation_gauche: float, vitesse_rotation_droite: float):
         self.commande = CommandeRoues(vitesse_rotation_gauche, vitesse_rotation_droite)
@@ -88,11 +89,12 @@ class Robot:
         )
         pos_suiv = self.modele_mouvement.avance_pos(self.pos, vitesse_avant, vitesse_rotation, dt)
         
-        self.en_collision = monde.collision_robot(pos_suiv)
+        self.en_collision = monde.collision(pos_suiv)
         if not self.en_collision:
             self.pos = pos_suiv
 
         # Normaliser l'orientation dans [-pi, +pi] 
-        self.pos.orientation = normaliser_angle(self.pos.orientation)
+        self.pos.orientation = normaliser_angle(self.pos.orientation
+                                                )
 
         self.vitesse_linaire_actuellement = vitesse_avant # utiliser le v pour calculer acceleration
