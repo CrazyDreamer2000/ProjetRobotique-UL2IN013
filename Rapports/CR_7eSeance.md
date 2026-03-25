@@ -1,7 +1,7 @@
 
 ---
 
-# Compte rendu n°7 – Séance UL2IN013  
+# Compte rendu n°7 – Séance UL2IN013  (18/03/2026)
 ## Projet de développement
 
 ## Fiche des changements à apporter pour la semaine prochaine
