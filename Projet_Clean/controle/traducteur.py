@@ -46,7 +46,7 @@ class TraducteurSimu(Traducteur):
         # Utilise le monde pour calculer de distance
         return self.monde.lire_distance_devant(self.robot.pos)
 
-    def get_position(self) -> Pos2D:
+    def get_position(self) -> Pos2D: #(x,y), (x,y)
         """
         Sortie:
             - robot.pos : Pos2D
@@ -66,3 +66,5 @@ class TraducteurReel(Traducteur):
     def __init__(self, robot: Robot, monde: Monde):
         self.robot = robot
         self.monde = monde
+    
+    

@@ -7,23 +7,24 @@ class AlgoBase:
     def __init__(self, traducteur):
         # Le traducteur est injecté à l'initialisation.
         self.trad = traducteur
-        self.fini = False
 
     def start(self):
         """
         Initialise ou réinitialise la stratégie
         """
-        self.fini = False
+        pass
 
     def step(self):
         """
         Exécute une étape de controle.
         Cette méthode envoie directement les commandes au robot.
         """
+        if self.stop():
+            self.trad.set_vitesse(0.0, 0.0)
         pass
     
     def stop(self):
         """
         Retourne True si la stratégie doit s'arrêter / est terminée, False sinon (?)
         """
-        return self.fini
+        pass

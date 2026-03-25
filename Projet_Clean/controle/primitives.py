@@ -15,30 +15,23 @@ class AvancerDistance(AlgoBase):
         self.y_depart = None
     
     def start(self):
-        super().start()
         pos = self.trad.get_position()
         self.x_depart = pos.x
         self.y_depart = pos.y
 
     def step(self):
-        if self.stop():
-            self.trad.set_vitesse(0.0, 0.0)
-
+        super().step()
         self.trad.set_vitesse(self.vitesse, self.vitesse)
     
     def stop(self):
-        if self.fini:
-            return True
-        
+
         pos = self.trad.get_position()
         dx = pos.x - self.x_depart
         dy = pos.y - self.y_depart
         distance = math.hypot(dx, dy)
 
-        if distance >= self.distance_m:
-            self.fini = True
-        
-        return self.fini
+        return distance >= self.distance_m
+
 
 class TournerAngle(AlgoBase):
     """
@@ -53,13 +46,11 @@ class TournerAngle(AlgoBase):
         self.orientation_depart = None
     
     def start(self):
-        super().start()
         pos = self.trad.get_position()
         self.orientation_depart = pos.orientation
 
     def step(self):
-        if self.stop():
-            self.trad.set_vitesse(0.0, 0.0)
+        super().step()
         
         pos = self.trad.get_position()
         angle_parcouru = normaliser_angle(pos.orientation - self.orientation_depart)
@@ -75,15 +66,10 @@ class TournerAngle(AlgoBase):
             self.trad.set_vitesse(v, -v)
     
     def stop(self):
-        if self.fini:
-            return True
-
         pos = self.trad.get_position()
         angle_parcouru = normaliser_angle(pos.orientation - self.orientation_depart)
-        if abs(angle_parcouru) >= self.angle_rad:
-            self.fini = True
-
-        return self.fini
+        
+        return abs(angle_parcouru) >= self.angle_rad
 
         
 class EviterCollision(AlgoBase):
@@ -100,7 +86,6 @@ class EviterCollision(AlgoBase):
         self.dt = dt
 
     def start(self):
-        super().start()
         self.timer = 0.0
         self.phase = "recule"
     
@@ -122,10 +107,4 @@ class EviterCollision(AlgoBase):
             self.trad.set_vitesse(-0.5*self.v, 0.5*self.v)
             
     def stop(self):
-        if self.fini:
-            return True
-
-        if self.phase == "tourne" and self.timer > 1:
-            self.fini = True
-        
-        return self.fini
+        return self.phase == "tourne" and self.timer > 1

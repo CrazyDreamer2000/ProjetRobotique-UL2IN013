@@ -15,8 +15,6 @@ class AlgoCarre(AlgoBase):
         self.strategie = None
 
     def start(self):
-        super().start()
-
         etapes = []
         for _ in range(4):
             etapes.append(AvancerDistance(self.trad, self.longueur_cote, self.vitesse))
@@ -26,13 +24,9 @@ class AlgoCarre(AlgoBase):
         self.strategie.start()
 
     def step(self):
-        if self.stop():
-            self.trad.set_vitesse(0.0, 0.0)
+        super().step()
 
         self.strategie.step()
     
     def stop(self):
-        if self.fini:
-            return True
-        self.fini = self.strategie.stop()
-        return self.fini
+        return self.strategie.stop()

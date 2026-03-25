@@ -65,3 +65,33 @@ Idées pour la prochaine fois (bonus)
     - traducteur parle au controlleur ( get distance, etc)
 
 Tout ca pour la semaine prochaine !
+
+
+----
+
+
+tout seul:
+a faire:
+- monde.step
+- super().step() termine la fonction quand appelée
+- 
+
+
+NOTES du 25/03:
+
+- alex: gitignore pour pas mettre cache
+- changer et simplifier main davantage (photo) + utiliser adaptateurs (pr simu / reel) (?)
+- sequence trop complique, bcp de code qui se repete
+- enlever self.fini, remplacer seulement par stop()
+- BCP a simplifier
+- dans primitive, calculs de angle et distance etc pas bien, pas a etre la. Seule chose utile 
+- maintenant: plus self.pos, mais distance parcourue depuis dernière fois. Pareil dans traducteur (se calcule differemment selon traducteur)
+- clock.tick -> time.sleep (python)
+- dt calcule temps entre appel de derniere fonction et maintenant , stocker dans variable de classe. Calculé LOCALEMENT
+- dt local (temps depuis dernier appel) là où il y en a besoin: robot, maj_capteur
+
+- strategie ne connaitra qu'un adapteteur, sias pas si robot ou simulé
+- savoir distance parcourue dans simu et reel est different
+- adaptateur fait pont
+
+- dans controlleur: parle au robot reel

@@ -14,7 +14,6 @@ class AlgoCarreSafe(AlgoBase):
         self.strategie = None
     
     def start(self):
-        super().start()
         carre = AlgoCarre(self.trad, self.vitesse)
         eviter = EviterCollision(self. trad, self.vitesse)
 
@@ -23,15 +22,8 @@ class AlgoCarreSafe(AlgoBase):
         self.strategie.start()
     
     def step(self):
-        if self.stop():
-            self.trad.set_vitesse(0.0, 0.0)
+        super().step()
         self.strategie.step()
     
     def stop(self):
-        if self.fini:
-            return True
-
-        if self.strategie.stop():
-            self.fini = True
-        
-        return self.fini
+        return self.strategie.stop()

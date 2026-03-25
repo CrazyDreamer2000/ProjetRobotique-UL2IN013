@@ -11,37 +11,23 @@ class Sequence(AlgoBase):
         self.dt = dt
 
     def start(self):
-        super().start()
         self.index = 0
 
-        if len(self.etapes) == 0:
-            self.fini = True
-        else:
+        if not self.stop():
             self.etapes[0].start()
     
     def step(self):
-        if self.stop():
-            self.trad.set_vitesse(0.0, 0.0)
-        
+
         etape = self.etapes[self.index]
         etape.step()
 
         if etape.stop():
             self.index += 1
-
-            if self.stop():
-                self.trad.set_vitesse(0.0, 0.0)
-            
-            self.etapes[self.index].start()
+            if not self.stop():            
+                self.etapes[self.index].start()
         
-    def stop(self):
-        if self.fini:
-            return True
-        
-        if self.index >= len(self.etapes):
-            self.fini = True
-        
-        return self.fini
+    def stop(self):        
+        return self.index >= len(self.etapes) or len(self.etapes) == 0
 
 
 class InterruptionCollision(AlgoBase):
@@ -57,13 +43,11 @@ class InterruptionCollision(AlgoBase):
         self.mode = "normal"
 
     def start(self):
-        super().start()
         self.mode = "normal"
         self.normale.start()
 
     def step(self):
-        if self.stop():
-            self.trad.set_vitesse(0.0, 0.0)
+        super().step()
 
         if self.mode == "normal":
             if self.trad.est_en_collision():
@@ -82,5 +66,4 @@ class InterruptionCollision(AlgoBase):
             self.collision.step()
 
     def stop(self):
-        if self.fini:
-            return True
+        return False
