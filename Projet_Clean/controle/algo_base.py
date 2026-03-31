@@ -21,7 +21,7 @@ class AlgoBase:
         """
         if self.stop():
             self.trad.set_vitesse_roues(0.0, 0.0)
-        pass
+            return
     
     def stop(self):
         """
