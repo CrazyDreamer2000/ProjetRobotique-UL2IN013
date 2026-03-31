@@ -17,8 +17,9 @@ class Adaptateur:
 
     def get_distance_delta(self)-> float:
         """Retourne la distance parcourue (m) depuis le dernier appel."""
-        pass
 
+        return 0.0
+    
     def get_angle_delta(self) -> float:
         """Retourne l'angle tourné (rad) depuis le dernier appel."""
         return 0.0
