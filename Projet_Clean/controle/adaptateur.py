@@ -31,4 +31,46 @@ class Adaptateur:
     def est_en_collision(self) -> bool:
         """Indique si le robot est actuellement en collision."""    
         return  False
+class AdaptateurSimu(Adaptateur):
+    """
+    Adaptateur spécifique pour la simulation.
+    Calcule les déplacements (deltas) à partir des coordonnées du monde.
+    """
+    def __init__(self, robot, monde):
+        super().__init__()
+        self.robot = robot
+        self.monde = monde
+
+        "memoriser les etat precedents pour calcul des deltas"
+        self.old_x = robot.pos.x
+        self.old_y = robot.pos.y
+        self.old_ori = robot.pos.orientation
+
+    def set_vitesse(self, v_gauche, v_droit):
+        self.robot.definir_commande_roues(v_gauche, v_droit)
+
+    def get_distance_delta(self) -> float:
+        dx = self.robot.pos.x - self.old_x
+        dy = self.robot.pos.y - self.old_y
+        delta = math.hypot(dx, dy)
+
+        #mise a jour les x et y
+        self.old_x = self.robot.pos.x
+        self.old_y = self.robot.pos.y
+        return delta
+    
+    def get_angle_delta(self) -> float:
+        #calculer le angle 
+        delta = normaliser_angle(self.robot.pos.orientation - self.old_ori)
+        self.old_ori = self.robot.pos.orientation
+        return delta
+    
+    def est_en_collision(self) -> bool:
+        return self.robot.en_collision
+
+    def reset(self):
+        
+        self.old_ori= self.robot.pos.orientation
+        self.old_x = self.robot.pos.x
+        self.old_y = self.robot.pso.y
     
