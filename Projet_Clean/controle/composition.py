@@ -13,21 +13,22 @@ class Sequence(AlgoBase):
     def start(self):
         self.index = 0
 
-        if not self.stop():
+        if len(self.etapes) > 0:
             self.etapes[0].start()
     
     def step(self):
+        if self.stop():
+            return
 
-        etape = self.etapes[self.index]
-        etape.step()
+        self.etapes[self.index].step()
 
-        if etape.stop():
+        if self.etapes[self.index].stop():
             self.index += 1
-            if not self.stop():            
+            if not self.stop():
                 self.etapes[self.index].start()
         
     def stop(self):        
-        return self.index >= len(self.etapes) or len(self.etapes) == 0
+        return self.index >= len(self.etapes)
 
 
 class InterruptionCollision(AlgoBase):

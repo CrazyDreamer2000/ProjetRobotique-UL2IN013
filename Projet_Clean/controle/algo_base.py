@@ -20,7 +20,7 @@ class AlgoBase:
         Cette méthode envoie directement les commandes au robot.
         """
         if self.stop():
-            self.trad.set_vitesse(0.0, 0.0)
+            self.trad.set_vitesse_roues(0.0, 0.0)
         pass
     
     def stop(self):

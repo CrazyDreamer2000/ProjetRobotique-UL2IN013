@@ -11,26 +11,16 @@ class AvancerDistance(AlgoBase):
         super().__init__(traducteur)
         self.distance_m = distance_m
         self.vitesse = vitesse_roues
-        self.x_depart = None
-        self.y_depart = None
     
     def start(self):
-        pos = self.trad.get_position()
-        self.x_depart = pos.x
-        self.y_depart = pos.y
+        self.trad.reset_distance_parcourue()
 
     def step(self):
         super().step()
-        self.trad.set_vitesse(self.vitesse, self.vitesse)
+        self.trad.set_vitesse_roues(self.vitesse, self.vitesse)
     
     def stop(self):
-
-        pos = self.trad.get_position()
-        dx = pos.x - self.x_depart
-        dy = pos.y - self.y_depart
-        distance = math.hypot(dx, dy)
-
-        return distance >= self.distance_m
+        return self.trad.get_distance_parcourue() >= self.distance_m
 
 
 class TournerAngle(AlgoBase):
@@ -43,33 +33,25 @@ class TournerAngle(AlgoBase):
         self.angle_rad = angle_rad
         self.vitesse = vitesse_roues
         self.sens = sens        
-        self.orientation_depart = None
     
     def start(self):
-        pos = self.trad.get_position()
-        self.orientation_depart = pos.orientation
+        self.trad.reset_angle_parcouru()
 
     def step(self):
         super().step()
         
-        pos = self.trad.get_position()
-        angle_parcouru = normaliser_angle(pos.orientation - self.orientation_depart)
-        
         # ralentissement simple à l'accroche
-        angle_restant = self.angle_rad - abs(angle_parcouru)
+        angle_restant = self.angle_rad - abs(self.trad.get_angle_parcouru())
         v = self.vitesse * (angle_restant / self.angle_rad)
         v = max(v, 0.5)
 
         if self.sens == "gauche":
-            self.trad.set_vitesse(-v, v)
+            self.trad.set_vitesse_roues(-v, v)
         else:
-            self.trad.set_vitesse(v, -v)
+            self.trad.set_vitesse_roues(v, -v)
     
     def stop(self):
-        pos = self.trad.get_position()
-        angle_parcouru = normaliser_angle(pos.orientation - self.orientation_depart)
-        
-        return abs(angle_parcouru) >= self.angle_rad
+        return abs(self.trad.get_angle_parcouru()) >= self.angle_rad
 
         
 class EviterCollision(AlgoBase):
@@ -91,7 +73,7 @@ class EviterCollision(AlgoBase):
     
     def step(self):
         if self.stop():
-            self.trad.set_vitesse(0.0, 0.0)
+            self.trad.set_vitesse_roues(0.0, 0.0)
 
         self.timer += self.dt
 
@@ -99,12 +81,12 @@ class EviterCollision(AlgoBase):
             if self.timer > 1:
                 self.phase = "tourne"
                 self.timer = 0.0
-            self.trad.set_vitesse(-self.v, -self.v)
+            self.trad.set_vitesse_roues(-self.v, -self.v)
         
         elif self.phase == "tourne":
             if self.stop():
-                self.trad.set_vitesse(0.0, 0.0)
-            self.trad.set_vitesse(-0.5*self.v, 0.5*self.v)
+                self.trad.set_vitesse_roues(0.0, 0.0)
+            self.trad.set_vitesse_roues(-0.5*self.v, 0.5*self.v)
             
     def stop(self):
         return self.phase == "tourne" and self.timer > 1

@@ -1,21 +1,34 @@
 # controle/traducteur.py
 
-from core.types import Pos2D
+from abc import ABC, abstractmethod # Pour les classes abstraites
 from core.robot import Robot
 from monde.monde import Monde
+from core.geom import normaliser_angle
 
-class Traducteur:
+class Traducteur(ABC):
     """
-    Classe abstraite définissant l'interface entre l'algorithme et le robot.
+    Classe abstraite définissant l'interface entre le controlleur et le robot
     """
-    def set_vitesse(self, v_gauche: float, v_droite: float):
+    def set_vitesse_roues(self, v_gauche: float, v_droite: float):
         pass
 
-    def get_distance(self) -> float:
-        return 0.0
+    def get_distance_devant(self) -> float:
+        pass
 
-    def get_position(self) -> Pos2D:
-        return None
+    def reset_distance_parcourue(self):
+        pass
+
+    def get_distance_parcourue(self) -> float:
+        pass
+
+    def reset_angle_parcouru(self):
+        pass
+
+    def get_angle_parcouru(self) -> float:
+        pass
+
+    def est_en_collision(self) -> bool:
+        pass
 
 class TraducteurSimu(Traducteur):
     """
@@ -26,7 +39,14 @@ class TraducteurSimu(Traducteur):
         self.robot = robot
         self.monde = monde
 
-    def set_vitesse(self, v_gauche: float, v_droite: float):
+        # Références de départ pour les mesures relatives
+        self._distance_depart_gauche = 0.0
+        self._distance_depart_droite = 0.0
+        self._orientation_depart = robot.pos.orientation
+
+    # COMMANDES
+
+    def set_vitesse_roues(self, v_gauche: float, v_droite: float):
         """
         Paramètres:
             - v_gauche : float
@@ -37,7 +57,32 @@ class TraducteurSimu(Traducteur):
         # Envoie directement les commandes au robot simulé
         self.robot.definir_commande_roues(v_gauche, v_droite)
 
-    def get_distance(self) -> float:
+    # DISTANCE PARCOURUE
+
+    def reset_distance_parcourue(self):
+        self._distance_depart_gauche = self.robot.roues.rotation_totale_gauche
+        self._distance_depart_droite = self.robot.roues.rotation_totale_droite
+
+    def get_distance_parcourue(self) -> float:
+        rayon = self.robot.modele_mouvement.rayon_roue
+
+        delta_gauche = self.robot.roues.rotation_totale_gauche - self._distance_depart_gauche
+        delta_droite = self.robot.roues.rotation_totale_droite - self._distance_depart_droite
+
+        distance_gauche = delta_gauche * rayon
+        distance_droite = delta_droite * rayon
+
+        return (distance_gauche + distance_droite) / 2
+
+    def reset_angle_parcouru(self):
+        self._orientation_depart = self.robot.pos.orientation
+
+    def get_angle_parcouru(self) -> float:
+        return normaliser_angle(self.robot.pos.orientation - self._orientation_depart)
+
+    # CAPTEURS / ETAT
+
+    def get_distance_devant(self) -> float:
         """
         Sortie:
             - monde.lire_distance_devant(robot.pos) : float
@@ -45,26 +90,9 @@ class TraducteurSimu(Traducteur):
         """
         # Utilise le monde pour calculer de distance
         return self.monde.lire_distance_devant(self.robot.pos)
-
-    def get_position(self) -> Pos2D: #(x,y), (x,y)
-        """
-        Sortie:
-            - robot.pos : Pos2D
-              Position du robot sous forme de la classe Pos2D
-        """
-        # Retourne la position réelle du robot dans la simulation
-        return self.robot.pos
     
     def est_en_collision(self) -> bool:
         """
         Renvoie True si le robot simulé est en collision, False sinon
         """
-        return self.robot.en_collision
-    
-class TraducteurReel(Traducteur):
-    """pour le robot reel""" 
-    def __init__(self, robot: Robot, monde: Monde):
-        self.robot = robot
-        self.monde = monde
-    
-    
+        return self.monde.collision(self.robot.pos)

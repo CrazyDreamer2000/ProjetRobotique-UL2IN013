@@ -15,7 +15,7 @@ class AlgoCarreSafe(AlgoBase):
     
     def start(self):
         carre = AlgoCarre(self.trad, self.vitesse)
-        eviter = EviterCollision(self. trad, self.vitesse)
+        eviter = EviterCollision(self.trad, self.vitesse)
 
         self.strategie = InterruptionCollision(self.trad, carre, eviter)
 
