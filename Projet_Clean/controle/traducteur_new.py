@@ -1,8 +1,10 @@
+from core.types import Pos2D
+from core.robot import Robot
+from monde.monde import Monde
 import math
-import time
 from core.geom import normaliser_angle
 
-class Adaptateur:
+class Traducteur:
     """
     Interface servant de pont entre les algorithmes de contrôle 
     et le robot (qu'il soit simulé ou réel).
@@ -32,7 +34,10 @@ class Adaptateur:
     def est_en_collision(self) -> bool:
         """Indique si le robot est actuellement en collision."""    
         return  False
-class AdaptateurSimu(Adaptateur):
+    
+    def get_distance(self) -> float:
+        return 0.0
+class TraducteurSimu(Traducteur):
     """
     Adaptateur spécifique pour la simulation.
     Calcule les déplacements (deltas) à partir des coordonnées du monde.
