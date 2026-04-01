@@ -7,6 +7,7 @@ from controle import ALGOS
 from controle.traducteur import TraducteurSimu
 from core.robot import Robot
 from monde.monde import Obstacle, Monde
+import time
 
 # RLock = verrou partage entre le thread principal et l'affichage.
 from threading import RLock
@@ -54,26 +55,22 @@ lock = RLock() # Verrou partage entre simulation (main) et rendu (thread afficha
 vue = Affichage(robot, monde, lock) # On cree l'affichage en lui donnant robot/monde/lock.
 vue.start() # Demarre le thread d'affichage en parallele du main.
 
-clock = pygame.time.Clock()
-
 running = True # Flag principal pour continuer/arreter la simulation.
 
 etait_en_collision = False # Variable pour gerer les colisions ).
 
 # Boucle principale de simulation.
 while running:    
-
-    dt = clock.tick(60) / 1000.0
-
+    
     if not vue.running:     # Si l'utilisateur ferme la fenetre dans le thread affichage, on stoppe ici aussi.
         running = False
 
     # on protege l'acces aux donnees partagees.
     with lock:
         algo.step()
-        robot.step(dt, monde)  # On avance la physique du robot de dt secondes.
-        robot.maj_capteurs(dt, monde, robot.vitesse_linaire_actuellement) # On met a jour les capteurs pour le cycle suivant.
-
+        robot.step(monde)  # On avance la physique du robot de dt secondes.
+        robot.maj_capteurs(monde, robot.vitesse_linaire_actuellement) # On met a jour les capteurs pour le cycle suivant.
+        time.sleep(1/60)
 
 # Fin de boucle: on demande au thread d'affichage de s'arreter.
 vue.running = False
