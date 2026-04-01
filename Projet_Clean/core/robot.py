@@ -2,6 +2,7 @@ import math
 from .types import Pos2D, CommandeRoues, EtatRoues, Capteurs
 from .cinematique import CinematiqueDeuxRoues
 from .geom import normaliser_angle
+import time
 
 
 ORIENTATIONS = {
@@ -38,11 +39,27 @@ class Robot:
         self.en_collision = False
 
         self.vitesse_linaire_actuellement = 0
-    
+
+        self.last_step_time = None
+        self.last_capteurs_time = None
+
+        def calcul_dt(self, last_time):
+        now = time.perf_counter() #on lit l’heure actuelle
+
+        if last_time is None: #c’est le tout premier appel, on n’a pas encore d’ancienne heure
+            return 0.0, now
+        
+        dt = now - last_time #on calcule le temps écoulé depuis le dernier appel
+        return dt, now # le nouveau temps actuel now qui va remplacer last-time dans robot
+
+
     def maj_capteurs(self, dt, monde, vitesse_actuelle):
         """Mettre à jour l'état du capteur du robot"""
 
         "(a = Δv / Δt)"
+
+        # La mise à jour de dt et le temps écoulé depuis le dernier appel
+        dt, self.last_capteurs_time = self.calcul_dt(self.last_capteurs_time)
 
         accel = 0.0 # Initialiser l'accélération
         if dt > 0:
@@ -70,6 +87,9 @@ class Robot:
             dt: Temps écoulé en secondes
             monde: Instance de Monde pour vérifier les collisions
         """
+
+        # La mise à jour de dt et le temps écoulé depuis le dernier appel
+        dt, self.last_step_time = self.calcul_dt(self.last_step_time)
 
         if dt<0:
             return
