@@ -94,4 +94,19 @@ NOTES du 25/03:
 - savoir distance parcourue dans simu et reel est different
 - adaptateur fait pont
 
+  NOTES du 01/04:
+
+  - Virer les algos qui commencent par majuscule (rappel)
+- Remplacer dans primitives l'utilisation de traducteur_new
+- Comme sequence, faire strategie boucle, qui répète n fois stratégie (permet de faire carré,pentagone ou hexagone... )
+- Cas éviter à traiter (vague), 
+- Classe boucle(nom stratégie, nombre fois executé): 
+- si pas dépassé, alors répéter
+    - Plus besoin de classe pour carré (Plus général)
+
+-Stratégie conditionelle qui prend deux stratégies en paramètre, si fonction vraie renvoie stratégie 1 sinon stratégie 2
+
+-TME SOLO: LISTE EXERCICES:
+mettre dans readme exos fait, exos pas fait, comme ça correcteur sait ce qu'on a fait et pas fait (nous avantage)
+
 - dans controlleur: parle au robot reel
