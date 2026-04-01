@@ -53,7 +53,7 @@ class Robot:
         return dt, now # le nouveau temps actuel now qui va remplacer last-time dans robot
 
 
-    def maj_capteurs(self, dt, monde, vitesse_actuelle):
+    def maj_capteurs(self,monde, vitesse_actuelle):
         """Mettre à jour l'état du capteur du robot"""
 
         "(a = Δv / Δt)"
@@ -75,7 +75,7 @@ class Robot:
     def definir_commande_roues(self, vitesse_rotation_gauche: float, vitesse_rotation_droite: float):
         self.commande = CommandeRoues(vitesse_rotation_gauche, vitesse_rotation_droite)
 
-    def step(self, dt: float, monde):
+    def step(self, monde):
         """
         Avance la simulation de dt secondes
         - met à jour les roues
