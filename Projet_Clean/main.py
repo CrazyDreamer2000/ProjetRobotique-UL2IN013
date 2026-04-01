@@ -70,7 +70,8 @@ while running:
         algo.step()
         robot.step(monde)  # On avance la physique du robot de dt secondes.
         robot.maj_capteurs(monde, robot.vitesse_linaire_actuellement) # On met a jour les capteurs pour le cycle suivant.
-        time.sleep(1/60)
+    
+    time.sleep(1/60)
 
 # Fin de boucle: on demande au thread d'affichage de s'arreter.
 vue.running = False
