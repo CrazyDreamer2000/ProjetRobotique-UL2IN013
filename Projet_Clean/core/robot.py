@@ -44,13 +44,13 @@ class Robot:
         self.last_capteurs_time = None
 
         def calcul_dt(self, last_time):
-        now = time.perf_counter() #on lit l’heure actuelle
-
-        if last_time is None: #c’est le tout premier appel, on n’a pas encore d’ancienne heure
+          now = time.perf_counter() #on lit l’heure actuelle
+          
+          if last_time is None: #c’est le tout premier appel, on n’a pas encore d’ancienne heure
             return 0.0, now
-        
-        dt = now - last_time #on calcule le temps écoulé depuis le dernier appel
-        return dt, now # le nouveau temps actuel now qui va remplacer last-time dans robot
+            
+            dt = now - last_time #on calcule le temps écoulé depuis le dernier appel
+            return dt, now # le nouveau temps actuel now qui va remplacer last-time dans robot
 
 
     def maj_capteurs(self,monde, vitesse_actuelle):
