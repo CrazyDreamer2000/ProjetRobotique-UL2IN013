@@ -110,3 +110,22 @@ NOTES du 25/03:
 mettre dans readme exos fait, exos pas fait, comme ça correcteur sait ce qu'on a fait et pas fait (nous avantage)
 
 - dans controlleur: parle au robot reel
+
+
+NOTES du 01/04 : A FAIRE 
+
+•	Généralisation des stratégies répétitives :
+•	Implémenter la classe Boucle avec deux paramètres principaux : nom de la stratégie à appliquer et nombre de répétitions.
+•	Permettre l’exécution répétée d’une stratégie pour dessiner des formes géométriques (carré, pentagone, hexagone, etc.) sans classe dédiée par figure.
+•	La boucle continue tant que le seuil de répétition n’est pas dépassé.
+•	Cette approche rend obsolète la création de classes spécifiques à chaque forme et simplifie la maintenance du code.
+•	Stratégies conditionnelles pour la gestion des collisions :
+•	Développer une stratégie conditionnelle prenant deux stratégies en paramètre.
+•	Selon le résultat d’une fonction (ex : test de collision), exécuter soit la stratégie 1, soit la stratégie 2.
+•	Permet une gestion fine des comportements selon les situations rencontrées.
+•	Dans la primitive Evitercollision, supprimer la vérification "si on est en collision ou pas"; cette vérification doit être gérée dans la stratégie conditionnelle.
+•	La primitive Evitercollision ne doit comporter que les comportements à appliquer en cas de collision.
+•	Suppression et remplacement d’éléments pour uniformisation :
+•	Supprimer tous les algorithmes dont le nom commence par une majuscule pour garantir uniformité et lisibilité du code.
+•	Remplacer dans les primitives l’utilisation de traducteur_new afin d’améliorer la cohérence et la maintenance.
+
