@@ -78,5 +78,5 @@ class TraducteurSimu(Traducteur):
         
         self.old_ori= self.robot.pos.orientation
         self.old_x = self.robot.pos.x
-        self.old_y = self.robot.pso.y
+        self.old_y = self.robot.pos.y
     
