@@ -1,7 +1,7 @@
 # SIMULATION
 
 import pygame
-import argparse
+from parser import parse_args
 import config as cfg
 from controle import ALGOS
 from controle.traducteur import TraducteurSimu
@@ -14,40 +14,17 @@ from threading import RLock
 # Classe du thread qui gere la fenetre et le rendu.
 from affichage.Affichage import Affichage # Ta nouvelle classe threadée
 
-parser = argparse.ArgumentParser()
-
-parser.add_argument(
-    "--algo",
-    type=str,
-    default="carresafe",
-    choices=["carre", "carresafe", "tourner", "eviter", "arret", "contact"],
-    help="Nom de l'algorithme (carre, carresafe, tourner, eviter, arret, contact)"
-)
-# Argument: vitesse des roues
-parser.add_argument(
-    "--vitesse_roues",
-    type=float,
-    default=7.0,
-    help="Vitesse des roues en rad/s"
-)
-parser.add_argument(
-    "--orientation",
-    type=str,
-    default="droite",
-    choices=["droite", "haut", "gauche", "bas"],
-    help="Orientation initiale du robot (gauche, droite, haut, bas)"
-)
-args = parser.parse_args()
-
+# Lit les arguments de la ligne de commande et renvoie un Namespace , un contenuer avec les valeurs lit
+parseArgs = parse_args()
 
 # Creation du robot au centre du monde.
-robot = Robot(cfg.RAYON_ROUE, cfg.ECARTEMENT_ROUES, args.orientation, cfg.LONGUEUR_MONDE / 2, cfg.LARGEUR_MONDE / 2)
+robot = Robot(cfg.RAYON_ROUE, cfg.ECARTEMENT_ROUES, parseArgs.orientation, cfg.LONGUEUR_MONDE / 2, cfg.LARGEUR_MONDE / 2)
 # Creation de l'environnement (obstacles, collisions)
 monde = Monde() 
 
 trad = TraducteurSimu(robot, monde)
 
-algo = ALGOS[args.algo](trad, 10, 0.5) # Algo choisi par defaut dans code actuel.
+algo = ALGOS[parseArgs.algo](trad, 10, 0.5) # Algo choisi par defaut dans code actuel.
 algo.start() # Init de l'algo avant la boucle principale.
 
 lock = RLock() # Verrou partage entre simulation (main) et rendu (thread affichage).
@@ -56,8 +33,6 @@ vue = Affichage(robot, monde, lock) # On cree l'affichage en lui donnant robot/m
 vue.start() # Demarre le thread d'affichage en parallele du main.
 
 running = True # Flag principal pour continuer/arreter la simulation.
-
-etait_en_collision = False # Variable pour gerer les colisions ).
 
 # Boucle principale de simulation.
 while running:    
