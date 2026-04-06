@@ -8,7 +8,7 @@ def build_parser() -> argparse.ArgumentParser:
     """
     parser = argparse.ArgumentParser()
 
-    parser.add_argument( "Sur cet objet, on ajoute les arguments avec add_argument"
+    parser.add_argument( 
         "--algo",
         type=str,
         default="carresafe",
