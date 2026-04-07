@@ -68,11 +68,12 @@ class Robot:
 
         self.dist_obstacle = monde.lire_distance_devant(self.pos)
         dist = self.dist_obstacle
-        print(dist)  #pour tester
+        #print(dist)  #pour tester
         self.capteurs.accelerometre = accel
         self.capteurs.capteur_distance = dist
 
     def definir_commande_roues(self, vitesse_rotation_gauche: float, vitesse_rotation_droite: float):
+        #print('vitesse envoyée: ',vitesse_rotation_gauche, vitesse_rotation_droite)
         self.commande = CommandeRoues(vitesse_rotation_gauche, vitesse_rotation_droite)
 
     def step(self, monde):
@@ -118,6 +119,3 @@ class Robot:
                                                 )
 
         self.vitesse_linaire_actuellement = vitesse_avant # utiliser le v pour calculer acceleration
-
-
-        print(self.en_collision)

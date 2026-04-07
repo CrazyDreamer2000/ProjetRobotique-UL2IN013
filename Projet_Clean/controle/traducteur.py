@@ -95,4 +95,4 @@ class TraducteurSimu(Traducteur):
         """
         Renvoie True si le robot simulé est en collision, False sinon
         """
-        return self.monde.collision(self.robot.pos)
+        return self.robot.en_collision

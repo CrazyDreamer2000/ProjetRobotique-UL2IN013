@@ -1,7 +1,7 @@
 import math
 from controle.algo_base import AlgoBase
 from controle.primitives import AvancerDistance, TournerAngle
-from controle.composition import Sequence
+from controle.composition import Sequence, Boucle
 
 
 class AlgoCarre(AlgoBase):
@@ -15,17 +15,17 @@ class AlgoCarre(AlgoBase):
         self.strategie = None
 
     def start(self):
-        etapes = []
-        for _ in range(4):
-            etapes.append(AvancerDistance(self.trad, self.longueur_cote, self.vitesse))
-            etapes.append(TournerAngle(self.trad, math.pi / 2, self.vitesse, sens="gauche"))
 
-        self.strategie = Sequence(self.trad, etapes)
+        etapes = [
+                    AvancerDistance(self.trad, self.longueur_cote, self.vitesse),
+                    TournerAngle(self.trad, math.pi / 2, self.vitesse, sens="gauche")
+                 ]
+        
+        self.strategie = Boucle(self.trad, Sequence(self.trad, etapes), 4)
         self.strategie.start()
 
     def step(self):
         super().step()
-
         self.strategie.step()
     
     def stop(self):

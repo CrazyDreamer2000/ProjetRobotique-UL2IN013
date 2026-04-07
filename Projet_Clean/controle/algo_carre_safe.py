@@ -1,7 +1,7 @@
 from controle.algo_base import AlgoBase
 from controle.algo_carre import AlgoCarre
 from controle.primitives import EviterCollision
-from controle.composition import InterruptionCollision
+from controle.composition import Condition
 
 
 class AlgoCarreSafe(AlgoBase):
@@ -14,11 +14,12 @@ class AlgoCarreSafe(AlgoBase):
         self.strategie = None
     
     def start(self):
-        carre = AlgoCarre(self.trad, self.vitesse)
-        eviter = EviterCollision(self.trad, self.vitesse)
 
-        self.strategie = InterruptionCollision(self.trad, carre, eviter)
-
+        self.strategie = Condition(self.trad,
+                                   condition = lambda t: t.est_en_collision(),
+                                   si_vrai = EviterCollision(self.trad, self.vitesse),
+                                   si_faux = AlgoCarre(self.trad, self.vitesse))
+        #self.strategie = InterruptionCollision(self.trad, AlgoCarre(self.trad, self.vitesse), EviterCollision(self.trad, self.vitesse))
         self.strategie.start()
     
     def step(self):
