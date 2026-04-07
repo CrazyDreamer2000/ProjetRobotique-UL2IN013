@@ -7,10 +7,10 @@ class AvancerDistance(AlgoBase):
     """
     Avance en ligne droite jusqu'à avoir parcouru une distance donnée
     """
-    def __init__(self, traducteur, distance_m, vitesse_roues):
+    def __init__(self, traducteur, vitesse_roues, distance_m):
         super().__init__(traducteur)
-        self.distance_m = distance_m
         self.vitesse = vitesse_roues
+        self.distance_m = distance_m
     
     def start(self):
         self.trad.reset_distance_parcourue()
@@ -21,6 +21,26 @@ class AvancerDistance(AlgoBase):
     
     def stop(self):
         return self.trad.get_distance_parcourue() >= self.distance_m
+    
+
+class ReculerDistance(AlgoBase):
+    """
+    Recule en ligne droite jusqu'à avoir parcouru une distance donnée
+    """
+    def __init__(self, traducteur, vitesse_roues, distance_m):
+        super().__init__(traducteur)
+        self.vitesse = vitesse_roues
+        self.distance_m = distance_m
+    
+    def start(self):
+        self.trad.reset_distance_parcourue()
+
+    def step(self):
+        super().step()
+        self.trad.set_vitesse_roues(-self.vitesse, -self.vitesse)
+    
+    def stop(self):
+        return self.trad.get_distance_parcourue() >= self.distance_m
 
 
 class TournerAngle(AlgoBase):
@@ -28,10 +48,10 @@ class TournerAngle(AlgoBase):
     Tourne sur place jusqu'à atteindre un angle relatif.
     sens = "gauche" ou "droite"
     """
-    def __init__(self, traducteur, angle_rad, vitesse_roues, sens="gauche"):
+    def __init__(self, traducteur, vitesse_roues, angle_rad, sens="gauche"):
         super().__init__(traducteur)
-        self.angle_rad = angle_rad
         self.vitesse = vitesse_roues
+        self.angle_rad = angle_rad
         self.sens = sens        
     
     def start(self):

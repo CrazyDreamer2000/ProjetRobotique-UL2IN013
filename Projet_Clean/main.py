@@ -9,6 +9,9 @@ from core.robot import Robot
 from monde.monde import Obstacle, Monde
 import time
 
+# test
+from controle.algo_polygone_safe import AlgoPolygoneSafe
+
 # RLock = verrou partage entre le thread principal et l'affichage.
 from threading import RLock
 # Classe du thread qui gere la fenetre et le rendu.
@@ -24,7 +27,8 @@ monde = Monde()
 
 trad = TraducteurSimu(robot, monde)
 
-algo = ALGOS[parseArgs.algo](trad, 10, 0.5) # Algo choisi par defaut dans code actuel.
+#algo = ALGOS[parseArgs.algo](trad, 10, 0.5) # Algo choisi par defaut dans code actuel.
+algo = AlgoPolygoneSafe(trad, 10, 6)
 algo.start() # Init de l'algo avant la boucle principale.
 
 lock = RLock() # Verrou partage entre simulation (main) et rendu (thread affichage).

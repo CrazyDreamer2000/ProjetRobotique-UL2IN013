@@ -17,8 +17,8 @@ class AlgoCarre(AlgoBase):
     def start(self):
 
         etapes = [
-                    AvancerDistance(self.trad, self.longueur_cote, self.vitesse),
-                    TournerAngle(self.trad, math.pi / 2, self.vitesse, sens="gauche")
+                    AvancerDistance(self.trad, self.vitesse, self.longueur_cote),
+                    TournerAngle(self.trad, self.vitesse, math.pi / 2)
                  ]
         
         self.strategie = Boucle(self.trad, Sequence(self.trad, etapes), 4)
