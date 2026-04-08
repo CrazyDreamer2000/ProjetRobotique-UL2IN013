@@ -1,8 +1,5 @@
 import math
 from .types import Pos2D, Roue, Capteurs
-from .cinematique import CinematiqueDeuxRoues
-from .geom import normaliser_angle
-import time
 
 class Robot:
     """Le "core" du robot"""
@@ -24,15 +21,3 @@ class Robot:
         self.en_collision = False
 
         self.vitesse_linaire_actuellement = 0
-
-        self.last_step_time = None
-        self.last_capteurs_time = None
-
-    def calcul_dt(self, last_time):
-        now = time.perf_counter() #on lit l’heure actuelle
-        
-        if last_time is None: #c’est le tout premier appel, on n’a pas encore d’ancienne heure
-            return 0.0, now
-        
-        dt = now - last_time #on calcule le temps écoulé depuis le dernier appel
-        return dt, now # le nouveau temps actuel now qui va remplacer last-time dans robot

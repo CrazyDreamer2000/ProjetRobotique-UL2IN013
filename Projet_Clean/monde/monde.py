@@ -162,9 +162,10 @@ class Monde:
         return dt, now # le nouveau temps actuel now qui va remplacer last-time dans robot
 
     def maj_capteurs(self, vitesse_actuelle):
-        """Mettre à jour l'état du capteur du robot"""
-
-        "(a = Δv / Δt)"
+        """
+        Mettre à jour l'état du capteur du robot
+        (a = Δv / Δt)
+        """
 
         # La mise à jour de dt et le temps écoulé depuis le dernier appel
         dt, self.last_capteurs_time = self.calcul_dt(self.last_capteurs_time)
@@ -202,10 +203,7 @@ class Monde:
         self.robot.roue_droite.rotation_totale += self.robot.roue_droite.vitesse_rotation * dt
 
         # Calcul de la nouvelle position possible
-        vitesse_avant, vitesse_rotation = self.cinematique.vitesses_robot_depuis_roues(
-            self.robot.roue_gauche.vitesse_rotation,
-            self.robot.roue_droite.vitesse_rotation
-        )
+        vitesse_avant, vitesse_rotation = self.cinematique.vitesses_robot_depuis_roues(self.robot.roue_gauche.vitesse_rotation, self.robot.roue_droite.vitesse_rotation)
         pos_suiv = self.cinematique.avance_pos(self.robot.pos, vitesse_avant, vitesse_rotation, dt)
         
         self.robot.en_collision = self.collision(pos_suiv)
@@ -213,7 +211,6 @@ class Monde:
             self.robot.pos = pos_suiv
 
         # Normaliser l'orientation dans [-pi, +pi] 
-        self.robot.pos.orientation = normaliser_angle(self.robot.pos.orientation
-                                                )
+        self.robot.pos.orientation = normaliser_angle(self.robot.pos.orientation)
 
         self.robot.vitesse_linaire_actuellement = vitesse_avant # utiliser le v pour calculer acceleration
