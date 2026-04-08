@@ -147,20 +147,6 @@ class Monde:
                 return d
         
         return portee_max  # Rien trouvé
-    
-    def arreter_avant_obstacle(self, pos_robot, distance_securite=0.3):
-        """
-        Vérifie si le robot doit s'arrêter avant un obstacle
-
-        """
-        distance_devant = self.lire_distance_devant(pos_robot, portee_max=2.0)
-        
-        # Arrêter si la distance jusqu'à l'obstacle est inférieure à la distance de sécurité
-        if distance_devant <= distance_securite:
-            return True
-        
-        return False
-
 
     
     def calcul_dt(self, last_time):
