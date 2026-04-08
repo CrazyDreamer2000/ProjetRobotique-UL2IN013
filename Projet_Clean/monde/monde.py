@@ -29,7 +29,10 @@ class Monde:
         # Modifiable depuis main.py (rectangle, triangle, cercle + taille).
         self.poly_robot_local = polygone_rectangle_local(cfg.ROBOT_LONGUEUR, cfg.ROBOT_LARGEUR)
         # Créer des obstacles aléatoires dès le départ
-        self.creer_obstacles_aleatoires()
+        self.ajouter_obstacle(450,300)
+        self.ajouter_obstacle(450,575)
+        self.ajouter_obstacle(450,50)
+       # self.creer_obstacles_aleatoires()
     
     def ajouter_obstacle(self, x, y, longueur=cfg.TAILLE_OBSTACLE, largeur=cfg.TAILLE_OBSTACLE):
         """
@@ -53,19 +56,17 @@ class Monde:
         # ici 5 zones (4 coins + 1 bord) 
         zones = [
             # (x_min, x_max, y_min, y_max, nom)
-            (0.5, 1.5, 0.5, 1.0, "Coin bas-gauche"),      # Zone 1
-            (3.0, 4.0, 0.5, 1.0, "Coin bas-droite"),      # Zone 2  
-            (0.5, 1.5, 2.0, 2.5, "Coin haut-gauche"),     # Zone 3
-            (3.0, 4.0, 2.0, 2.5, "Coin haut-droite"),     # Zone 4
-            (2.0, 2.5, 0.3, 0.7, "Bord bas-centre")       # Zone 5
+            (1.0, 1.0, 1.0, 1.0, "Coin milieu"),      # Zone 2  
+            (2.0, 2.0, 3.5, 4, "Coin haut-milieu"),     # Zone 4
+            (2.0, 3.0, 0.3, 1, "Bord bas-centre")       # Zone 5
         ]
         
         # un obstacle à la fois
         for i, (x_min, x_max, y_min, y_max, nom) in enumerate(zones):
             
             # Position aléatoire DANS la zone
-            x = random.uniform(x_min, x_max)
-            y = random.uniform(y_min, y_max)
+            x = (x_max)
+            y = (y_max)
             
             # Orientation aléatoire (0 à 360°)
             orientation = random.uniform(0, 2 * math.pi)
@@ -154,3 +155,11 @@ class Monde:
             return True
         
         return False
+
+"""
+    def question1point1(self):
+        self.ajouter_obstacle(2.0 * cfg.SCALE, 2.5 * cfg.SCALE, 0.3, 0.7) #Obstacle en bas au milieu
+        self.ajouter_obstacle(x * cfg.SCALE, 3 * cfg.SCALE, 0.3, 0.7) #Obstacle en haut au milieu
+        self.ajouter_obstacle(x * cfg.SCALE, y * cfg.SCALE, longueur, largeur)
+
+"""

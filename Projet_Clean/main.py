@@ -18,7 +18,7 @@ from affichage.Affichage import Affichage # Ta nouvelle classe threadée
 parseArgs = parse_args()
 
 # Creation du robot au centre du monde.
-robot = Robot(cfg.RAYON_ROUE, cfg.ECARTEMENT_ROUES, parseArgs.orientation, cfg.LONGUEUR_MONDE / 2, cfg.LARGEUR_MONDE / 2)
+robot = Robot(cfg.RAYON_ROUE, cfg.ECARTEMENT_ROUES, parseArgs.orientation, cfg.LONGUEUR_MONDE/12, cfg.LARGEUR_MONDE-0.2)
 # Creation de l'environnement (obstacles, collisions)
 monde = Monde() 
 

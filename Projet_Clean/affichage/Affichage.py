@@ -88,7 +88,7 @@ class Affichage(threading.Thread):
     def reset_affichage(self):
         """Reset visuel: robot au centre + nouveaux obstacles."""
         with self.lock:
-            self.robot.pos.x = cfg.LONGUEUR_MONDE / 2
+            self.robot.pos.x = cfg.LONGUEUR_MONDE/ 2
             self.robot.pos.y = cfg.LARGEUR_MONDE / 2
             self.robot.pos.orientation = 0.0
             self.robot.en_collision = False
