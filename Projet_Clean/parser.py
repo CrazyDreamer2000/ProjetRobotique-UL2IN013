@@ -15,6 +15,7 @@ def build_parser() -> argparse.ArgumentParser:
         choices=["carre", "carresafe, hexagone"],
         help="Nom de l'algorithme (carre, carresafe,hexagone)",
     )
+
     parser.add_argument(
         "--vitesse_roues",
         type=float,
