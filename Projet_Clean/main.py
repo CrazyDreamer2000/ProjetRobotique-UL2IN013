@@ -17,7 +17,7 @@ from affichage.Affichage import Affichage # Ta nouvelle classe threadee
 # Lit les arguments de la ligne de commande et renvoie un Namespace , un contenuer avec les valeurs lit
 parseArgs = parse_args()
 
-# Creation du robot au centre du monde.
+# Creation robots
 robotdroite = Robot(cfg.RAYON_ROUE, cfg.ECARTEMENT_ROUES, parseArgs.orientation, (cfg.LONGUEUR_MONDE / 2)+1, cfg.LARGEUR_MONDE / 2)
 robotgauche = Robot(cfg.RAYON_ROUE, cfg.ECARTEMENT_ROUES, parseArgs.orientation, (cfg.LONGUEUR_MONDE / 2)-1, cfg.LARGEUR_MONDE / 2)
 
