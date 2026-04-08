@@ -9,9 +9,10 @@ import time
 class Affichage(threading.Thread):
     # Ici on prepare notre thread d'affichage.
     # En gros: on recupere le robot, le monde et le lock pour pouvoir dessiner ce qu'il se passe sans se battre avec le thread principal.
-    def __init__(self, robot, monde, lock):
+    def __init__(self, robot1, robot2, monde, lock):
         super().__init__()
-        self.robot = robot
+        self.robot1 = robot1
+        self.robot2 = robot2
         self.monde = monde
         self.running = True
         self.fps = 60
