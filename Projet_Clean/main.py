@@ -12,20 +12,26 @@ import time
 # RLock = verrou partage entre le thread principal et l'affichage.
 from threading import RLock
 # Classe du thread qui gere la fenetre et le rendu.
-from affichage.Affichage import Affichage # Ta nouvelle classe threadée
+from affichage.Affichage import Affichage # Ta nouvelle classe threadee
 
 # Lit les arguments de la ligne de commande et renvoie un Namespace , un contenuer avec les valeurs lit
 parseArgs = parse_args()
 
 # Creation du robot au centre du monde.
-robot = Robot(cfg.RAYON_ROUE, cfg.ECARTEMENT_ROUES, parseArgs.orientation, cfg.LONGUEUR_MONDE / 2, cfg.LARGEUR_MONDE / 2)
+robotdroite = Robot(cfg.RAYON_ROUE, cfg.ECARTEMENT_ROUES, parseArgs.orientation, (cfg.LONGUEUR_MONDE / 2)+1, cfg.LARGEUR_MONDE / 2)
+robotgauche = Robot(cfg.RAYON_ROUE, cfg.ECARTEMENT_ROUES, parseArgs.orientation, (cfg.LONGUEUR_MONDE / 2)-1, cfg.LARGEUR_MONDE / 2)
+
 # Creation de l'environnement (obstacles, collisions)
 monde = Monde() 
 
-trad = TraducteurSimu(robot, monde)
+tradgauche = TraducteurSimu(robotgauche, monde)
+traddroite = TraducteurSimu(robotdroite, monde)
 
-algo = ALGOS[parseArgs.algo](trad, 10, 0.5) # Algo choisi par defaut dans code actuel.
-algo.start() # Init de l'algo avant la boucle principale.
+
+algogauche = ALGOS[parseArgs.algo](tradgauche, 10, 0.5) # Algo choisi par defaut dans code actuel.
+algodroite = ALGOS[parseArgs.algo](traddroite, 10, 0.5)
+algogauche.start() # Init de l'algo avant la boucle principale.
+algodroite.start()
 
 lock = RLock() # Verrou partage entre simulation (main) et rendu (thread affichage).
 
@@ -42,9 +48,12 @@ while running:
 
     # on protege l'acces aux donnees partagees.
     with lock:
-        algo.step()
-        robot.step(monde)  # On avance la physique du robot de dt secondes.
-        robot.maj_capteurs(monde, robot.vitesse_linaire_actuellement) # On met a jour les capteurs pour le cycle suivant.
+        algogauche.step()
+        algodroite.step()
+        robotgauche.step(monde)  # On avance la physique du robot de dt secondes.
+        robotdroite.step(monde)
+        robotgauche.maj_capteurs(monde, robot.vitesse_linaire_actuellement) # On met a jour les capteurs pour le cycle suivant.
+        robotdroite.maj_capteurs(monde, robot.vitesse_linaire_actuellement)
     
     time.sleep(1/60)
 
