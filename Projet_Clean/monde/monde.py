@@ -53,11 +53,11 @@ class Monde:
         # ici 5 zones (4 coins + 1 bord) 
         zones = [
             # (x_min, x_max, y_min, y_max, nom)
-            (0.5, 1.5, 0.5, 1.0, "Coin bas-gauche"),      # Zone 1
-            (3.0, 4.0, 0.5, 1.0, "Coin bas-droite"),      # Zone 2  
-            (0.5, 1.5, 2.0, 2.5, "Coin haut-gauche"),     # Zone 3
-            (3.0, 4.0, 2.0, 2.5, "Coin haut-droite"),     # Zone 4
-            (2.0, 2.5, 0.3, 0.7, "Bord bas-centre")       # Zone 5
+            #(0.5, 1.5, 0.5, 1.0, "Coin bas-gauche"),      # Zone 1
+            #(3.0, 4.0, 0.5, 1.0, "Coin bas-droite"),      # Zone 2  
+            (2.0, 2.5, 3.0, 4.0, "Coin haut-gauche"),     # Zone 3
+            (2.0, 2.5, 2.0, 2.5, "Coin haut-droite"),     # Zone 4
+            (2.0, 2.5, 0.5, 1.0, "Bord bas-centre")       # Zone 5
         ]
         
         # un obstacle à la fois
