@@ -4,7 +4,7 @@ from controle.primitives import AvancerDistance, TournerAngle
 from controle.composition import Sequence
 
 
-class AlgoCarre(AlgoBase):
+class AlgoHexa(AlgoBase):
     """
     Controleur hexagone construit à partir de primitives réutilisables
     """
