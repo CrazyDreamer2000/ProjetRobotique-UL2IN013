@@ -16,6 +16,7 @@ class AvancerDistance(AlgoBase):
         self.trad.reset_distance_parcourue()
 
     def step(self):
+        print('avancerdistance')
         super().step()
         self.trad.set_vitesse_roues(self.vitesse, self.vitesse)
     
@@ -36,6 +37,7 @@ class ReculerDistance(AlgoBase):
         self.trad.reset_distance_parcourue()
 
     def step(self):
+        print('reculerdistance')
         super().step()
         self.trad.set_vitesse_roues(-self.vitesse, -self.vitesse)
     
@@ -58,6 +60,7 @@ class TournerAngle(AlgoBase):
         self.trad.reset_angle_parcouru()
 
     def step(self):
+        print('tournerangle')
         super().step()
         
         # ralentissement simple à l'accroche

@@ -45,8 +45,10 @@ class Condition(AlgoBase):
     
     def start(self):
         self.si_faux.start()
+        self.si_vrai_en_cours = False
 
     def step(self):
+        print('condition')
         if self.stop():
             return
         
@@ -59,6 +61,7 @@ class Condition(AlgoBase):
         
         else:                       # SINON (si_vrai n'est pas en cours)
             if self.condition(self.trad): # Si la condition est vérifiée
+                print('condition vérifiée')
                 self.si_vrai_en_cours = True   # on indique qu'il est en cours
                 self.si_vrai.start()           # on le démarre
                 self.si_vrai.step()
@@ -80,6 +83,7 @@ class Boucle(AlgoBase):
         self.i = 0
 
     def step(self):
+        print('boucle i:',self.i)
         if self.stop():
             return
         if self.strategie.stop():

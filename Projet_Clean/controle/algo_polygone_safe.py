@@ -21,17 +21,17 @@ class AlgoPolygoneSafe(AlgoBase):
                               TournerAngle(self.trad, self.vitesse, math.pi/3) ]
                          )
         
-        carre = Boucle( self.trad,
+        polygone = Boucle( self.trad,
                         Sequence( self.trad,
                                   [ AvancerDistance(self.trad, self.vitesse, self.longueur_cote),
                                     TournerAngle(self.trad, self.vitesse, 2*math.pi/self.nb_cotes) ]  ),
                         self.nb_cotes
-                      )
+                         )
 
         self.strategie = Condition(self.trad,
                                    condition = lambda t: t.est_en_collision(),
                                    si_vrai = eviter,
-                                   si_faux = carre)
+                                   si_faux = polygone)
 
         self.strategie.start()
     

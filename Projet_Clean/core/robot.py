@@ -4,7 +4,6 @@ from .cinematique import CinematiqueDeuxRoues
 from .geom import normaliser_angle
 import time
 
-
 ORIENTATIONS = {
                 "droite" : 0,
                 "haut" : math.pi / 2,
@@ -52,7 +51,6 @@ class Robot:
         dt = now - last_time #on calcule le temps écoulé depuis le dernier appel
         return dt, now # le nouveau temps actuel now qui va remplacer last-time dans robot
 
-
     def maj_capteurs(self,monde, vitesse_actuelle):
         """Mettre à jour l'état du capteur du robot"""
 
@@ -73,49 +71,5 @@ class Robot:
         self.capteurs.capteur_distance = dist
 
     def definir_commande_roues(self, vitesse_rotation_gauche: float, vitesse_rotation_droite: float):
-        #print('vitesse envoyée: ',vitesse_rotation_gauche, vitesse_rotation_droite)
+        print('vitesse envoyée: ',vitesse_rotation_gauche, vitesse_rotation_droite)
         self.commande = CommandeRoues(vitesse_rotation_gauche, vitesse_rotation_droite)
-
-    def step(self, monde):
-        """
-        Avance la simulation de dt secondes
-        - met à jour les roues
-        - calcule le mouvement
-        - met à jour la pos (avec vérification des collisions)
-        - gère la reculade après collision
-        
-        Paramètres:
-            dt: Temps écoulé en secondes
-            monde: Instance de Monde pour vérifier les collisions
-        """
-
-        # La mise à jour de dt et le temps écoulé depuis le dernier appel
-        dt, self.last_step_time = self.calcul_dt(self.last_step_time)
-
-        if dt<0:
-            return
-
-        # Application de la commande
-        self.roues.vitesse_rotation_gauche = self.commande.vitesse_rotation_gauche
-        self.roues.vitesse_rotation_droite = self.commande.vitesse_rotation_droite
-
-        # Mise a jour de l'etat des roues
-        self.roues.rotation_totale_gauche += self.roues.vitesse_rotation_gauche * dt
-        self.roues.rotation_totale_droite += self.roues.vitesse_rotation_droite * dt
-
-        # Calcul de la nouvelle position possible
-        vitesse_avant, vitesse_rotation = self.modele_mouvement.vitesses_robot_depuis_roues(
-            self.roues.vitesse_rotation_gauche,
-            self.roues.vitesse_rotation_droite
-        )
-        pos_suiv = self.modele_mouvement.avance_pos(self.pos, vitesse_avant, vitesse_rotation, dt)
-        
-        self.en_collision = monde.collision(pos_suiv)
-        if not self.en_collision:
-            self.pos = pos_suiv
-
-        # Normaliser l'orientation dans [-pi, +pi] 
-        self.pos.orientation = normaliser_angle(self.pos.orientation
-                                                )
-
-        self.vitesse_linaire_actuellement = vitesse_avant # utiliser le v pour calculer acceleration

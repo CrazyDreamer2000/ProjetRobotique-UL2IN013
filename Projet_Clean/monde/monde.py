@@ -4,9 +4,10 @@ from dataclasses import dataclass
 import config as cfg
 import math
 import random  # Pour générer des positions aléatoires
-from core.geom import polygone_rectangle_local, transformer_polygone_local_vers_monde
+from core.geom import polygone_rectangle_local, transformer_polygone_local_vers_monde, normaliser_angle
 from core.types import Pos2D
 from .collisions import collision_sat, point_dans_polygone_convexe
+import time
 
 @dataclass
 class Obstacle:
@@ -22,8 +23,12 @@ class Monde:
     """
     Simulation de l'environnement réel du robot.
     """
-    def __init__(self):
+    def __init__(self, robot):
         self.liste_obstacles = []
+        
+        self.robot = robot
+        
+        self.last_step_time = None
 
         # Zone de collision du robot (forme invisible utilisée pour détecter les contacts)
         # Modifiable depuis main.py (rectangle, triangle, cercle + taille).
@@ -154,3 +159,56 @@ class Monde:
             return True
         
         return False
+
+
+    
+    def calcul_dt(self, last_time):
+        now = time.perf_counter() #on lit l’heure actuelle
+        
+        if last_time is None: #c’est le tout premier appel, on n’a pas encore d’ancienne heure
+            return 0.0, now
+        
+        dt = now - last_time #on calcule le temps écoulé depuis le dernier appel
+        return dt, now # le nouveau temps actuel now qui va remplacer last-time dans robot
+
+    def step(self):
+        """
+        Avance la simulation de dt secondes
+        - met à jour les roues
+        - calcule le mouvement
+        - met à jour la pos (avec vérification des collisions)
+        - gère la reculade après collision
+        """
+
+        # La mise à jour de dt et le temps écoulé depuis le dernier appel
+        dt, self.last_step_time = self.calcul_dt(self.last_step_time)
+
+        if dt<0:
+            return
+
+        # Application de la commande
+        self.robot.roues.vitesse_rotation_gauche = self.robot.commande.vitesse_rotation_gauche
+        self.robot.roues.vitesse_rotation_droite = self.robot.commande.vitesse_rotation_droite
+
+        # Mise a jour de l'etat des roues
+        self.robot.roues.rotation_totale_gauche += self.robot.roues.vitesse_rotation_gauche * dt
+        self.robot.roues.rotation_totale_droite += self.robot.roues.vitesse_rotation_droite * dt
+
+        # Calcul de la nouvelle position possible
+        vitesse_avant, vitesse_rotation = self.robot.modele_mouvement.vitesses_robot_depuis_roues(
+            self.robot.roues.vitesse_rotation_gauche,
+            self.robot.roues.vitesse_rotation_droite
+        )
+        pos_suiv = self.robot.modele_mouvement.avance_pos(self.robot.pos, vitesse_avant, vitesse_rotation, dt)
+        
+        print(self.robot.en_collision)
+        self.robot.en_collision = self.collision(pos_suiv)
+        print(self.robot.en_collision)
+        if not self.robot.en_collision:
+            self.robot.pos = pos_suiv
+
+        # Normaliser l'orientation dans [-pi, +pi] 
+        self.robot.pos.orientation = normaliser_angle(self.robot.pos.orientation
+                                                )
+
+        self.robot.vitesse_linaire_actuellement = vitesse_avant # utiliser le v pour calculer acceleration

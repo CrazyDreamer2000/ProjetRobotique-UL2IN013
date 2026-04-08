@@ -23,7 +23,7 @@ parseArgs = parse_args()
 # Creation du robot au centre du monde.
 robot = Robot(cfg.RAYON_ROUE, cfg.ECARTEMENT_ROUES, parseArgs.orientation, cfg.LONGUEUR_MONDE / 2, cfg.LARGEUR_MONDE / 2)
 # Creation de l'environnement (obstacles, collisions)
-monde = Monde() 
+monde = Monde(robot) 
 
 trad = TraducteurSimu(robot, monde)
 
@@ -47,7 +47,7 @@ while running:
     # on protege l'acces aux donnees partagees.
     with lock:
         algo.step()
-        robot.step(monde)  # On avance la physique du robot de dt secondes.
+        monde.step()  # On avance la physique du robot de dt secondes.
         robot.maj_capteurs(monde, robot.vitesse_linaire_actuellement) # On met a jour les capteurs pour le cycle suivant.
     
     time.sleep(1/60)
