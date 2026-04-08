@@ -9,9 +9,10 @@ import time
 class Affichage(threading.Thread):
     # Ici on prepare notre thread d'affichage.
     # En gros: on recupere le robot, le monde et le lock pour pouvoir dessiner ce qu'il se passe sans se battre avec le thread principal.
-    def __init__(self, robot, monde, lock):
+    def __init__(self, robot1,robot2, monde, lock):
         super().__init__()
-        self.robot = robot
+        self.robot1 = robot1
+        self.robot2 = robot2
         self.monde = monde
         self.running = True
         self.fps = 60
@@ -88,10 +89,14 @@ class Affichage(threading.Thread):
     def reset_affichage(self):
         """Reset visuel: robot au centre + nouveaux obstacles."""
         with self.lock:
-            self.robot.pos.x = cfg.LONGUEUR_MONDE/ 2
-            self.robot.pos.y = cfg.LARGEUR_MONDE / 2
-            self.robot.pos.orientation = 0.0
-            self.robot.en_collision = False
+            self.robot1.pos.x = cfg.LONGUEUR_MONDE/ 2
+            self.robot1.pos.y = cfg.LARGEUR_MONDE / 2
+            self.robot1.pos.orientation = 0.0
+            self.robot1.en_collision = False
+            self.robot2.pos.x = cfg.LONGUEUR_MONDE/ 2
+            self.robot2.pos.y = cfg.LARGEUR_MONDE / 2
+            self.robot2.pos.orientation = 0.0
+            self.robot2.en_collision = False
             self.monde.liste_obstacles.clear()
             self.monde.creer_obstacles_aleatoires()
 
@@ -106,20 +111,34 @@ class Affichage(threading.Thread):
             # Points du robot transformes en coordonnees ecran
         points_monde = [
             (x * cfg.SCALE, y * cfg.SCALE)
-            for x, y in transformer_polygone_local_vers_monde(self.monde.poly_robot_local, self.robot.pos)
+            for x, y in transformer_polygone_local_vers_monde(self.monde.poly_robot1_local, self.robot1.pos)
+            ]
+        points_monde2 = [
+            (x * cfg.SCALE, y * cfg.SCALE)
+            for x, y in transformer_polygone_local_vers_monde(self.monde.poly_robot2_local, self.robot2.pos)
             ]
 
             # Centre du robot + orientation actuelle
-        cx, cy = self.robot.pos.x * cfg.SCALE, self.robot.pos.y * cfg.SCALE
-        ori = self.robot.pos.orientation
+        cx, cy = self.robot1.pos.x * cfg.SCALE, self.robot1.pos.y * cfg.SCALE
+        ori = self.robot1.pos.orientation
+
+        cx2, cy2 = self.robot2.pos.x * cfg.SCALE, self.robot2.pos.y * cfg.SCALE
+        ori2 = self.robot2.pos.orientation
 
         # Corps du robot
         pygame.draw.polygon(self.screen, (80, 130, 200), points_monde)
+        pygame.draw.polygon(self.screen, (80, 200, 130), points_monde2)
 
         # Petite fleche rouge pour montrer la direction du robot
-        longueur = max(px for px, _ in self.monde.poly_robot_local) * cfg.SCALE
+        longueur = max(px for px, _ in self.monde.poly_robot1_local) * cfg.SCALE
+        longueur2 = max(px for px, _ in self.monde.poly_robot2_local) * cfg.SCALE
+
         cible = transformer_point_local_vers_monde(longueur, 0, cx, cy, ori)
+        cible2 = transformer_point_local_vers_monde(longueur2, 0, cx2, cy2, ori2)
+
         pygame.draw.line(self.screen, (255, 0, 0), (cx, cy), cible, 2)
+        pygame.draw.line(self.screen, (255, 0, 0), (cx2, cy2), cible2, 2)
+
 
     # Dessin des obstacles:
     def dessiner_obstacles(self):

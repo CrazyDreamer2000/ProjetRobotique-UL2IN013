@@ -27,7 +27,7 @@ class Monde:
 
         # Zone de collision du robot (forme invisible utilisée pour détecter les contacts)
         # Modifiable depuis main.py (rectangle, triangle, cercle + taille).
-        self.poly_robot_local = polygone_rectangle_local(cfg.ROBOT_LONGUEUR, cfg.ROBOT_LARGEUR)
+        self.poly_robot1_local = polygone_rectangle_local(cfg.ROBOT_LONGUEUR, cfg.ROBOT_LARGEUR)
         self.poly_robot2_local = polygone_rectangle_local(cfg.ROBOT_LONGUEUR, cfg.ROBOT_LARGEUR)
         # Créer des obstacles aléatoires dès le départ
         self.ajouter_obstacle(450,300)
@@ -90,20 +90,24 @@ class Monde:
         )
 
     def collision(self, pos_robot: Pos2D) -> bool:
-        # Polygone robot en monde
-        robot_poly = transformer_polygone_local_vers_monde(self.poly_robot_local, pos_robot)
-        robot2_poly = transformer_polygone_local_vers_monde(self.poly_robot_local, pos_robot)
-
+        
+        robot1_poly = transformer_polygone_local_vers_monde(self.poly_robot1_local, pos_robot)
+        robot2_poly = transformer_polygone_local_vers_monde(self.poly_robot2_local, pos_robot)
 
         # bordures: si un coin sort
-        for x, y in robot_poly:
+        for x, y in robot1_poly:
+            if self._point_hors_monde(x,y):
+                return True
+        for x, y in robot2_poly:
             if self._point_hors_monde(x,y):
                 return True
 
         # obstacles
         for obs in self.liste_obstacles:
             obs_poly = transformer_polygone_local_vers_monde(obs.poly_local, obs.pos)
-            if collision_sat(robot_poly, obs_poly):
+            if collision_sat(robot1_poly, obs_poly):
+                return True
+            if collision_sat(robot2_poly,obs_poly):
                 return True
 
         return False
