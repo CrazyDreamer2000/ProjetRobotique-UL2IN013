@@ -29,6 +29,7 @@ class Monde:
         self.robot = robot
         
         self.last_step_time = None
+        self.last_capteurs_time = None
 
         # Zone de collision du robot (forme invisible utilisée pour détecter les contacts)
         # Modifiable depuis main.py (rectangle, triangle, cercle + taille).
@@ -171,6 +172,25 @@ class Monde:
         dt = now - last_time #on calcule le temps écoulé depuis le dernier appel
         return dt, now # le nouveau temps actuel now qui va remplacer last-time dans robot
 
+    def maj_capteurs(self, vitesse_actuelle):
+        """Mettre à jour l'état du capteur du robot"""
+
+        "(a = Δv / Δt)"
+
+        # La mise à jour de dt et le temps écoulé depuis le dernier appel
+        dt, self.last_capteurs_time = self.calcul_dt(self.last_capteurs_time)
+
+        accel = 0.0 # Initialiser l'accélération
+        if dt > 0:
+           accel = (vitesse_actuelle - self.robot.vitesse_precedante) / dt
+        self.robot.vitesse_precedante = vitesse_actuelle
+
+        self.robot.dist_obstacle = self.lire_distance_devant(self.robot.pos)
+        dist = self.robot.dist_obstacle
+        #print(dist)  #pour tester
+        self.robot.capteurs.accelerometre = accel
+        self.robot.capteurs.capteur_distance = dist
+
     def step(self):
         """
         Avance la simulation de dt secondes
@@ -185,6 +205,8 @@ class Monde:
 
         if dt<0:
             return
+        
+        self.maj_capteurs(self.robot.vitesse_linaire_actuellement)
 
         # Application de la commande
         self.robot.roues.vitesse_rotation_gauche = self.robot.commande.vitesse_rotation_gauche
@@ -201,9 +223,7 @@ class Monde:
         )
         pos_suiv = self.robot.modele_mouvement.avance_pos(self.robot.pos, vitesse_avant, vitesse_rotation, dt)
         
-        print(self.robot.en_collision)
         self.robot.en_collision = self.collision(pos_suiv)
-        print(self.robot.en_collision)
         if not self.robot.en_collision:
             self.robot.pos = pos_suiv
 

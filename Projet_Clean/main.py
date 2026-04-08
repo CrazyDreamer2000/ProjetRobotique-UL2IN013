@@ -48,7 +48,7 @@ while running:
     with lock:
         algo.step()
         monde.step()  # On avance la physique du robot de dt secondes.
-        robot.maj_capteurs(monde, robot.vitesse_linaire_actuellement) # On met a jour les capteurs pour le cycle suivant.
+        #robot.maj_capteurs(monde, robot.vitesse_linaire_actuellement) # On met a jour les capteurs pour le cycle suivant.
     
     time.sleep(1/60)
 

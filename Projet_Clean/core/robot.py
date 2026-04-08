@@ -51,25 +51,7 @@ class Robot:
         dt = now - last_time #on calcule le temps écoulé depuis le dernier appel
         return dt, now # le nouveau temps actuel now qui va remplacer last-time dans robot
 
-    def maj_capteurs(self,monde, vitesse_actuelle):
-        """Mettre à jour l'état du capteur du robot"""
-
-        "(a = Δv / Δt)"
-
-        # La mise à jour de dt et le temps écoulé depuis le dernier appel
-        dt, self.last_capteurs_time = self.calcul_dt(self.last_capteurs_time)
-
-        accel = 0.0 # Initialiser l'accélération
-        if dt > 0:
-           accel = (vitesse_actuelle - self.vitesse_precedante) / dt
-        self.vitesse_precedante = vitesse_actuelle
-
-        self.dist_obstacle = monde.lire_distance_devant(self.pos)
-        dist = self.dist_obstacle
-        #print(dist)  #pour tester
-        self.capteurs.accelerometre = accel
-        self.capteurs.capteur_distance = dist
 
     def definir_commande_roues(self, vitesse_rotation_gauche: float, vitesse_rotation_droite: float):
-        print('vitesse envoyée: ',vitesse_rotation_gauche, vitesse_rotation_droite)
+        #print('vitesse envoyée: ',vitesse_rotation_gauche, vitesse_rotation_droite)
         self.commande = CommandeRoues(vitesse_rotation_gauche, vitesse_rotation_droite)
