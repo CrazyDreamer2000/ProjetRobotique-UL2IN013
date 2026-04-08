@@ -35,7 +35,7 @@ algodroite.start()
 
 lock = RLock() # Verrou partage entre simulation (main) et rendu (thread affichage).
 
-vue = Affichage(robot, monde, lock) # On cree l'affichage en lui donnant robot/monde/lock.
+vue = Affichage(robotgauche, robotdroite, monde, lock) # On cree l'affichage en lui donnant robot/monde/lock.
 vue.start() # Demarre le thread d'affichage en parallele du main.
 
 running = True # Flag principal pour continuer/arreter la simulation.
