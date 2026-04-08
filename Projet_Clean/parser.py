@@ -11,8 +11,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument( 
         "--algo",
         type=str,
-        default="carresafe",
-        choices=["carre", "carresafe"],
+        default="polygone",
+        choices=["carre", "carresafe", "polygone"],
         help="Nom de l'algorithme (carre, carresafe)",
     )
     parser.add_argument(
@@ -23,9 +23,8 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--orientation",
-        type=str,
-        default="droite",
-        choices=["droite", "haut", "gauche", "bas"],
+        type=float,
+        default=0.0,
         help="Orientation initiale du robot (gauche, droite, haut, bas)",
     )
 

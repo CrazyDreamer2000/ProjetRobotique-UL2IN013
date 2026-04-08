@@ -6,6 +6,7 @@ import math
 import random  # Pour générer des positions aléatoires
 from core.geom import polygone_rectangle_local, transformer_polygone_local_vers_monde, normaliser_angle
 from core.types import Pos2D
+from core.cinematique import CinematiqueDeuxRoues
 from .collisions import collision_sat, point_dans_polygone_convexe
 import time
 
@@ -27,6 +28,8 @@ class Monde:
         self.liste_obstacles = []
         
         self.robot = robot
+
+        self.cinematique = CinematiqueDeuxRoues(robot.rayon_roue_m, robot.ecartement_roues_m)
         
         self.last_step_time = None
         self.last_capteurs_time = None
@@ -203,11 +206,11 @@ class Monde:
         self.robot.roues.rotation_totale_droite += self.robot.roues.vitesse_rotation_droite * dt
 
         # Calcul de la nouvelle position possible
-        vitesse_avant, vitesse_rotation = self.robot.modele_mouvement.vitesses_robot_depuis_roues(
+        vitesse_avant, vitesse_rotation = self.cinematique.vitesses_robot_depuis_roues(
             self.robot.roues.vitesse_rotation_gauche,
             self.robot.roues.vitesse_rotation_droite
         )
-        pos_suiv = self.robot.modele_mouvement.avance_pos(self.robot.pos, vitesse_avant, vitesse_rotation, dt)
+        pos_suiv = self.cinematique.avance_pos(self.robot.pos, vitesse_avant, vitesse_rotation, dt)
         
         self.robot.en_collision = self.collision(pos_suiv)
         if not self.robot.en_collision:

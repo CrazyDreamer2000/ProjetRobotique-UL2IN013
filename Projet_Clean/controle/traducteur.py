@@ -64,7 +64,7 @@ class TraducteurSimu(Traducteur):
         self._distance_depart_droite = self.robot.roues.rotation_totale_droite
 
     def get_distance_parcourue(self) -> float:
-        rayon = self.robot.modele_mouvement.rayon_roue
+        rayon = self.monde.cinematique.rayon_roue
 
         delta_gauche = self.robot.roues.rotation_totale_gauche - self._distance_depart_gauche
         delta_droite = self.robot.roues.rotation_totale_droite - self._distance_depart_droite

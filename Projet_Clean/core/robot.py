@@ -4,22 +4,16 @@ from .cinematique import CinematiqueDeuxRoues
 from .geom import normaliser_angle
 import time
 
-ORIENTATIONS = {
-                "droite" : 0,
-                "haut" : math.pi / 2,
-                "gauche" : math.pi,
-                "bas" : -math.pi / 2
-             }
-
 class Robot:
     """Le "core" du robot"""
-    def __init__(self, rayon_roue_m: float, ecartement_roues_m: float, ori_initiale="droite", x=0.0, y=0.0):
+    def __init__(self, rayon_roue_m: float, ecartement_roues_m: float, ori_initiale=0, x=0.0, y=0.0):
         
         # Modèle qui traduit les vitesses des roues en déplacement du robot
-        self.modele_mouvement = CinematiqueDeuxRoues(rayon_roue_m, ecartement_roues_m)
+        self.rayon_roue_m = rayon_roue_m
+        self.ecartement_roues_m = ecartement_roues_m
 
         # Position & angle du robot (séparé du core)
-        self.pos = Pos2D(x, y, ORIENTATIONS[ori_initiale])
+        self.pos = Pos2D(x, y, ori_initiale)
 
         # Commandes envoyées aux roues
         self.commande = CommandeRoues(0.0, 0.0)
