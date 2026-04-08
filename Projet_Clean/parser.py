@@ -11,9 +11,9 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument( 
         "--algo",
         type=str,
-        default="carresafe",
-        choices=["carre", "carresafe"],
-        help="Nom de l'algorithme (carre, carresafe)",
+        default="hexagone",
+        choices=["carre", "carresafe, hexagone"],
+        help="Nom de l'algorithme (carre, carresafe,hexagone)",
     )
     parser.add_argument(
         "--vitesse_roues",

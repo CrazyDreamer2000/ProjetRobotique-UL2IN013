@@ -18,18 +18,26 @@ from affichage.Affichage import Affichage # Ta nouvelle classe threadée
 parseArgs = parse_args()
 
 # Creation du robot au centre du monde.
-robot = Robot(cfg.RAYON_ROUE, cfg.ECARTEMENT_ROUES, parseArgs.orientation, cfg.LONGUEUR_MONDE/12, cfg.LARGEUR_MONDE-0.2)
+robot = Robot(cfg.RAYON_ROUE, cfg.ECARTEMENT_ROUES, parseArgs.orientation, cfg.LONGUEUR_MONDE/10, cfg.LARGEUR_MONDE/2)
+#robot2 = Robot(cfg.RAYON_ROUE, cfg.ECARTEMENT_ROUES, parseArgs.orientation, cfg.LONGUEUR_MONDE/12 , cfg.LARGEUR_MONDE/2 )
+
 # Creation de l'environnement (obstacles, collisions)
 monde = Monde() 
 
 trad = TraducteurSimu(robot, monde)
+#trad2= TraducteurSimu(robot2,monde)
+#nb_cotes"
+algo = ALGOS[parseArgs.algo](trad,10,0.5) # Algo choisi par defaut dans code actuel.
+#algo2 = ALGOS[parseArgs.algo](trad2, 10, 0.5) # Algo choisi par defaut dans code actuel.
 
-algo = ALGOS[parseArgs.algo](trad, 10, 0.5) # Algo choisi par defaut dans code actuel.
 algo.start() # Init de l'algo avant la boucle principale.
+#algo2.start() 
 
 lock = RLock() # Verrou partage entre simulation (main) et rendu (thread affichage).
 
 vue = Affichage(robot, monde, lock) # On cree l'affichage en lui donnant robot/monde/lock.
+#vue = Affichage(robot2, monde, lock) # On cree l'affichage en lui donnant robot/monde/lock.
+
 vue.start() # Demarre le thread d'affichage en parallele du main.
 
 running = True # Flag principal pour continuer/arreter la simulation.
@@ -43,9 +51,12 @@ while running:
     # on protege l'acces aux donnees partagees.
     with lock:
         algo.step()
+        #algo2.step()
         robot.step(monde)  # On avance la physique du robot de dt secondes.
+        #robot2.step(monde)
         robot.maj_capteurs(monde, robot.vitesse_linaire_actuellement) # On met a jour les capteurs pour le cycle suivant.
-    
+        #robot2.maj_capteurs(monde, robot2.vitesse_linaire_actuellement) # On met a jour les capteurs pour le cycle suivant.
+
     time.sleep(1/60)
 
 # Fin de boucle: on demande au thread d'affichage de s'arreter.

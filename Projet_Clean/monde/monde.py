@@ -28,6 +28,7 @@ class Monde:
         # Zone de collision du robot (forme invisible utilisée pour détecter les contacts)
         # Modifiable depuis main.py (rectangle, triangle, cercle + taille).
         self.poly_robot_local = polygone_rectangle_local(cfg.ROBOT_LONGUEUR, cfg.ROBOT_LARGEUR)
+        self.poly_robot2_local = polygone_rectangle_local(cfg.ROBOT_LONGUEUR, cfg.ROBOT_LARGEUR)
         # Créer des obstacles aléatoires dès le départ
         self.ajouter_obstacle(450,300)
         self.ajouter_obstacle(450,575)
@@ -91,6 +92,8 @@ class Monde:
     def collision(self, pos_robot: Pos2D) -> bool:
         # Polygone robot en monde
         robot_poly = transformer_polygone_local_vers_monde(self.poly_robot_local, pos_robot)
+        robot2_poly = transformer_polygone_local_vers_monde(self.poly_robot_local, pos_robot)
+
 
         # bordures: si un coin sort
         for x, y in robot_poly:
