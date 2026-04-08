@@ -1,8 +1,8 @@
 import math
+import random
 from controle.algo_base import AlgoBase
 from controle.primitives import AvancerDistance, TournerAngle
 from controle.composition import Sequence
-
 
 class AlgoHexagone(AlgoBase):
     """
@@ -20,6 +20,12 @@ class AlgoHexagone(AlgoBase):
         for _ in range(6):
             etapes.append(AvancerDistance(self.trad, self.longueur_cote, self.vitesse))
             etapes.append(TournerAngle(self.trad, 2*math.pi / 6, self.vitesse, sens="gauche"))
+            """
+            color1= random.randrange(0,255)
+            color2= random.randrange(0,255) ET on dessine ça qui va donner (r,g,b) random à chaque iteration (pour chaque ligne)
+            color3= random.randrange(0,255)
+            """ 
+            
 
         self.strategie = Sequence(self.trad, etapes)
         self.strategie.start()
