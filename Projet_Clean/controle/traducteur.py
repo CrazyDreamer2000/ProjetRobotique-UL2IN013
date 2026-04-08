@@ -55,19 +55,20 @@ class TraducteurSimu(Traducteur):
               Vitesse de rotation de la roue droite (rad/s)
         """
         # Envoie directement les commandes au robot simulé
-        self.robot.definir_commande_roues(v_gauche, v_droite)
+        self.robot.roue_gauche.vitesse_rotation = v_gauche
+        self.robot.roue_droite.vitesse_rotation = v_droite
 
     # DISTANCE PARCOURUE
 
     def reset_distance_parcourue(self):
-        self._distance_depart_gauche = self.robot.roues.rotation_totale_gauche
-        self._distance_depart_droite = self.robot.roues.rotation_totale_droite
+        self._distance_depart_gauche = self.robot.roue_gauche.rotation_totale
+        self._distance_depart_droite = self.robot.roue_gauche.rotation_totale
 
     def get_distance_parcourue(self) -> float:
         rayon = self.monde.cinematique.rayon_roue
 
-        delta_gauche = self.robot.roues.rotation_totale_gauche - self._distance_depart_gauche
-        delta_droite = self.robot.roues.rotation_totale_droite - self._distance_depart_droite
+        delta_gauche = self.robot.roue_gauche.rotation_totale - self._distance_depart_gauche
+        delta_droite = self.robot.roue_gauche.rotation_totale - self._distance_depart_droite
 
         distance_gauche = delta_gauche * rayon
         distance_droite = delta_droite * rayon

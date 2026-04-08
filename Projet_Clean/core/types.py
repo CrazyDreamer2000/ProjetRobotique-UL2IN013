@@ -9,21 +9,12 @@ class Pos2D:
 
 
 @dataclass
-class CommandeRoues:
-    """Commandes envoyées aux roues"""
-    vitesse_rotation_gauche: float # rad/s
-    vitesse_rotation_droite: float # 
-
-
-@dataclass
-class EtatRoues:
+class Roue:
     """
-    Etat "réel" des roues
+    Etat d'une roue
     """
-    vitesse_rotation_gauche: float # rad/s
-    vitesse_rotation_droite: float #
-    rotation_totale_gauche: float # rad
-    rotation_totale_droite: float #
+    vitesse_rotation: float # rad/s
+    rotation_totale: float # rad
 
 
 @dataclass

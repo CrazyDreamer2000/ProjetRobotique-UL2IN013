@@ -197,18 +197,14 @@ class Monde:
         
         self.maj_capteurs(self.robot.vitesse_linaire_actuellement)
 
-        # Application de la commande
-        self.robot.roues.vitesse_rotation_gauche = self.robot.commande.vitesse_rotation_gauche
-        self.robot.roues.vitesse_rotation_droite = self.robot.commande.vitesse_rotation_droite
-
-        # Mise a jour de l'etat des roues
-        self.robot.roues.rotation_totale_gauche += self.robot.roues.vitesse_rotation_gauche * dt
-        self.robot.roues.rotation_totale_droite += self.robot.roues.vitesse_rotation_droite * dt
+        # Mise a jour de la rotation totale des roues
+        self.robot.roue_gauche.rotation_totale += self.robot.roue_gauche.vitesse_rotation * dt
+        self.robot.roue_droite.rotation_totale += self.robot.roue_droite.vitesse_rotation * dt
 
         # Calcul de la nouvelle position possible
         vitesse_avant, vitesse_rotation = self.cinematique.vitesses_robot_depuis_roues(
-            self.robot.roues.vitesse_rotation_gauche,
-            self.robot.roues.vitesse_rotation_droite
+            self.robot.roue_gauche.vitesse_rotation,
+            self.robot.roue_droite.vitesse_rotation
         )
         pos_suiv = self.cinematique.avance_pos(self.robot.pos, vitesse_avant, vitesse_rotation, dt)
         
