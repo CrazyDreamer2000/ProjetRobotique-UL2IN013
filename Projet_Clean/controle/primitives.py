@@ -40,7 +40,7 @@ class ReculerDistance(AlgoBase):
         self.trad.set_vitesse_roues(-self.vitesse, -self.vitesse)
     
     def stop(self):
-        return abs(self.trad.get_distance_parcourue()) >= self.distance_m
+        return self.trad.get_distance_parcourue() >= self.distance_m
 
 
 class TournerAngle(AlgoBase):
@@ -71,4 +71,4 @@ class TournerAngle(AlgoBase):
             self.trad.set_vitesse_roues(v, -v)
     
     def stop(self):
-        return abs(self.trad.get_angle_parcouru()) >= self.angle_rad
+        return self.trad.get_angle_parcouru() >= self.angle_rad

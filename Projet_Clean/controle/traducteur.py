@@ -72,7 +72,7 @@ class TraducteurSimu(Traducteur):
         distance_gauche = delta_gauche * rayon
         distance_droite = delta_droite * rayon
 
-        return (distance_gauche + distance_droite) / 2
+        return abs(distance_gauche + distance_droite) / 2
 
     def reset_angle_parcouru(self):
         self._orientation_depart = self.monde.robot.pos.orientation
