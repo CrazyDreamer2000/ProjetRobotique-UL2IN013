@@ -32,6 +32,11 @@ class Affichage(threading.Thread):
             # Petite pause pour garder un rythme stable et eviter de saturer le CPU.
             time.sleep(1.0 / self.fps)
 
+        pygame.quit()
+        
+    def stop(self):
+        self.running = False
+
     # ici on lit les actions utilisateur et on desine dessiner a l'ecran et on update 
     def update(self):
         self.gerer_evenements()

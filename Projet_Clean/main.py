@@ -1,5 +1,4 @@
 import time
-import pygame
 from parser import parse_args
 import config as cfg
 from controle import ALGOS
@@ -36,7 +35,7 @@ while running:
     
     time.sleep(1/60)
 
-vue.running = False # Fin de boucle: on demande au thread d'affichage de s'arreter.
+vue.stop()  # Fin de boucle: on demande au thread d'affichage de s'arreter.
 vue.join(timeout=1.0) # Puis on attend sa fin pour une fermeture propre.
 
 pygame.quit()
