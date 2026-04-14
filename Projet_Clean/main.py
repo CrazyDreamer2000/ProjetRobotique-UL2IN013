@@ -13,7 +13,7 @@ parseArgs = parse_args() # Lit les arguments de la ligne de commande et renvoie 
 
 robot = Robot(cfg.RAYON_ROUE, cfg.ECARTEMENT_ROUES, parseArgs.orientation, cfg.LONGUEUR_MONDE / 2, cfg.LARGEUR_MONDE / 2)
 monde = Monde(robot) 
-trad = TraducteurSimu(robot, monde)
+trad = TraducteurSimu(monde)
 
 algo = ALGOS[parseArgs.algo](trad, 10, 0.5) # Algo choisi par defaut dans code actuel.
 algo.start()

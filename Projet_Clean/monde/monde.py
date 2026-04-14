@@ -34,11 +34,9 @@ class Monde:
         self.last_step_time = None
         self.last_capteurs_time = None
 
-        # Zone de collision du robot (forme invisible utilisée pour détecter les contacts)
-        # Modifiable depuis main.py (rectangle, triangle, cercle + taille).
         self.poly_robot_local = polygone_rectangle_local(cfg.ROBOT_LONGUEUR, cfg.ROBOT_LARGEUR)
-        # Créer des obstacles aléatoires dès le départ
-        self.creer_obstacles_aleatoires()
+
+        self.creer_obstacles_aleatoires() # Création d'obstacles aléatoires
     
     def ajouter_obstacle(self, x, y, longueur=cfg.TAILLE_OBSTACLE, largeur=cfg.TAILLE_OBSTACLE):
         """

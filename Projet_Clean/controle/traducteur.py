@@ -35,14 +35,13 @@ class TraducteurSimu(Traducteur):
     Implémentation du traducteur pour la simulation.
     Fait le lien entre les commandes de l'algo et les objets Robot/Monde.
     """
-    def __init__(self, robot: Robot, monde: Monde):
-        self.robot = robot
+    def __init__(self, monde: Monde):
         self.monde = monde
 
         # Références de départ pour les mesures relatives
         self._distance_depart_gauche = 0.0
         self._distance_depart_droite = 0.0
-        self._orientation_depart = robot.pos.orientation
+        self._orientation_depart = monde.robot.pos.orientation
 
     # COMMANDES
 
@@ -55,20 +54,20 @@ class TraducteurSimu(Traducteur):
               Vitesse de rotation de la roue droite (rad/s)
         """
         # Envoie directement les commandes au robot simulé
-        self.robot.roue_gauche.vitesse_rotation = v_gauche
-        self.robot.roue_droite.vitesse_rotation = v_droite
+        self.monde.robot.roue_gauche.vitesse_rotation = v_gauche
+        self.monde.robot.roue_droite.vitesse_rotation = v_droite
 
     # DISTANCE PARCOURUE
 
     def reset_distance_parcourue(self):
-        self._distance_depart_gauche = self.robot.roue_gauche.rotation_totale
-        self._distance_depart_droite = self.robot.roue_gauche.rotation_totale
+        self._distance_depart_gauche = self.monde.robot.roue_gauche.rotation_totale
+        self._distance_depart_droite = self.monde.robot.roue_gauche.rotation_totale
 
     def get_distance_parcourue(self) -> float:
         rayon = self.monde.cinematique.rayon_roue
 
-        delta_gauche = self.robot.roue_gauche.rotation_totale - self._distance_depart_gauche
-        delta_droite = self.robot.roue_gauche.rotation_totale - self._distance_depart_droite
+        delta_gauche = self.monde.robot.roue_gauche.rotation_totale - self._distance_depart_gauche
+        delta_droite = self.monde.robot.roue_gauche.rotation_totale - self._distance_depart_droite
 
         distance_gauche = delta_gauche * rayon
         distance_droite = delta_droite * rayon
@@ -76,10 +75,10 @@ class TraducteurSimu(Traducteur):
         return (distance_gauche + distance_droite) / 2
 
     def reset_angle_parcouru(self):
-        self._orientation_depart = self.robot.pos.orientation
+        self._orientation_depart = self.monde.robot.pos.orientation
 
     def get_angle_parcouru(self) -> float:
-        return normaliser_angle(self.robot.pos.orientation - self._orientation_depart)
+        return normaliser_angle(self.monde.robot.pos.orientation - self._orientation_depart)
 
     # CAPTEURS / ETAT
 
@@ -90,10 +89,10 @@ class TraducteurSimu(Traducteur):
               Valeur du capteur de distance (distance en mètres : 2m max)
         """
         # Utilise le monde pour calculer de distance
-        return self.monde.lire_distance_devant(self.robot.pos)
+        return self.monde.lire_distance_devant(self.monde.robot.pos)
     
     def est_en_collision(self) -> bool:
         """
         Renvoie True si le robot simulé est en collision, False sinon
         """
-        return self.robot.en_collision
+        return self.monde.robot.en_collision
