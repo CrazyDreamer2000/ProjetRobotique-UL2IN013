@@ -98,8 +98,30 @@ class TraducteurSimu(Traducteur):
         return self.monde.robot.en_collision
     
 class TraducteurReel(Traducteur):
+    """
+    Implémentation du traducteur pour le robot réel.
+    Fait le lien entre les commandes de l'algo et les fonctions d'interface du robot réel.
+    """
     def __init__(self, robot: Robot):
         self.robot = robot
 
+    def set_vitesse_roues(self, v_gauche: float, v_droite: float):
+        pass
 
-    
+    def get_distance_devant(self) -> float:
+        pass
+
+    def reset_distance_parcourue(self):
+        pass
+
+    def get_distance_parcourue(self) -> float:
+        pass
+
+    def reset_angle_parcouru(self):
+        pass
+
+    def get_angle_parcouru(self) -> float:
+        pass
+
+    def est_en_collision(self) -> bool:
+        pass
