@@ -5,7 +5,6 @@ from core.robot import Robot
 from monde.monde import Monde
 from core.geom import normaliser_angle
 import math
-from robot2I013.robot2I013 import Robot2IN013
 
 class Traducteur(ABC):
     """
