@@ -179,3 +179,4 @@ class TraducteurReel(Traducteur):
         SEUIL_COLLISION = 0.2 #ici on met notre seuil voulu
         if self.get_distance_devant() < SEUIL_COLLISION: 
             return True
+        return False
