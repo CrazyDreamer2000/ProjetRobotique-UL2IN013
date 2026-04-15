@@ -96,3 +96,10 @@ class TraducteurSimu(Traducteur):
         Renvoie True si le robot simulé est en collision, False sinon
         """
         return self.monde.robot.en_collision
+    
+class TraducteurReel(Traducteur):
+    def __init__(self, robot: Robot):
+        self.robot = robot
+
+
+    
