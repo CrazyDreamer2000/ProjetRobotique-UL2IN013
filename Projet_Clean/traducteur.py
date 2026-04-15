@@ -128,8 +128,8 @@ class TraducteurReel(Traducteur):
         dps_droite = v_droite *  deg_par_rad
 
         #ici on applique la vitesse en deg/s au moteurs gauche et droite
-        self.robot.set_motor_dps(self.robot.MOTOR_left,dps_gauche)
-        self.robot.set_motor_dps(self.robot.MOTOR_right,dps_droite) 
+        self.robot.set_motor_dps(self.robot.MOTOR_LEFT,dps_gauche)
+        self.robot.set_motor_dps(self.robot.MOTOR_RIGHT,dps_droite) 
 
     def get_distance_devant(self) -> float:
         """
@@ -171,7 +171,8 @@ class TraducteurReel(Traducteur):
         distance_gauche = delta_gauche * (math.pi / 180) * rayon
         distance_droite = delta_droite * (math.pi / 180) * rayon
         #on retourne la distance moyenne parcourue par les deux roues
-        return abs(distance_gauche + distance_droite) / 2
+        distance_moy_mm= abs(distance_gauche + distance_droite) / 2
+        return distance_moy_mm / 1000.0
 
     def reset_angle_parcouru(self):
         pass
