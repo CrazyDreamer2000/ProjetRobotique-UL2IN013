@@ -3,8 +3,8 @@ from dataclasses import dataclass # on utilise dataclass juste pour simplifier l
 @dataclass
 class Pos2D:
     """Position et orientation du robot dans la simulation"""
-    x: float # mètres
-    y: float # mètres
+    x: float # millimètres
+    y: float # millimètres
     orientation: float  # radians, orientation = 0 -> droite
 
 

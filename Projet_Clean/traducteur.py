@@ -86,7 +86,7 @@ class TraducteurSimu(Traducteur):
         """
         Sortie:
             - monde.lire_distance_devant(robot.pos) : float
-              Valeur du capteur de distance (distance en mètres : 2m max)
+              Valeur du capteur de distance (distance en millimètres : (0.5 -> 8000) )
         """
         # Utilise le monde pour calculer de distance
         return self.monde.lire_distance_devant(self.monde.robot.pos)
@@ -96,3 +96,4 @@ class TraducteurSimu(Traducteur):
         Renvoie True si le robot simulé est en collision, False sinon
         """
         return self.monde.robot.en_collision
+    

@@ -4,6 +4,7 @@ from dataclasses import dataclass
 import config as cfg
 import math
 import random  # Pour générer des positions aléatoires
+from core.robot import Robot
 from core.geom import polygone_rectangle_local, transformer_polygone_local_vers_monde, normaliser_angle
 from core.types import Pos2D
 from core.cinematique import CinematiqueDeuxRoues
@@ -16,20 +17,20 @@ class Obstacle:
     Classe qui représente un obstacle rectangulaire.
     """
     pos: Pos2D
-    longueur: float # Longueur en mètres
-    largeur: float # Largeur en mètres
+    longueur: float # Longueur en millimètres
+    largeur: float # Largeur en millimètres
     poly_local: list # Liste des coins
 
 class Monde:
     """
     Simulation de l'environnement réel du robot.
     """
-    def __init__(self, robot):
+    def __init__(self):
         self.liste_obstacles = []
         
-        self.robot = robot
+        self.robot = Robot(cfg.RAYON_ROUE, cfg.ECARTEMENT_ROUES, 0, cfg.LONGUEUR_MONDE / 2, cfg.LARGEUR_MONDE / 2)
 
-        self.cinematique = CinematiqueDeuxRoues(robot.rayon_roue_m, robot.ecartement_roues_m)
+        self.cinematique = CinematiqueDeuxRoues(self.robot.rayon_roue, self.robot.ecartement_roues)
         
         self.last_step_time = None
         self.last_capteurs_time = None
@@ -60,11 +61,11 @@ class Monde:
         # ici 5 zones (4 coins + 1 bord) 
         zones = [
             # (x_min, x_max, y_min, y_max, nom)
-            (0.5, 1.5, 0.5, 1.0, "Coin bas-gauche"),      # Zone 1
-            (3.0, 4.0, 0.5, 1.0, "Coin bas-droite"),      # Zone 2  
-            (0.5, 1.5, 2.0, 2.5, "Coin haut-gauche"),     # Zone 3
-            (3.0, 4.0, 2.0, 2.5, "Coin haut-droite"),     # Zone 4
-            (2.0, 2.5, 0.3, 0.7, "Bord bas-centre")       # Zone 5
+            (500, 1500, 500, 1000, "Coin bas-gauche"),      # Zone 1
+            (3000, 4000, 500, 1000, "Coin bas-droite"),      # Zone 2  
+            (500, 1500, 2000, 2500, "Coin haut-gauche"),     # Zone 3
+            (3000, 4000, 2000, 2500, "Coin haut-droite"),     # Zone 4
+            (2000, 2500, 300, 700, "Bord bas-centre")       # Zone 5
         ]
         
         # un obstacle à la fois
@@ -78,8 +79,8 @@ class Monde:
             orientation = random.uniform(0, 2 * math.pi)
             
             # Dimensions aléatoires
-            longueur = random.uniform(0.3, 0.6)  # 30-60 cm
-            largeur = random.uniform(0.15, 0.25) # 15-25 cm
+            longueur = random.uniform(300, 600)  # 30-60 cm
+            largeur = random.uniform(150, 250) # 15-25 cm
             
             # Créer l'obstacle
             self.ajouter_obstacle(x * cfg.SCALE, y * cfg.SCALE, longueur, largeur) # multiplication par scale est temporaire
@@ -128,7 +129,7 @@ class Monde:
 
         return False
   
-    def lire_distance_devant(self, pos_robot, portee_max=2.0):
+    def lire_distance_devant(self, pos_robot, portee=(0.5 * 2, 800 * 2)):
         """
         Mesure la distance jusqu'au premier obstacle devant le robot.
         -> Teste des points tous les 2cm devant le robot et renvoie la distance si le point est sur un obstacle
@@ -136,10 +137,10 @@ class Monde:
         x, y = pos_robot.x, pos_robot.y
         angle = pos_robot.orientation
         
-        # Tester tous les 2cm
-        for distance in range(1, int(portee_max / 0.02)):
-            d = distance * 0.02  # Distance actuelle
-            
+        # Tester tous les cm
+        for distance in range(int(portee[0]), portee[1], 1):
+            d = distance / 2
+
             # Position du point de test
             test_x = x + d * math.cos(angle)
             test_y = y + d * math.sin(angle)
@@ -147,7 +148,7 @@ class Monde:
             if self.collision_point(test_x, test_y):
                 return d
         
-        return portee_max  # Rien trouvé
+        return portee[1]  # Rien trouvé
 
     
     def calcul_dt(self, last_time):

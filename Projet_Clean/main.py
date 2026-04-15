@@ -5,25 +5,22 @@ from controle import ALGOS
 
 Simu = True
 
-robot = None
 monde = None
 trad = None
 
 parseArgs = parse_args() # Lit les arguments de la ligne de commande et renvoie un Namespace , un contenuer avec les valeurs lit
 
 if Simu:
-    from core.robot import Robot
     from monde.monde import Monde
     from threading import RLock # RLock = verrou partage entre le thread principal et l'affichage.
     from affichage.Affichage import Affichage # Classe du thread qui gere la fenetre et le rendu.
     from traducteur import TraducteurSimu
 
-    robot = Robot(cfg.RAYON_ROUE, cfg.ECARTEMENT_ROUES, parseArgs.orientation, cfg.LONGUEUR_MONDE / 2, cfg.LARGEUR_MONDE / 2)
-    monde = Monde(robot) 
+    monde = Monde() 
     trad = TraducteurSimu(monde)
 
     lock = RLock() # Verrou partage entre simulation (main) et rendu (thread affichage).
-    vue = Affichage(robot, monde, lock) # On cree l'affichage en lui donnant robot/monde/lock.
+    vue = Affichage(monde, lock) # On cree l'affichage en lui donnant robot/monde/lock.
     vue.start() # Demarre le thread d'affichage en parallele du main.
 
 else:
@@ -32,7 +29,7 @@ else:
     robot = robot2I013()
     trad = TraducteurReel(robot)
 
-algo = ALGOS[parseArgs.algo](trad, 10, 0.5) # Algo choisi par defaut dans code actuel.
+algo = ALGOS[parseArgs.algo](trad, 10, 500) # Algo choisi par defaut dans code actuel.
 algo.start()
 
 running = True 

@@ -3,10 +3,10 @@ from .types import Pos2D, Roue, Capteurs
 
 class Robot:
     """Le "core" du robot"""
-    def __init__(self, rayon_roue_m: float, ecartement_roues_m: float, ori_initiale=0, x=0.0, y=0.0):
+    def __init__(self, rayon_roue: float, ecartement_roues: float, ori_initiale=0, x=0.0, y=0.0):
         
-        self.rayon_roue_m = rayon_roue_m
-        self.ecartement_roues_m = ecartement_roues_m
+        self.rayon_roue = rayon_roue
+        self.ecartement_roues = ecartement_roues
 
         # Position & angle du robot (séparé du core)
         self.pos = Pos2D(x, y, ori_initiale)

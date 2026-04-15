@@ -17,7 +17,7 @@ class AlgoPolygoneSafe(AlgoBase):
     def start(self):
 
         eviter = Sequence(  self.trad,
-                            [ ReculerDistance(self.trad, self.vitesse, 0.3),
+                            [ ReculerDistance(self.trad, self.vitesse, 30),
                               TournerAngle(self.trad, self.vitesse, math.pi/3) ]
                          )
         
