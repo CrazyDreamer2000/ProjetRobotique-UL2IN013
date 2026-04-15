@@ -129,26 +129,29 @@ class Monde:
 
         return False
   
-    def lire_distance_devant(self, pos_robot, portee=(0.5 * 2, 800 * 2)):
+    def lire_distance_devant(self, pos_robot, portee=(0.5, 800.0)):
         """
         Mesure la distance jusqu'au premier obstacle devant le robot.
         -> Teste des points tous les 2cm devant le robot et renvoie la distance si le point est sur un obstacle
         """
-        x, y = pos_robot.x, pos_robot.y
-        angle = pos_robot.orientation
-        
-        # Tester tous les cm
-        for distance in range(int(portee[0]), portee[1], 1):
-            d = distance / 2
+        min = portee[0]
+        max = portee[1]
+
+        dist = None
+
+        while (max - min) > 1: # On prend la valeur au demi-milimètre près
+            dist = (min + max) // 2
 
             # Position du point de test
-            test_x = x + d * math.cos(angle)
-            test_y = y + d * math.sin(angle)
-            
+            test_x = pos_robot.x + (cfg.ROBOT_LONGUEUR / 2 + dist) * math.cos(pos_robot.orientation)
+            test_y = pos_robot.y + (cfg.ROBOT_LONGUEUR / 2 + dist) * math.sin(pos_robot.orientation)
+
             if self.collision_point(test_x, test_y):
-                return d
+                max = dist
+            else:
+                min = dist
         
-        return portee[1]  # Rien trouvé
+        return dist
 
     
     def calcul_dt(self, last_time):

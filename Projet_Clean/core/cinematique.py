@@ -20,7 +20,6 @@ class CinematiqueDeuxRoues:
         vitesse_avant = (vitesse_lineaire_droite + vitesse_lineaire_gauche) / 2 # cm/s : moyenne de la vitesse des roues (choix)
         vitesse_rotation = (vitesse_lineaire_droite - vitesse_lineaire_gauche) / self.ecartement_roues # rad/s : différence des vitesses des deux roues / ecartement (plus ils sont écartés, moins le robot tourne vite)
         
-        print(vitesse_avant, vitesse_rotation)
         return vitesse_avant, vitesse_rotation
 
     def avance_pos(self, pos, vitesse_avant: float, vitesse_rotation: float, dt: float):
