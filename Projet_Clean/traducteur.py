@@ -61,10 +61,12 @@ class TraducteurSimu(Traducteur):
     # DISTANCE PARCOURUE
 
     def reset_distance_parcourue(self):
+        """ Réinitialise les références de distance pour le calcul de la distance parcourue."""
         self._distance_depart_gauche = self.monde.robot.roue_gauche.rotation_totale
         self._distance_depart_droite = self.monde.robot.roue_gauche.rotation_totale
 
     def get_distance_parcourue(self) -> float:
+        """ Calcule la distance parcourue depuis le dernier reset en utilisant les rotations des roues."""
         rayon = self.monde.cinematique.rayon_roue
 
         delta_gauche = self.monde.robot.roue_gauche.rotation_totale - self._distance_depart_gauche
@@ -76,9 +78,11 @@ class TraducteurSimu(Traducteur):
         return abs(distance_gauche + distance_droite) / 2
 
     def reset_angle_parcouru(self):
+        """ Réinitialise la référence d'orientation pour le calcul de l'angle parcouru."""
         self._orientation_depart = self.monde.robot.pos.orientation
 
     def get_angle_parcouru(self) -> float:
+        """ Calcule l'angle parcouru depuis le dernier reset en utilisant l'orientation du robot."""
         return normaliser_angle(self.monde.robot.pos.orientation - self._orientation_depart)
 
     # CAPTEURS / ETAT
@@ -176,6 +180,7 @@ class TraducteurReel(Traducteur):
         pass
 
     def est_en_collision(self) -> bool:
+        """ Indique si le robot est en collision en se basant sur la distance devant et un seuil de collision."""
         SEUIL_COLLISION = 0.2 #ici on met notre seuil voulu
         if self.get_distance_devant() < SEUIL_COLLISION: 
             return True
