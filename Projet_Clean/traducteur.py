@@ -108,7 +108,21 @@ class TraducteurReel(Traducteur):
         self.robot = robot
 
     def set_vitesse_roues(self, v_gauche: float, v_droite: float):
-        pass 
+        """
+        Ici on effectue la conversion de rad/s à deg/s
+        v_gauche: Vitesse de la roue gauche (en rad/s)
+        v_droite: Vitesse de la roue droite (en rad/s)
+        """
+        # formule de degré par radian
+        deg_par_rad = 180 / math.pi #57.296
+
+        #Ici on effectue la conversion rad/s à deg/s
+        dps_gauche=  v_gauche  *  deg_par_rad
+        dps_droite = v_droite *  deg_par_rad
+
+        #ici on applique la vitesse en deg/s au moteurs gauche et droite
+        self.robot.set_motor_dps(self.robot.MOTOR_left,dps_gauche)
+        self.robot.set_motor_dps(self.robot.MOTOR_right,dps_droite) 
 
     def get_distance_devant(self) -> float:
         pass
