@@ -106,6 +106,10 @@ class TraducteurReel(Traducteur):
     """
     def __init__(self, robot):
         self.robot = robot
+    # Pour la distance
+        self._ref_pos_gauche_distance = 0.0
+        self._ref_pos_droite_distance = 0.0
+
 
     def set_vitesse_roues(self, v_gauche: float, v_droite: float):
         """
@@ -125,7 +129,24 @@ class TraducteurReel(Traducteur):
         self.robot.set_motor_dps(self.robot.MOTOR_right,dps_droite) 
 
     def get_distance_devant(self) -> float:
-        pass
+        """
+        Sortie:
+            - (Fonction a nettoyer)
+            - distance_devant(robot. : float
+              Valeur du capteur de distance (distance en milimètres : 2m, 2000mm max)
+        """
+        #On lit le capteur de distance du robot, qui renvoie distance entière en milimètre,
+        distance_devant= self.robot.get_distance()
+        #A voir dans doc de la classe, mais ici l'intervalle est de **5-8,000** millimeters.
+        #Lorsque la valeur est en dehors de l'intervalle, le retour est **8190** 
+        # Autrement dit si distance devant < 5  ou distance_devant > 8000 millimeters (0.005 et 8mètres respectivement)
+        if distance_devant == 8190:
+            #deux options je vous laisse choisir pour implementation:
+            #si objet très proche <5mm dans réel:
+            #return 0.0 ? je sais pas mais dans 
+            #si on suppose trop loin, cas par défaut pour rafraichissement tick
+            return 8.0
+        return distance_devant/1000.0
 
     def reset_distance_parcourue(self):
         pass
