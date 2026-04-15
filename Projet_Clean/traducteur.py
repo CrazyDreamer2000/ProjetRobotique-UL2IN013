@@ -149,8 +149,12 @@ class TraducteurReel(Traducteur):
         return distance_devant/1000.0
 
     def reset_distance_parcourue(self):
-        pass
-
+        """Réinitialise les références de distance pour le calcul de la distance parcourue."""
+        #get_motor_position renvoie un couple (degré,degré)
+        encodeurs=self.robot.get_motor_position()
+        self._ref_pos_gauche_distance = encodeurs[0]
+        self._ref_pos_droite_distance = encodeurs[1]
+        
     def get_distance_parcourue(self) -> float:
         pass
 
