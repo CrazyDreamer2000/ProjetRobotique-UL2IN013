@@ -176,4 +176,6 @@ class TraducteurReel(Traducteur):
         pass
 
     def est_en_collision(self) -> bool:
-        pass
+        SEUIL_COLLISION = 0.2 #ici on met notre seuil voulu
+        if self.get_distance_devant() < SEUIL_COLLISION: 
+            return True
