@@ -154,9 +154,21 @@ class TraducteurReel(Traducteur):
         encodeurs=self.robot.get_motor_position()
         self._ref_pos_gauche_distance = encodeurs[0]
         self._ref_pos_droite_distance = encodeurs[1]
-        
+
     def get_distance_parcourue(self) -> float:
-        pass
+        """Calcule la distance parcourue depuis le dernier reset."""
+        rayon = self.robot.WHEEL_DIAMETER / 2.0 # On recupere le rayon de la roue (diamètre/2)
+
+        #get_motor_position renvoie un couple (degré,degré)
+        encodeurs=self.robot.get_motor_position()                   
+        delta_gauche = encodeurs[0] - self._ref_pos_gauche_distance
+        delta_droite = encodeurs[1] - self._ref_pos_droite_distance
+        
+        #distance = angle * rayon (ici on convertit dégrés en radian pour distance metres)
+        distance_gauche = delta_gauche * (math.pi / 180) * rayon
+        distance_droite = delta_droite * (math.pi / 180) * rayon
+        #on retourne la distance moyenne parcourue par les deux roues
+        return abs(distance_gauche + distance_droite) / 2
 
     def reset_angle_parcouru(self):
         pass
