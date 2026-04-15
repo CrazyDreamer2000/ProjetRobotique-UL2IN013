@@ -4,6 +4,8 @@ from abc import ABC, abstractmethod # Pour les classes abstraites
 from core.robot import Robot
 from monde.monde import Monde
 from core.geom import normaliser_angle
+import math
+from robot2I013.robot2I013 import Robot2IN013
 
 class Traducteur(ABC):
     """
@@ -102,11 +104,11 @@ class TraducteurReel(Traducteur):
     Implémentation du traducteur pour le robot réel.
     Fait le lien entre les commandes de l'algo et les fonctions d'interface du robot réel.
     """
-    def __init__(self, robot: Robot):
+    def __init__(self, robot):
         self.robot = robot
 
     def set_vitesse_roues(self, v_gauche: float, v_droite: float):
-        pass
+        pass 
 
     def get_distance_devant(self) -> float:
         pass
