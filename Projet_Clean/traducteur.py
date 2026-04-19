@@ -112,6 +112,8 @@ class TraducteurReel(Traducteur):
     # Pour la distance
         self._ref_pos_gauche_distance = 0.0
         self._ref_pos_droite_distance = 0.0
+    # Pour l'angle
+        self._ref_orientation = 0.0
 
 
     def set_vitesse_roues(self, v_gauche: float, v_droite: float):
@@ -146,9 +148,9 @@ class TraducteurReel(Traducteur):
         if distance_devant == 8190:
             #deux options je vous laisse choisir pour implementation:
             #si objet très proche <5mm dans réel:
-            #return 0.0 ? je sais pas mais dans 
+            #return 0.05 ? je sais pas mais dans 
             #si on suppose trop loin, cas par défaut pour rafraichissement tick
-            return 8.0
+            return distance_devant/1000.0 #on retourne la distance en mètres
         return distance_devant/1000.0
 
     def reset_distance_parcourue(self):
@@ -175,10 +177,20 @@ class TraducteurReel(Traducteur):
         return distance_moy_mm / 1000.0
 
     def reset_angle_parcouru(self):
-        pass
+        """Réinitialise la référence d'orientation pour le calcul de l'angle parcouru."""
+        encodeurs = self.robot.get_motor_position()
+        # On utilise la différence de rotation entre les deux roues pour estimer l'angle
+        delta_gauche = encodeurs[0] - self._ref_pos_gauche_distance
+        delta_droite = encodeurs[1] - self._ref_pos_droite_distance
+        # On convertit les deltas en radians
+        delta_gauche_rad = delta_gauche * (math.pi / 180)
+        delta_droite_rad = delta_droite * (math.pi / 180)
+        # On utilise la formule de l'angle parcouru : (delta_droite - delta_gauche) * rayon / empattement
+        self._ref_orientation = (delta_droite_rad - delta_gauche_rad) * (self.robot.WHEEL_DIAMETER / 2) / self.robot.WHEEL_BASE_WIDTH
 
     def get_angle_parcouru(self) -> float:
-        pass
+        """ Calcule l'angle parcouru depuis le dernier reset."""
+        return self._ref_orientation
 
     def est_en_collision(self) -> bool:
         """ Indique si le robot est en collision en se basant sur la distance devant et un seuil de collision."""
