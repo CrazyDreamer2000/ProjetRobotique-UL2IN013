@@ -68,7 +68,6 @@ class TraducteurSimu(Traducteur):
     def get_distance_parcourue(self) -> float:
         """ Calcule la distance parcourue depuis le dernier reset en utilisant les rotations des roues."""
         rayon = self.monde.cinematique.rayon_roue
-
         delta_gauche = self.monde.robot.roue_gauche.rotation_totale - self._distance_depart_gauche
         delta_droite = self.monde.robot.roue_gauche.rotation_totale - self._distance_depart_droite
 
@@ -137,7 +136,7 @@ class TraducteurReel(Traducteur):
         """
         Sortie:
             - (Fonction a nettoyer)
-            - distance_devant(robot. : float
+            - distance_devant(robot. : float)
               Valeur du capteur de distance (distance en milimètres : 2m, 2000mm max)
         """
         #On lit le capteur de distance du robot, qui renvoie distance entière en milimètre,
@@ -150,8 +149,8 @@ class TraducteurReel(Traducteur):
             #si objet très proche <5mm dans réel:
             #return 0.05 ? je sais pas mais dans 
             #si on suppose trop loin, cas par défaut pour rafraichissement tick
-            return distance_devant/1000.0 #on retourne la distance en mètres
-        return distance_devant/1000.0
+            return distance_devant
+        return distance_devant
 
     def reset_distance_parcourue(self):
         """Réinitialise les références de distance pour le calcul de la distance parcourue."""
@@ -174,7 +173,7 @@ class TraducteurReel(Traducteur):
         distance_droite = delta_droite * (math.pi / 180) * rayon
         #on retourne la distance moyenne parcourue par les deux roues
         distance_moy_mm= abs(distance_gauche + distance_droite) / 2
-        return distance_moy_mm / 1000.0
+        return distance_moy_mm 
 
     def reset_angle_parcouru(self):
         """Réinitialise la référence d'orientation pour le calcul de l'angle parcouru."""

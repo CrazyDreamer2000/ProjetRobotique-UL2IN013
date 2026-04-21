@@ -3,7 +3,7 @@ from parser import parse_args
 import config as cfg
 from controle import ALGOS
 
-Simu = True
+Simu = False
 
 monde = None
 trad = None
@@ -24,12 +24,13 @@ if Simu:
     vue.start() # Demarre le thread d'affichage en parallele du main.
 
 else:
-    from robot2I013 import robot2I013
+    from robot2I013.robot2I013 import Robot2IN013
     from traducteur import TraducteurReel
-    robot = robot2I013()
+    robot = Robot2IN013()
     trad = TraducteurReel(robot)
 
-algo = ALGOS[parseArgs.algo](trad, 10, 500) # Algo choisi par defaut dans code actuel.
+algo = ALGOS[parseArgs.algo](trad, 2.0, 500) # Algo choisi par defaut dans code actuel.
+
 algo.start()
 
 running = True 

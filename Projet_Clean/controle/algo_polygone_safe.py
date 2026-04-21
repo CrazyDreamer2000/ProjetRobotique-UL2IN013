@@ -7,7 +7,7 @@ class AlgoPolygoneSafe(AlgoBase):
     """
     Polygone + réaction aux collisions
     """
-    def __init__(self, traducteur, vitesse_roues, longueur_cote=0.5, nb_cotes = 5):
+    def __init__(self, traducteur, vitesse_roues, longueur_cote=0.5, nb_cotes = 4):
         super().__init__(traducteur)
         self.vitesse = vitesse_roues
         self.nb_cotes = nb_cotes

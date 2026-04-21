@@ -11,7 +11,8 @@ class AvancerDistance(AlgoBase):
         super().__init__(traducteur)
         self.vitesse = vitesse_roues
         self.distance_cm = distance_cm
-    
+        #Pourquoi on utilise distance cm ?
+        # a changer en metre plus tard pour etre cohérent avec les autres primitives et la simulation
     def start(self):
         print("J'avance de ",self.distance_cm," cm")
         self.trad.reset_distance_parcourue()
@@ -23,7 +24,7 @@ class AvancerDistance(AlgoBase):
     def stop(self):
         return self.trad.get_distance_parcourue() >= self.distance_cm
     
-
+ 
 class ReculerDistance(AlgoBase):
     """
     Recule en ligne droite jusqu'à avoir parcouru une distance donnée
