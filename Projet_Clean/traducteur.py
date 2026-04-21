@@ -193,7 +193,7 @@ class TraducteurReel(Traducteur):
 
     def est_en_collision(self) -> bool:
         """ Indique si le robot est en collision en se basant sur la distance devant et un seuil de collision."""
-        SEUIL_COLLISION = 0.2 #ici on met notre seuil voulu
+        SEUIL_COLLISION = 2 #ici on met notre seuil voulu
         if self.get_distance_devant() < SEUIL_COLLISION: 
             return True
         return False
