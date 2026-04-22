@@ -7,6 +7,8 @@ Simu = False
 
 monde = None
 trad = None
+lock = None
+vue = None
 
 parseArgs = parse_args() # Lit les arguments de la ligne de commande et renvoie un Namespace , un contenuer avec les valeurs lit
 
