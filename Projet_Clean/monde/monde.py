@@ -79,8 +79,8 @@ class Monde:
             orientation = random.uniform(0, 2 * math.pi)
             
             # Dimensions aléatoires
-            longueur = random.uniform(300, 600)  # 30-60 cm
-            largeur = random.uniform(150, 250) # 15-25 cm
+            longueur = int(random.uniform(300, 600))  # 30-60 cm
+            largeur = int(random.uniform(150, 250)) # 15-25 cm
             
             # Créer l'obstacle
             self.ajouter_obstacle(x * cfg.SCALE, y * cfg.SCALE, longueur, largeur) # multiplication par scale est temporaire
