@@ -26,7 +26,10 @@ class AlgoCarre(AlgoBase):
 
     def step(self):
         super().step()
-        self.strategie.step()
+        if self.strategie is not None:
+            self.strategie.step()
     
     def stop(self):
-        return self.strategie.stop()
+        if self.strategie is not None:
+            return self.strategie.stop()
+        return True  # Pas de stratégie donc on considère que c'est fini

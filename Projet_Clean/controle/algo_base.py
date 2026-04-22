@@ -31,13 +31,13 @@ class AlgoBase:
             self.trad.set_vitesse_roues(0.0, 0.0)
             return
     
-    def stop(self):
+    def stop(self)-> bool:
         """
         Retourne True si la stratégie doit s'arrêter / est terminée, False sinon (?)
         """
         if self.modeDebug:
             print(f"Check stop de {self.name} ({self.type})")
-        pass
+        pass 
 
     def __str__(self):
         return f"{self.name} ({self.type})"
