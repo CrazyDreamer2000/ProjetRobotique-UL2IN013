@@ -3,7 +3,7 @@ from parser import parse_args
 import config as cfg
 from controle import ALGOS
 
-Simu = False
+Simu = True
 
 monde = None
 trad = None

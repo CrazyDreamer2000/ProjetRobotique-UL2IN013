@@ -7,14 +7,12 @@ class AvancerDistance(AlgoBase):
     """
     Avance en ligne droite jusqu'à avoir parcouru une distance donnée
     """
-    def __init__(self, traducteur, vitesse_roues, distance_cm):
+    def __init__(self, traducteur, vitesse_roues, distance_mm):
         super().__init__(traducteur, name="AvancerDistance", type="Primitive")
         self.vitesse = vitesse_roues
-        self.distance_cm = distance_cm
-        #Pourquoi on utilise distance cm ?
-        # a changer en metre plus tard pour etre cohérent avec les autres primitives et la simulation
+        self.distance_mm = distance_mm
     def start(self):
-        print("J'avance de ",self.distance_cm," cm")
+        print("J'avance de ",self.distance_mm," mm")
         self.trad.reset_distance_parcourue()
 
     def step(self):
@@ -22,17 +20,17 @@ class AvancerDistance(AlgoBase):
         self.trad.set_vitesse_roues(self.vitesse, self.vitesse)
     
     def stop(self):
-        return self.trad.get_distance_parcourue() >= self.distance_cm
+        return self.trad.get_distance_parcourue() >= self.distance_mm
     
  
 class ReculerDistance(AlgoBase):
     """
     Recule en ligne droite jusqu'à avoir parcouru une distance donnée
     """
-    def __init__(self, traducteur, vitesse_roues, distance_m):
+    def __init__(self, traducteur, vitesse_roues, distance_mm):
         super().__init__(traducteur, name="ReculerDistance", type="Primitive")
         self.vitesse = vitesse_roues
-        self.distance_m = distance_m
+        self.distance_mm = distance_mm
     
     def start(self):
         self.trad.reset_distance_parcourue()
@@ -42,7 +40,7 @@ class ReculerDistance(AlgoBase):
         self.trad.set_vitesse_roues(-self.vitesse, -self.vitesse)
     
     def stop(self):
-        return self.trad.get_distance_parcourue() >= self.distance_m
+        return self.trad.get_distance_parcourue() >= self.distance_mm
 
 
 class TournerAngle(AlgoBase):
