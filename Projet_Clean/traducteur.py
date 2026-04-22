@@ -10,24 +10,31 @@ class Traducteur(ABC):
     """
     Classe abstraite définissant l'interface entre le controlleur et le robot
     """
+    @abstractmethod
     def set_vitesse_roues(self, v_gauche: float, v_droite: float):
         pass
-
+    
+    @abstractmethod
     def get_distance_devant(self) -> float:
         pass
 
+    @abstractmethod
     def reset_distance_parcourue(self):
         pass
 
+    @abstractmethod
     def get_distance_parcourue(self) -> float:
         pass
 
+    @abstractmethod
     def reset_angle_parcouru(self):
         pass
 
+    @abstractmethod
     def get_angle_parcouru(self) -> float:
         pass
 
+    @abstractmethod
     def est_en_collision(self) -> bool:
         pass
 
