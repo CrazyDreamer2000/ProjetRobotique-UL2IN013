@@ -8,7 +8,7 @@ class AlgoSuivreBalise(AlgoBase):
     Suivre une balise avec le robot réel en évitant les collisions
     """
     def __init__(self, traducteur):
-        super().__init__(traducteur)
+        super().__init__(traducteur, name="SuivreBalise", type="Strategie")
         
     
     def start(self):
