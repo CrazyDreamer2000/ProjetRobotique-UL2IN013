@@ -8,7 +8,7 @@ class AvancerDistance(AlgoBase):
     Avance en ligne droite jusqu'à avoir parcouru une distance donnée
     """
     def __init__(self, traducteur, vitesse_roues, distance_cm):
-        super().__init__(traducteur)
+        super().__init__(traducteur, name="AvancerDistance", type="Primitive")
         self.vitesse = vitesse_roues
         self.distance_cm = distance_cm
         #Pourquoi on utilise distance cm ?
@@ -30,7 +30,7 @@ class ReculerDistance(AlgoBase):
     Recule en ligne droite jusqu'à avoir parcouru une distance donnée
     """
     def __init__(self, traducteur, vitesse_roues, distance_m):
-        super().__init__(traducteur)
+        super().__init__(traducteur, name="ReculerDistance", type="Primitive")
         self.vitesse = vitesse_roues
         self.distance_m = distance_m
     
@@ -51,7 +51,7 @@ class TournerAngle(AlgoBase):
     sens = "gauche" ou "droite"
     """
     def __init__(self, traducteur, vitesse_roues, angle_rad, sens="gauche"):
-        super().__init__(traducteur)
+        super().__init__(traducteur, name="TournerAngle", type="Primitive")
         self.vitesse = vitesse_roues
         self.angle_rad = angle_rad
         self.sens = sens        
