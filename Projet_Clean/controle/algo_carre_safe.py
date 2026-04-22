@@ -1,14 +1,15 @@
 from controle.algo_base import AlgoBase
 from controle.algo_carre import AlgoCarre
 from controle.composition import Sequence, Condition
-
+from controle.primitives import ReculerDistance, TournerAngle
+import math
 
 class AlgoCarreSafe(AlgoBase):
     """
     Carré + réaction aux collisions
     """
     def __init__(self, traducteur, vitesse_roues, longueur_cote=0.5):
-        super().__init__(traducteur)
+        super().__init__(traducteur, name="CarreSafe", type="Strategie")
         self.vitesse = vitesse_roues
         self.strategie = None
     
