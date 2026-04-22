@@ -40,16 +40,17 @@ running = True
 while running:    
     
     if Simu:
-        if not vue.running:   # Si l'utilisateur ferme la fenetre dans le thread affichage, on stoppe ici aussi.
+        if vue is not None and not vue.running:   # Si l'utilisateur ferme la fenetre dans le thread affichage, on stoppe ici aussi.
             running = False
-
-        with lock:  # on protege l'acces aux donnees partagees.
-            algo.step()
-            monde.step()  # On avance la physique du robot de dt secondes.
+        if lock is not None:
+            with lock:  # on protege l'acces aux donnees partagees.
+                algo.step()
+                monde.step()  # On avance la physique du robot de dt secondes.
     else:
         algo.step()
 
     time.sleep(1/60)
 
-vue.stop()  # Fin de boucle: on demande au thread d'affichage de s'arreter.
-vue.join(timeout=1.0) # Puis on attend sa fin pour une fermeture propre.
+if vue is not None:
+    vue.stop()  # Fin de boucle: on demande au thread d'affichage de s'arreter.
+    vue.join(timeout=1.0) # Puis on attend sa fin pour une fermeture propre.
