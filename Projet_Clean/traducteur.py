@@ -142,14 +142,8 @@ class TraducteurReel(Traducteur):
         #On lit le capteur de distance du robot, qui renvoie distance entière en milimètre,
         distance_devant= self.robot.get_distance()
         #A voir dans doc de la classe, mais ici l'intervalle est de **5-8,000** millimeters.
-        #Lorsque la valeur est en dehors de l'intervalle, le retour est **8190** 
-        # Autrement dit si distance devant < 5  ou distance_devant > 8000 millimeters (0.005 et 8mètres respectivement)
         if distance_devant == 8190:
-            #deux options je vous laisse choisir pour implementation:
-            #si objet très proche <5mm dans réel:
-            #return 0.05 ? je sais pas mais dans 
-            #si on suppose trop loin, cas par défaut pour rafraichissement tick
-            return distance_devant
+            return 2000.0  #On retourne 2000mm si la valeur est à 8190, ce qui correspond à une distance supérieure à 2m (limite du capteur)
         return distance_devant
 
     def reset_distance_parcourue(self):
@@ -193,7 +187,7 @@ class TraducteurReel(Traducteur):
 
     def est_en_collision(self) -> bool:
         """ Indique si le robot est en collision en se basant sur la distance devant et un seuil de collision."""
-        SEUIL_COLLISION = 2 #ici on met notre seuil voulu
+        SEUIL_COLLISION = 200.0  # Seuil de distance en millimètres pour considérer une collision
         if self.get_distance_devant() < SEUIL_COLLISION: 
             return True
         return False
