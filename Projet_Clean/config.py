@@ -1,9 +1,9 @@
-# Monde en centimètres
+# Dimensions du monde (en millimètres)
 LONGUEUR_MONDE = 4500
 LARGEUR_MONDE = 3000
 
-# Conversion monde (milliètres) -> écran (pixels)
-SCALE = 0.2  # px/cm
+# Conversion monde (millimètres) -> écran (pixels)
+SCALE = 0.2  # px/mm
 
 # Robot (dimensions en millimètres)
 ROBOT_LONGUEUR = 330

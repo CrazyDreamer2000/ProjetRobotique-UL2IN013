@@ -7,15 +7,15 @@ class AlgoPolygoneSafe(AlgoBase):
     """
     Polygone + réaction aux collisions
     """
-    def __init__(self, traducteur, vitesse_roues, longueur_cote=500, nb_cotes = 5):
-        super().__init__(traducteur)
+    def __init__(self, traducteur, vitesse_roues, longueur_cote=0.5, nb_cotes = 4):
+        super().__init__(traducteur, name="PolygoneSafe", type="Strategie")
         self.vitesse = vitesse_roues
         self.nb_cotes = nb_cotes
         self.longueur_cote = longueur_cote
         self.strategie = None
     
     def start(self):
-
+        super().start()
         eviter = Sequence(  self.trad,
                             [ ReculerDistance(self.trad, self.vitesse, 30),
                               TournerAngle(self.trad, self.vitesse, math.pi/3) ]
@@ -38,8 +38,11 @@ class AlgoPolygoneSafe(AlgoBase):
     
     def step(self):
         super().step()
-        self.strategie.step()
+        if self.strategie is not None:
+            self.strategie.step()
     
     def stop(self):
-        return self.strategie.stop()
-    
+        #super().stop()
+        if self.strategie is not None:
+            return self.strategie.stop()
+        return True  # Pas de stratégie donc on considère que c'est fini

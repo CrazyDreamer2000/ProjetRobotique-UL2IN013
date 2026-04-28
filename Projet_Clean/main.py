@@ -7,6 +7,8 @@ Simu = True
 
 monde = None
 trad = None
+lock = None
+vue = None
 
 parseArgs = parse_args() # Lit les arguments de la ligne de commande et renvoie un Namespace , un contenuer avec les valeurs lit
 
@@ -24,9 +26,9 @@ if Simu:
     vue.start() # Demarre le thread d'affichage en parallele du main.
 
 else:
-    from robot2I013 import robot2I013
+    from robot2I013.robot2I013 import Robot2IN013
     from traducteur import TraducteurReel
-    robot = robot2I013()
+    robot = Robot2IN013()
     trad = TraducteurReel(robot)
 
 algo = ALGOS[parseArgs.algo](trad, parseArgs.vitesse_roues) # Algo choisi par defaut dans code actuel.
@@ -37,16 +39,17 @@ running = True
 while running:    
     
     if Simu:
-        if not vue.running:   # Si l'utilisateur ferme la fenetre dans le thread affichage, on stoppe ici aussi.
+        if vue is not None and not vue.running:   # Si l'utilisateur ferme la fenetre dans le thread affichage, on stoppe ici aussi.
             running = False
-
-        with lock:  # on protege l'acces aux donnees partagees.
-            algo.step()
-            monde.step()  # On avance la physique du robot de dt secondes.
+        if lock is not None:
+            with lock:  # on protege l'acces aux donnees partagees.
+                algo.step()
+                monde.step()  # On avance la physique du robot de dt secondes.
     else:
         algo.step()
 
     time.sleep(1/60)
 
-vue.stop()  # Fin de boucle: on demande au thread d'affichage de s'arreter.
-vue.join(timeout=1.0) # Puis on attend sa fin pour une fermeture propre.
+if vue is not None:
+    vue.stop()  # Fin de boucle: on demande au thread d'affichage de s'arreter.
+    vue.join(timeout=1.0) # Puis on attend sa fin pour une fermeture propre.

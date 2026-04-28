@@ -5,7 +5,7 @@ class Sequence(AlgoBase):
     Exécute plusieurs stratégies/primitives l'une après l'autre
     """
     def __init__(self, traducteur, etapes, dt=0.05):
-        super().__init__(traducteur)
+        super().__init__(traducteur, name="Sequence", type="Composition")
         self.etapes = etapes
         self.index = 0
         self.dt = dt
@@ -36,9 +36,9 @@ class Condition(AlgoBase):
     Execute la stratégie si_faux.
     Si la condition est vérifiée, la stratégie si_vrai est lancée et dure jusqu'à sa fin.
     """
-    def __init__(self, trad, condition_switch, si_vrai, si_faux, condition_stop):
-        super().__init__(trad)
-        self.condition_switch = condition_switch
+    def __init__(self, trad, condition, si_vrai, si_faux):
+        super().__init__(trad, name="Condition", type="Composition")
+        self.condition = condition
         self.si_vrai = si_vrai
         self.si_faux = si_faux
         self.condition_stop = condition_stop
@@ -84,7 +84,7 @@ class Condition(AlgoBase):
 
 class Boucle(AlgoBase):
     def __init__(self, trad, strategie, n):
-        super().__init__(trad)
+        super().__init__(trad, name="Boucle", type="Composition")
         self.strategie = strategie
         self.n = n # itérations restantes
         self.i = 0

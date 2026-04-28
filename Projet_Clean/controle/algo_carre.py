@@ -8,8 +8,8 @@ class AlgoCarre(AlgoBase):
     """
     Controleur carré construit à partir de primitives réutilisables
     """
-    def __init__(self, traducteur, vitesse_roues, longueur_cote=500):
-        super().__init__(traducteur)
+    def __init__(self, traducteur, vitesse_roues, longueur_cote=0.5):
+        super().__init__(traducteur, name="Carre", type="Strategie")
         self.vitesse = vitesse_roues
         self.longueur_cote = longueur_cote
         self.strategie = None
@@ -26,7 +26,10 @@ class AlgoCarre(AlgoBase):
 
     def step(self):
         super().step()
-        self.strategie.step()
+        if self.strategie is not None:
+            self.strategie.step()
     
     def stop(self):
-        return self.strategie.stop()
+        if self.strategie is not None:
+            return self.strategie.stop()
+        return True  # Pas de stratégie donc on considère que c'est fini
