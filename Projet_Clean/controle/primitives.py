@@ -12,6 +12,7 @@ class AvancerDistance(AlgoBase):
         self.vitesse = vitesse_roues
         self.distance_mm = distance_mm
     def start(self):
+        super().start()
         print("J'avance de ",self.distance_mm," mm")
         self.trad.reset_distance_parcourue()
 
@@ -33,6 +34,7 @@ class ReculerDistance(AlgoBase):
         self.distance_mm = distance_mm
     
     def start(self):
+        super().start()
         self.trad.reset_distance_parcourue()
 
     def step(self):
@@ -55,6 +57,7 @@ class TournerAngle(AlgoBase):
         self.sens = sens        
     
     def start(self):
+        super().start()
         print("Je tourne de",self.angle_rad," radians")
         self.trad.reset_angle_parcouru()
 

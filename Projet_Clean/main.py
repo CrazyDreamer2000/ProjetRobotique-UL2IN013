@@ -31,7 +31,7 @@ else:
     robot = Robot2IN013()
     trad = TraducteurReel(robot)
 
-algo = ALGOS[parseArgs.algo](trad, 2.0, 500) # Algo choisi par defaut dans code actuel.
+algo = ALGOS[parseArgs.algo](trad, 3.0, 500) # Algo choisi par defaut dans code actuel.
 
 algo.start()
 

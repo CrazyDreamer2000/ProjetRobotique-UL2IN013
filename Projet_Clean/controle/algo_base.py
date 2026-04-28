@@ -4,7 +4,7 @@ class AlgoBase:
     """
     Classe de base pour toutes les stratégies / primitives
     """
-    def __init__(self, traducteur,name:str,type:str,modeDebug:bool=False):
+    def __init__(self, traducteur,name:str,type:str,modeDebug:bool=True):
         # Le traducteur est injecté à l'initialisation.
         self.trad = traducteur
         self.name = name
@@ -24,8 +24,8 @@ class AlgoBase:
         Exécute une étape de controle.
         Cette méthode envoie directement les commandes au robot.
         """
-        if self.modeDebug:
-            print(f"Step de {self.name} ({self.type})")
+        # if self.modeDebug:
+        #     print(f"Step de {self.name} ({self.type})")
 
         if self.stop():
             self.trad.set_vitesse_roues(0.0, 0.0)
@@ -37,7 +37,7 @@ class AlgoBase:
         """
         if self.modeDebug:
             print(f"Check stop de {self.name} ({self.type})")
-        pass 
+        return False 
 
     def __str__(self):
         return f"{self.name} ({self.type})"

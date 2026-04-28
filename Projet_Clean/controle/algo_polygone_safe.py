@@ -15,7 +15,7 @@ class AlgoPolygoneSafe(AlgoBase):
         self.strategie = None
     
     def start(self):
-
+        super().start()
         eviter = Sequence(  self.trad,
                             [ ReculerDistance(self.trad, self.vitesse, 30),
                               TournerAngle(self.trad, self.vitesse, math.pi/3) ]
@@ -41,6 +41,7 @@ class AlgoPolygoneSafe(AlgoBase):
             self.strategie.step()
     
     def stop(self):
+        #super().stop()
         if self.strategie is not None:
             return self.strategie.stop()
         return True  # Pas de stratégie donc on considère que c'est fini

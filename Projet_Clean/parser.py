@@ -18,7 +18,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--vitesse_roues",
         type=float,
-        default=7.0,
+        default=3.0,
         help="Vitesse des roues en rad/s",
     )
     parser.add_argument(
