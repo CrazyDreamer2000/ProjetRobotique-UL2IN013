@@ -16,7 +16,7 @@ class AlgoBase:
         Initialise ou réinitialise la stratégie
         """
         if self.modeDebug:
-            print(f"Initialisation de {self.name} ({self.type})")
+            print(f"Start {self.name}  ({self.type})")
         pass
 
     def step(self):
@@ -24,8 +24,8 @@ class AlgoBase:
         Exécute une étape de controle.
         Cette méthode envoie directement les commandes au robot.
         """
-        # if self.modeDebug:
-        #     print(f"Step de {self.name} ({self.type})")
+        #if self.modeDebug:
+        #    print(f"Step {self.name} ({self.type})")
 
         if self.stop():
             self.trad.set_vitesse_roues(0.0, 0.0)
@@ -36,7 +36,7 @@ class AlgoBase:
         Retourne True si la stratégie doit s'arrêter / est terminée, False sinon (?)
         """
         if self.modeDebug:
-            print(f"Check stop de {self.name} ({self.type})")
+            print(f"Check stop {self.name} ({self.type})")
         return False 
 
     def __str__(self):

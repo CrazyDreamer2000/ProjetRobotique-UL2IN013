@@ -15,6 +15,7 @@ class AlgoCarre(AlgoBase):
         self.strategie = None
 
     def start(self):
+        super().start()
 
         etapes = [
                     AvancerDistance(self.trad, self.vitesse, self.longueur_cote),

@@ -8,13 +8,13 @@ class AlgoFoncerDevant(AlgoBase):
     Polygone + réaction aux collisions
     """
     def __init__(self, trad, vitesse_max, dist_securite = 500):
-        super().__init__(trad)
+        super().__init__(trad, name="FoncerDevant", type="Algorithme")
         self.vitesse_max = vitesse_max
         self.dist_securite = dist_securite
         self.strategie = None
     
     def start(self):
-        print("AlgoFoncerDevant")
+        super().start()
         avancerproche = AvancerProche(self.trad, self.vitesse_max)
         avancer = Avancer(self.trad, self.vitesse_max)
         self.strategie = Condition( self.trad,

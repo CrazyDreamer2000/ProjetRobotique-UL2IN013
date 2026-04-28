@@ -11,6 +11,8 @@ class Sequence(AlgoBase):
         self.dt = dt
 
     def start(self):
+        #super().start()
+        print("Sequence")
         self.index = 0
 
         if len(self.etapes) > 0:
@@ -19,7 +21,7 @@ class Sequence(AlgoBase):
     def step(self):
         if self.stop():
             return
-
+        
         self.etapes[self.index].step()
 
         if self.etapes[self.index].stop():
@@ -36,32 +38,36 @@ class Condition(AlgoBase):
     Execute la stratégie si_faux.
     Si la condition est vérifiée, la stratégie si_vrai est lancée et dure jusqu'à sa fin.
     """
-    def __init__(self, trad, condition, si_vrai, si_faux):
+    def __init__(self, trad, condition_switch, si_vrai, si_faux, condition_stop):
         super().__init__(trad, name="Condition", type="Composition")
-        self.condition = condition
+        self.condition_switch = condition_switch
         self.si_vrai = si_vrai
         self.si_faux = si_faux
         self.condition_stop = condition_stop
         self.si_vrai_en_cours = False # True si la stratégie actuelle est si_vrai, False sinon
     
     def start(self):
-        print("Condition")
+        #super().start()
+        print("start Condition")
+
         if self.condition_switch(self.trad):
+            print(" switch True")
             self.si_vrai_en_cours = True
             self.si_vrai.start()
         else:
+            print(" switch False")
             self.si_vrai_en_cours = False
             self.si_faux.start()
         
-
     def step(self):
-        #print("step condition", self.condition_switch(self.trad), self.si_vrai_en_cours, self.stop())
+        print("   step Condition: switch=",self.condition_switch(self.trad),"stop=",self.stop())
         #print(self.trad.get_distance_devant())
         if self.stop():
             self.trad.set_vitesse_roues(0.0, 0.0)
             return
         
         if self.si_vrai_en_cours:   # Si si_vrai est en cours
+            print("si_vrai en cours")
             if self.si_vrai.stop():     # mais qu'il doit s'arrêter
                 self.si_vrai_en_cours = False # on indique qu'il n'est plus en cours 
                 self.si_faux.step()           # et on continue si_faux
@@ -69,9 +75,8 @@ class Condition(AlgoBase):
                 self.si_vrai.step()     # Sinon, on continue si_vrai
         
         else:                       # SINON (si_vrai n'est pas en cours)
-            #print("test condition")
+            print("si_faux en cours")
             if self.condition_switch(self.trad): # Si la condition est vérifiée
-                #print("condition vérifiée")
                 self.si_vrai_en_cours = True   # on indique qu'il est en cours
                 self.si_vrai.start()           # on le démarre
                 self.si_vrai.step()
@@ -90,6 +95,8 @@ class Boucle(AlgoBase):
         self.i = 0
 
     def start(self):
+        #super().start()
+        print("start Boucle")
         self.i = 0
 
     def step(self):

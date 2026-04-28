@@ -25,11 +25,12 @@ class Avancer(AlgoBase):
     Avance indéfiniment
     """
     def __init__(self, traducteur, vitesse_roues):
-        super().__init__(traducteur)
+        super().__init__(traducteur, name="Avancer", type="Primitive")
         self.vitesse = vitesse_roues
     
     def start(self):
-        print("J'avance")
+        #super().start()
+        print("Avancer")
         return
 
     def step(self):
@@ -49,8 +50,8 @@ class AvancerDistance(AlgoBase):
         self.vitesse = vitesse_roues
         self.distance_mm = distance_mm
     def start(self):
-        super().start()
-        print("J'avance de ",self.distance_mm," mm")
+        #super().start()
+        print("start AvancerDistance ",self.distance_mm," mm")
         self.trad.reset_distance_parcourue()
 
     def step(self):
@@ -63,14 +64,15 @@ class AvancerDistance(AlgoBase):
 
 class AvancerProche(AlgoBase):
     def __init__(self, traducteur, vitesse_max, dist_securite = 150):
-        super().__init__(traducteur)
+        super().__init__(traducteur, name="AvancerProche", type="Primitive")
         self.vitesse_max = vitesse_max
         self.dist_securite = dist_securite # Distance du mur à partir duquel on ralentit
         self.min_securite = 30 # Distance minimale du mur à tout moment
         self.vitesse = 0
    
     def start(self):
-        print("Je m'approche")
+        #super().start()
+        print("start AvancerProche dist_secu=",self.dist_securite)
         self.vitesse = 0
 
     def step(self):
@@ -90,6 +92,9 @@ class AvancerProche(AlgoBase):
 
     
     def stop(self):
+        if self.trad.get_distance_devant() < self.min_securite:
+            print("Stop AvancerProche")
+        
         return self.trad.get_distance_devant() < self.min_securite
 
  
@@ -103,7 +108,8 @@ class ReculerDistance(AlgoBase):
         self.distance_mm = distance_mm
     
     def start(self):
-        super().start()
+        #super().start()
+        print("start ReculerDistance ",self.distance_mm," mm")
         self.trad.reset_distance_parcourue()
 
     def step(self):
@@ -111,6 +117,9 @@ class ReculerDistance(AlgoBase):
         self.trad.set_vitesse_roues(-self.vitesse, -self.vitesse)
     
     def stop(self):
+        if self.trad.get_distance_parcourue() >= self.distance_mm:
+            print("Stop ReculerDistance")
+
         return self.trad.get_distance_parcourue() >= self.distance_mm
 
 
@@ -126,8 +135,8 @@ class TournerAngle(AlgoBase):
         self.sens = sens        
     
     def start(self):
-        super().start()
-        print("Je tourne de",self.angle_rad," radians")
+        #super().start()
+        print("start TournerAngle ",self.angle_rad," rad")
         self.trad.reset_angle_parcouru()
 
     def step(self):
@@ -144,4 +153,7 @@ class TournerAngle(AlgoBase):
             self.trad.set_vitesse_roues(v, -v)
     
     def stop(self):
+        if self.trad.get_angle_parcouru() >= self.angle_rad:
+            print("stop TournerAngle")
+        
         return self.trad.get_angle_parcouru() >= self.angle_rad
