@@ -38,6 +38,8 @@ class Monde:
         self.poly_robot_local = polygone_rectangle_local(cfg.ROBOT_LONGUEUR, cfg.ROBOT_LARGEUR)
 
         self.creer_obstacles_aleatoires() # Création d'obstacles aléatoires
+
+        print("Monde créé")
     
     def ajouter_obstacle(self, x, y, longueur=cfg.TAILLE_OBSTACLE, largeur=cfg.TAILLE_OBSTACLE):
         """
@@ -129,7 +131,7 @@ class Monde:
 
         return False
   
-    def lire_distance_devant(self, pos_robot, portee=(0.5, 800.0)):
+    def lire_distance_devant(self, pos_robot, portee=(0.5, 8000.0)):
         """
         Mesure la distance jusqu'au premier obstacle devant le robot.
         -> Teste des points tous les 2cm devant le robot et renvoie la distance si le point est sur un obstacle
@@ -139,7 +141,7 @@ class Monde:
 
         dist = None
 
-        while (max - min) > 1: # On prend la valeur au demi-milimètre près
+        while (max - min) > 1: # On prend la valeur au milimètre près
             dist = (min + max) // 2
 
             # Position du point de test

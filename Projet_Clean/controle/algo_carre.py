@@ -8,7 +8,7 @@ class AlgoCarre(AlgoBase):
     """
     Controleur carré construit à partir de primitives réutilisables
     """
-    def __init__(self, traducteur, vitesse_roues, longueur_cote=0.5):
+    def __init__(self, traducteur, vitesse_roues, longueur_cote=500):
         super().__init__(traducteur)
         self.vitesse = vitesse_roues
         self.longueur_cote = longueur_cote

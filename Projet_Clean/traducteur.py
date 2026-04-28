@@ -44,6 +44,8 @@ class TraducteurSimu(Traducteur):
         self._distance_depart_droite = 0.0
         self._orientation_depart = monde.robot.pos.orientation
 
+        print("Traducteur créé")
+
     # COMMANDES
 
     def set_vitesse_roues(self, v_gauche: float, v_droite: float):

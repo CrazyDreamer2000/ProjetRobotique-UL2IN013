@@ -3,6 +3,43 @@ from controle.algo_base import AlgoBase
 from core.geom import normaliser_angle
 
 
+class Stop(AlgoBase):
+    """
+    Arrête l'algorithme
+    """
+    def __init__(self, traducteur):
+        super().__init__(traducteur)
+    
+    def start(self):
+        return
+    
+    def step(self):
+        self.trad.set_vitesse_roues(0.0, 0.0)
+    
+    def stop():
+        return False
+
+
+class Avancer(AlgoBase):
+    """
+    Avance indéfiniment
+    """
+    def __init__(self, traducteur, vitesse_roues):
+        super().__init__(traducteur)
+        self.vitesse = vitesse_roues
+    
+    def start(self):
+        print("J'avance")
+        return
+
+    def step(self):
+        super().step()
+        self.trad.set_vitesse_roues(self.vitesse, self.vitesse)
+    
+    def stop(self):
+        return False
+
+
 class AvancerDistance(AlgoBase):
     """
     Avance en ligne droite jusqu'à avoir parcouru une distance donnée
@@ -23,6 +60,38 @@ class AvancerDistance(AlgoBase):
     def stop(self):
         return self.trad.get_distance_parcourue() >= self.distance_cm
     
+
+class AvancerProche(AlgoBase):
+    def __init__(self, traducteur, vitesse_max, dist_securite = 150):
+        super().__init__(traducteur)
+        self.vitesse_max = vitesse_max
+        self.dist_securite = dist_securite # Distance du mur à partir duquel on ralentit
+        self.min_securite = 30 # Distance minimale du mur à tout moment
+        self.vitesse = 0
+   
+    def start(self):
+        print("Je m'approche")
+        self.vitesse = 0
+
+    def step(self):
+        if self.stop():
+            self.trad.set_vitesse_roues(0.0, 0.0)
+            return
+
+        dist_devant = self.trad.get_distance_devant() # sécurité
+        if dist_devant > self.dist_securite: # pas aller trop vite
+            dist_devant = self.dist_securite
+        if dist_devant < self.min_securite: # pas aller trop lentement
+            dist_devant = 0
+
+        self.vitesse = (dist_devant / self.dist_securite) * self.vitesse_max
+        print(self.vitesse)
+        self.trad.set_vitesse_roues(self.vitesse, self.vitesse)
+
+    
+    def stop(self):
+        return self.trad.get_distance_devant() < self.min_securite
+
 
 class ReculerDistance(AlgoBase):
     """

@@ -7,7 +7,7 @@ class AlgoPolygoneSafe(AlgoBase):
     """
     Polygone + réaction aux collisions
     """
-    def __init__(self, traducteur, vitesse_roues, longueur_cote=0.5, nb_cotes = 5):
+    def __init__(self, traducteur, vitesse_roues, longueur_cote=500, nb_cotes = 5):
         super().__init__(traducteur)
         self.vitesse = vitesse_roues
         self.nb_cotes = nb_cotes
@@ -29,9 +29,10 @@ class AlgoPolygoneSafe(AlgoBase):
                          )
 
         self.strategie = Condition(self.trad,
-                                   condition = lambda t: t.est_en_collision(),
+                                   condition_switch = lambda t: t.est_en_collision(),
                                    si_vrai = eviter,
-                                   si_faux = polygone)
+                                   si_faux = polygone,
+                                   condition_stop = lambda: polygone.stop())
 
         self.strategie.start()
     

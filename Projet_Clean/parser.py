@@ -12,7 +12,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--algo",
         type=str,
         default="polygone",
-        choices=["carre", "carresafe", "polygone", "avancer"],
+        choices=["carre", "carresafe", "polygone", "avancer", "foncerdevant"],
         help="Nom de l'algorithme (carre, carresafe)",
     )
     parser.add_argument(

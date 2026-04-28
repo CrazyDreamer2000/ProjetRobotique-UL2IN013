@@ -36,19 +36,29 @@ class Condition(AlgoBase):
     Execute la stratégie si_faux.
     Si la condition est vérifiée, la stratégie si_vrai est lancée et dure jusqu'à sa fin.
     """
-    def __init__(self, trad, condition, si_vrai, si_faux):
+    def __init__(self, trad, condition_switch, si_vrai, si_faux, condition_stop):
         super().__init__(trad)
-        self.condition = condition
+        self.condition_switch = condition_switch
         self.si_vrai = si_vrai
         self.si_faux = si_faux
+        self.condition_stop = condition_stop
         self.si_vrai_en_cours = False # True si la stratégie actuelle est si_vrai, False sinon
     
     def start(self):
-        self.si_faux.start()
-        self.si_vrai_en_cours = False
+        print("Condition")
+        if self.condition_switch(self.trad):
+            self.si_vrai_en_cours = True
+            self.si_vrai.start()
+        else:
+            self.si_vrai_en_cours = False
+            self.si_faux.start()
+        
 
     def step(self):
+        #print("step condition", self.condition_switch(self.trad), self.si_vrai_en_cours, self.stop())
+        #print(self.trad.get_distance_devant())
         if self.stop():
+            self.trad.set_vitesse_roues(0.0, 0.0)
             return
         
         if self.si_vrai_en_cours:   # Si si_vrai est en cours
@@ -59,7 +69,9 @@ class Condition(AlgoBase):
                 self.si_vrai.step()     # Sinon, on continue si_vrai
         
         else:                       # SINON (si_vrai n'est pas en cours)
-            if self.condition(self.trad): # Si la condition est vérifiée
+            #print("test condition")
+            if self.condition_switch(self.trad): # Si la condition est vérifiée
+                #print("condition vérifiée")
                 self.si_vrai_en_cours = True   # on indique qu'il est en cours
                 self.si_vrai.start()           # on le démarre
                 self.si_vrai.step()
@@ -67,7 +79,7 @@ class Condition(AlgoBase):
                 self.si_faux.step()       # Sinon, on continue si_faux
     
     def stop(self):
-        return self.si_faux.stop()
+        return self.condition_stop()
     
 
 class Boucle(AlgoBase):
