@@ -28,9 +28,10 @@ class AlgoSuivreBaliseDistance(AlgoBase):
         suivre_balise = Sequence(self.trad,
                                 [ AvancerDistance(self.trad, self.vitesse, self.distance_cible) ] )
         self.strategie = Condition(self.trad,
-                                   condition = lambda t: t.est_en_collision(),
+                                   condition_switch = lambda t: t.est_en_collision(),
                                    si_vrai = eviter,
-                                   si_faux = suivre_balise)
+                                   si_faux = suivre_balise,
+                                   condition_stop = lambda: False) # on ne s'arrete jamais tant qu'on suit la balise
 
     def step(self):
         super().step()

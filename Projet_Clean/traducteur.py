@@ -38,6 +38,9 @@ class Traducteur(ABC):
     def est_en_collision(self) -> bool:
         pass
 
+    def tourner_capteur_robot(self,angle : float):
+        pass
+
 class TraducteurSimu(Traducteur):
     """
     Implémentation du traducteur pour la simulation.
@@ -110,6 +113,12 @@ class TraducteurSimu(Traducteur):
         """
         return self.monde.robot.en_collision
     
+    def tourner_capteur_robot(self,angle : float):
+        """
+        Tourne le capteur du robot de l'angle spécifié.
+        """
+
+
 class TraducteurReel(Traducteur):
     """
     Implémentation du traducteur pour le robot réel.
@@ -121,8 +130,10 @@ class TraducteurReel(Traducteur):
         self._ref_pos_gauche_distance = 0.0
         self._ref_pos_droite_distance = 0.0
     # Pour l'angle
-        self._ref_orientation = 0.0
-
+        self._ref_angle_gauche = 0.0
+        self._ref_angle_droite = 0.0
+    # Pour l'angle du capteur
+        self._angle_capteur = 0.0
 
     def set_vitesse_roues(self, v_gauche: float, v_droite: float):
         """
@@ -142,7 +153,7 @@ class TraducteurReel(Traducteur):
         self.robot.set_motor_dps(self.robot.MOTOR_RIGHT,dps_droite) 
 
     def get_distance_devant(self) -> float:
-        """
+        """  
         Sortie:
             - (Fonction a nettoyer)
             - distance_devant(robot. : float)
@@ -181,18 +192,31 @@ class TraducteurReel(Traducteur):
     def reset_angle_parcouru(self):
         """Réinitialise la référence d'orientation pour le calcul de l'angle parcouru."""
         encodeurs = self.robot.get_motor_position()
-        # On utilise la différence de rotation entre les deux roues pour estimer l'angle
-        delta_gauche = encodeurs[0] - self._ref_pos_gauche_distance
-        delta_droite = encodeurs[1] - self._ref_pos_droite_distance
-        # On convertit les deltas en radians
-        delta_gauche_rad = delta_gauche * (math.pi / 180)
-        delta_droite_rad = delta_droite * (math.pi / 180)
-        # On utilise la formule de l'angle parcouru : (delta_droite - delta_gauche) * rayon / empattement
-        self._ref_orientation = (delta_droite_rad - delta_gauche_rad) * (self.robot.WHEEL_DIAMETER / 2) / self.robot.WHEEL_BASE_WIDTH
+        self._ref_angle_gauche = encodeurs[0]
+        self._ref_angle_droite = encodeurs[1]
 
     def get_angle_parcouru(self) -> float:
         """ Calcule l'angle parcouru depuis le dernier reset."""
-        return self._ref_orientation
+        encodeurs = self.robot.get_motor_position()
+        
+        delta_gauche = encodeurs[0] - self._ref_angle_gauche
+        delta_droite = encodeurs[1] - self._ref_angle_droite
+        
+        # Conversion degrés → radians
+        delta_gauche_rad = delta_gauche * (math.pi / 180)
+        delta_droite_rad = delta_droite * (math.pi / 180)
+        
+        # Rayon de la roue (mm)
+        rayon = self.robot.WHEEL_DIAMETER / 2.0
+        
+        # Distance parcourue par chaque roue (mm)
+        distance_gauche = delta_gauche_rad * rayon
+        distance_droite = delta_droite_rad * rayon
+        #on retourne l'angle parcouru
+        dist_roues = self.robot.WHEEL_BASE_WIDTH  # distance de roue gauche a droite
+        angle_rad = (distance_droite - distance_gauche) / dist_roues
+    
+        return angle_rad
 
     def est_en_collision(self) -> bool:
         """ Indique si le robot est en collision en se basant sur la distance devant et un seuil de collision."""
@@ -200,3 +224,8 @@ class TraducteurReel(Traducteur):
         if self.get_distance_devant() < SEUIL_COLLISION: 
             return True
         return False
+
+    def tourner_capteur_robot(self,angle : float):
+        """ Tourne le capteur du robot de l'angle spécifié """
+        self._angle_capteur = angle
+        self.robot.servo_rotate(self._angle_capteur)
