@@ -6,18 +6,18 @@ class CinematiqueDeuxRoues:
     """
 
     def __init__(self, rayon_roue_m: float, ecartement_roues_m: float):
-        self.rayon_roue = rayon_roue_m # mètres
-        self.ecartement_roues = ecartement_roues_m # mètres
+        self.rayon_roue = rayon_roue_m # millimètres
+        self.ecartement_roues = ecartement_roues_m # millimètres
 
     def vitesses_robot_depuis_roues(self, vitesse_rotation_gauche: float, vitesse_rotation_droite: float) -> tuple[float, float]:
         """
         Prends en paramètre les vitesses de rotation des roues et renvoie la vitesse avant (m/s) et la vitesse de rotation (rad/s) du robot
         Renvoie la vitesse avant et la vitesse de rotation du robot.
         """
-        vitesse_lineaire_gauche = self.rayon_roue * vitesse_rotation_gauche # mètres/s
+        vitesse_lineaire_gauche = self.rayon_roue * vitesse_rotation_gauche # millimètres/s
         vitesse_lineaire_droite = self.rayon_roue * vitesse_rotation_droite #
 
-        vitesse_avant = (vitesse_lineaire_droite + vitesse_lineaire_gauche) / 2 # m/s : moyenne de la vitesse des roues (choix)
+        vitesse_avant = (vitesse_lineaire_droite + vitesse_lineaire_gauche) / 2 # cm/s : moyenne de la vitesse des roues (choix)
         vitesse_rotation = (vitesse_lineaire_droite - vitesse_lineaire_gauche) / self.ecartement_roues # rad/s : différence des vitesses des deux roues / ecartement (plus ils sont écartés, moins le robot tourne vite)
         
         return vitesse_avant, vitesse_rotation
@@ -37,7 +37,7 @@ class CinematiqueDeuxRoues:
             return type(pos)(x2, y2, ori2)
 
         # Sinon : arc de cercle
-        rayon_virage = vitesse_avant / vitesse_rotation # mètres : Distance entre centre robot et centre de rotation. Plus vitesse_rotation grande, plus rayon_virage petit = angle plus aigu
+        rayon_virage = vitesse_avant / vitesse_rotation # millimètres : Distance entre centre robot et centre de rotation. Plus vitesse_rotation grande, plus rayon_virage petit = angle plus aigu
         ori2 = ori + vitesse_rotation * dt # Angle obtenu avec vitesse_rotation en dt temps
 
         x2 = x + rayon_virage * (math.sin(ori2) - math.sin(ori))

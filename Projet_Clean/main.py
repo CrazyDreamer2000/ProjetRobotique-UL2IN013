@@ -1,57 +1,55 @@
-# SIMULATION
-
-import pygame
+import time
 from parser import parse_args
 import config as cfg
 from controle import ALGOS
-from controle.traducteur import TraducteurSimu
-from core.robot import Robot
-from monde.monde import Obstacle, Monde
-import time
 
-# RLock = verrou partage entre le thread principal et l'affichage.
-from threading import RLock
-# Classe du thread qui gere la fenetre et le rendu.
-from affichage.Affichage import Affichage # Ta nouvelle classe threadée
+Simu = True
 
-# Lit les arguments de la ligne de commande et renvoie un Namespace , un contenuer avec les valeurs lit
-parseArgs = parse_args()
+monde = None
+trad = None
+lock = None
+vue = None
 
-# Creation du robot au centre du monde.
-robot = Robot(cfg.RAYON_ROUE, cfg.ECARTEMENT_ROUES, parseArgs.orientation, cfg.LONGUEUR_MONDE / 2, cfg.LARGEUR_MONDE / 2)
-# Creation de l'environnement (obstacles, collisions)
-monde = Monde() 
+parseArgs = parse_args() # Lit les arguments de la ligne de commande et renvoie un Namespace , un contenuer avec les valeurs lit
 
-trad = TraducteurSimu(robot, monde)
+if Simu:
+    from monde.monde import Monde
+    from threading import RLock # RLock = verrou partage entre le thread principal et l'affichage.
+    from affichage.Affichage import Affichage # Classe du thread qui gere la fenetre et le rendu.
+    from traducteur import TraducteurSimu
 
-algo = ALGOS[parseArgs.algo](trad, 10, 0.5) # Algo choisi par defaut dans code actuel.
-algo.start() # Init de l'algo avant la boucle principale.
+    monde = Monde() 
+    trad = TraducteurSimu(monde)
 
-lock = RLock() # Verrou partage entre simulation (main) et rendu (thread affichage).
+    lock = RLock() # Verrou partage entre simulation (main) et rendu (thread affichage).
+    vue = Affichage(monde, lock) # On cree l'affichage en lui donnant robot/monde/lock.
+    vue.start() # Demarre le thread d'affichage en parallele du main.
 
-vue = Affichage(robot, monde, lock) # On cree l'affichage en lui donnant robot/monde/lock.
-vue.start() # Demarre le thread d'affichage en parallele du main.
+else:
+    from robot2I013.robot2I013 import Robot2IN013
+    from traducteur import TraducteurReel
+    robot = Robot2IN013()
+    trad = TraducteurReel(robot)
 
-running = True # Flag principal pour continuer/arreter la simulation.
+algo = ALGOS[parseArgs.algo](trad, parseArgs.vitesse_roues) # Algo choisi par defaut dans code actuel.
+algo.start()
 
-# Boucle principale de simulation.
+running = True 
+
 while running:    
     
-    if not vue.running:     # Si l'utilisateur ferme la fenetre dans le thread affichage, on stoppe ici aussi.
-        running = False
-
-    # on protege l'acces aux donnees partagees.
-    with lock:
+    if Simu:
+        if vue is not None and not vue.running:   # Si l'utilisateur ferme la fenetre dans le thread affichage, on stoppe ici aussi.
+            running = False
+        if lock is not None:
+            with lock:  # on protege l'acces aux donnees partagees.
+                algo.step()
+                monde.step()  # On avance la physique du robot de dt secondes.
+    else:
         algo.step()
-        robot.step(monde)  # On avance la physique du robot de dt secondes.
-        robot.maj_capteurs(monde, robot.vitesse_linaire_actuellement) # On met a jour les capteurs pour le cycle suivant.
-    
+
     time.sleep(1/60)
 
-# Fin de boucle: on demande au thread d'affichage de s'arreter.
-vue.running = False
-# Puis on attend sa fin pour une fermeture propre.
-vue.join(timeout=1.0)
-
-# Ferme pygame proprement.
-pygame.quit()
+if vue is not None:
+    vue.stop()  # Fin de boucle: on demande au thread d'affichage de s'arreter.
+    vue.join(timeout=1.0) # Puis on attend sa fin pour une fermeture propre.

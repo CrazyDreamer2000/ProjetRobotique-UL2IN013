@@ -1,16 +1,14 @@
-#from .AlgoTournerSurPlace import AlgoTournerSurPlace
-#from .AlgoArretDevantObstacle import AlgoArretDevantObstacle
-#from .AlgoReculeTourneContact import AlgoReculeTourneContact
-#from .AlgoEviter import AlgoEviter
 from .algo_carre import AlgoCarre
 from .algo_carre_safe import AlgoCarreSafe
+from .algo_polygone_safe import AlgoPolygoneSafe
+from .algo_foncer_devant import AlgoFoncerDevant
+from .primitives import AvancerDistance
 
 # Algorithmes
 ALGOS = {
             "carre" : AlgoCarre,
             "carresafe" : AlgoCarreSafe,
-            #"tourner" : AlgoTournerSurPlace,
-            #"eviter" : AlgoEviter,
-            #"arret" : AlgoArretDevantObstacle,
-            #"contact" : AlgoReculeTourneContact
+            "polygone" : AlgoPolygoneSafe,
+            "avancer" : AvancerDistance,
+            "foncerdevant" : AlgoFoncerDevant
         }

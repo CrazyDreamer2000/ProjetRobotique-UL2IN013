@@ -9,9 +9,8 @@ import time
 class Affichage(threading.Thread):
     # Ici on prepare notre thread d'affichage.
     # En gros: on recupere le robot, le monde et le lock pour pouvoir dessiner ce qu'il se passe sans se battre avec le thread principal.
-    def __init__(self, robot, monde, lock):
+    def __init__(self, monde, lock):
         super().__init__()
-        self.robot = robot
         self.monde = monde
         self.running = True
         self.fps = 60
@@ -31,6 +30,11 @@ class Affichage(threading.Thread):
             self.update()
             # Petite pause pour garder un rythme stable et eviter de saturer le CPU.
             time.sleep(1.0 / self.fps)
+
+        pygame.quit()
+        
+    def stop(self):
+        self.running = False
 
     # ici on lit les actions utilisateur et on desine dessiner a l'ecran et on update 
     def update(self):
@@ -88,10 +92,10 @@ class Affichage(threading.Thread):
     def reset_affichage(self):
         """Reset visuel: robot au centre + nouveaux obstacles."""
         with self.lock:
-            self.robot.pos.x = cfg.LONGUEUR_MONDE / 2
-            self.robot.pos.y = cfg.LARGEUR_MONDE / 2
-            self.robot.pos.orientation = 0.0
-            self.robot.en_collision = False
+            self.monde.robot.pos.x = cfg.LONGUEUR_MONDE / 2
+            self.monde.robot.pos.y = cfg.LARGEUR_MONDE / 2
+            self.monde.robot.pos.orientation = 0.0
+            self.monde.robot.en_collision = False
             self.monde.liste_obstacles.clear()
             self.monde.creer_obstacles_aleatoires()
 
@@ -106,12 +110,12 @@ class Affichage(threading.Thread):
             # Points du robot transformes en coordonnees ecran
         points_monde = [
             (x * cfg.SCALE, y * cfg.SCALE)
-            for x, y in transformer_polygone_local_vers_monde(self.monde.poly_robot_local, self.robot.pos)
+            for x, y in transformer_polygone_local_vers_monde(self.monde.poly_robot_local, self.monde.robot.pos)
             ]
 
             # Centre du robot + orientation actuelle
-        cx, cy = self.robot.pos.x * cfg.SCALE, self.robot.pos.y * cfg.SCALE
-        ori = self.robot.pos.orientation
+        cx, cy = self.monde.robot.pos.x * cfg.SCALE, self.monde.robot.pos.y * cfg.SCALE
+        ori = self.monde.robot.pos.orientation
 
         # Corps du robot
         pygame.draw.polygon(self.screen, (80, 130, 200), points_monde)

@@ -94,6 +94,8 @@ NOTES du 25/03:
 - savoir distance parcourue dans simu et reel est different
 - adaptateur fait pont
 
+
+
   NOTES du 01/04:
 
   - Virer les algos qui commencent par majuscule (rappel)
@@ -131,3 +133,8 @@ mettre dans readme exos fait, exos pas fait, comme ça correcteur sait ce qu'on 
 
 - Supprimer tous les algorithmes dont le nom commence par une majuscule pour garantir uniformité et lisibilité du code.
 
+
+
+
+QUESTIONS:
+- toutes les classes de la partie controle ont la même structure start step stop, mais si j'ai bien compris, seules les primitives ne parlent avec le traducteur. Donc, ne devrait t on prendre en paramètre les traducteurs que dans les primitives?

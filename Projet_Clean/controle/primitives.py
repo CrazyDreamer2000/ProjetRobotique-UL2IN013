@@ -3,16 +3,55 @@ from controle.algo_base import AlgoBase
 from core.geom import normaliser_angle
 
 
+class Stop(AlgoBase):
+    """
+    Arrête l'algorithme
+    """
+    def __init__(self, traducteur):
+        super().__init__(traducteur)
+    
+    def start(self):
+        return
+    
+    def step(self):
+        self.trad.set_vitesse_roues(0.0, 0.0)
+    
+    def stop():
+        return False
+
+
+class Avancer(AlgoBase):
+    """
+    Avance indéfiniment
+    """
+    def __init__(self, traducteur, vitesse_roues):
+        super().__init__(traducteur, name="Avancer", type="Primitive")
+        self.vitesse = vitesse_roues
+    
+    def start(self):
+        #super().start()
+        print("Avancer")
+        return
+
+    def step(self):
+        super().step()
+        self.trad.set_vitesse_roues(self.vitesse, self.vitesse)
+    
+    def stop(self):
+        return False
+
+
 class AvancerDistance(AlgoBase):
     """
     Avance en ligne droite jusqu'à avoir parcouru une distance donnée
     """
-    def __init__(self, traducteur, distance_m, vitesse_roues):
-        super().__init__(traducteur)
-        self.distance_m = distance_m
+    def __init__(self, traducteur, vitesse_roues, distance_mm):
+        super().__init__(traducteur, name="AvancerDistance", type="Primitive")
         self.vitesse = vitesse_roues
-    
+        self.distance_mm = distance_mm
     def start(self):
+        #super().start()
+        print("start AvancerDistance ",self.distance_mm," mm")
         self.trad.reset_distance_parcourue()
 
     def step(self):
@@ -20,7 +59,68 @@ class AvancerDistance(AlgoBase):
         self.trad.set_vitesse_roues(self.vitesse, self.vitesse)
     
     def stop(self):
-        return self.trad.get_distance_parcourue() >= self.distance_m
+        return self.trad.get_distance_parcourue() >= self.distance_mm
+    
+
+class AvancerProche(AlgoBase):
+    def __init__(self, traducteur, vitesse_max, dist_securite = 150):
+        super().__init__(traducteur, name="AvancerProche", type="Primitive")
+        self.vitesse_max = vitesse_max
+        self.dist_securite = dist_securite # Distance du mur à partir duquel on ralentit
+        self.min_securite = 30 # Distance minimale du mur à tout moment
+        self.vitesse = 0
+   
+    def start(self):
+        #super().start()
+        print("start AvancerProche dist_secu=",self.dist_securite)
+        self.vitesse = 0
+
+    def step(self):
+        if self.stop():
+            self.trad.set_vitesse_roues(0.0, 0.0)
+            return
+
+        dist_devant = self.trad.get_distance_devant() # sécurité
+        if dist_devant > self.dist_securite: # pas aller trop vite
+            dist_devant = self.dist_securite
+        if dist_devant < self.min_securite: # pas aller trop lentement
+            dist_devant = 0
+
+        self.vitesse = (dist_devant / self.dist_securite) * self.vitesse_max
+        print(self.vitesse)
+        self.trad.set_vitesse_roues(self.vitesse, self.vitesse)
+
+    
+    def stop(self):
+        if self.trad.get_distance_devant() < self.min_securite:
+            print("Stop AvancerProche")
+        
+        return self.trad.get_distance_devant() < self.min_securite
+
+ 
+class ReculerDistance(AlgoBase):
+    """
+    Recule en ligne droite jusqu'à avoir parcouru une distance donnée
+    """
+    def __init__(self, traducteur, vitesse_roues, distance_mm):
+        super().__init__(traducteur, name="ReculerDistance", type="Primitive")
+        self.vitesse = vitesse_roues
+        self.distance_mm = distance_mm
+    
+    def start(self):
+        #super().start()
+        print("start ReculerDistance ",self.distance_mm," mm")
+        self.trad.reset_distance_parcourue()
+
+    def step(self):
+        super().step()
+        self.trad.set_vitesse_roues(-self.vitesse, -self.vitesse)
+    
+    def stop(self):
+        if self.trad.get_distance_parcourue() >= self.distance_mm:
+            print("Stop ReculerDistance")
+
+        return self.trad.get_distance_parcourue() >= self.distance_mm
 
 
 class TournerAngle(AlgoBase):
@@ -28,13 +128,15 @@ class TournerAngle(AlgoBase):
     Tourne sur place jusqu'à atteindre un angle relatif.
     sens = "gauche" ou "droite"
     """
-    def __init__(self, traducteur, angle_rad, vitesse_roues, sens="gauche"):
-        super().__init__(traducteur)
-        self.angle_rad = angle_rad
+    def __init__(self, traducteur, vitesse_roues, angle_rad, sens="gauche"):
+        super().__init__(traducteur, name="TournerAngle", type="Primitive")
         self.vitesse = vitesse_roues
+        self.angle_rad = angle_rad
         self.sens = sens        
     
     def start(self):
+        #super().start()
+        print("start TournerAngle ",self.angle_rad," rad")
         self.trad.reset_angle_parcouru()
 
     def step(self):
@@ -51,42 +153,7 @@ class TournerAngle(AlgoBase):
             self.trad.set_vitesse_roues(v, -v)
     
     def stop(self):
-        return abs(self.trad.get_angle_parcouru()) >= self.angle_rad
-
+        if self.trad.get_angle_parcouru() >= self.angle_rad:
+            print("stop TournerAngle")
         
-class EviterCollision(AlgoBase):
-    """
-    Réagit à une collision:
-    - recule
-    - tourne
-    """
-    def __init__(self, traducteur, vitesse, dt = 0.05):
-        super().__init__(traducteur)
-        self.v = vitesse
-        self.timer = 0.0
-        self.phase = "recule"
-        self.dt = dt
-
-    def start(self):
-        self.timer = 0.0
-        self.phase = "recule"
-    
-    def step(self):
-        if self.stop():
-            self.trad.set_vitesse_roues(0.0, 0.0)
-
-        self.timer += self.dt
-
-        if self.phase == "recule":
-            if self.timer > 1:
-                self.phase = "tourne"
-                self.timer = 0.0
-            self.trad.set_vitesse_roues(-self.v, -self.v)
-        
-        elif self.phase == "tourne":
-            if self.stop():
-                self.trad.set_vitesse_roues(0.0, 0.0)
-            self.trad.set_vitesse_roues(-0.5*self.v, 0.5*self.v)
-            
-    def stop(self):
-        return self.phase == "tourne" and self.timer > 1
+        return self.trad.get_angle_parcouru() >= self.angle_rad

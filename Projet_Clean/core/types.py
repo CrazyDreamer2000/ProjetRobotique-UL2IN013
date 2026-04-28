@@ -3,27 +3,18 @@ from dataclasses import dataclass # on utilise dataclass juste pour simplifier l
 @dataclass
 class Pos2D:
     """Position et orientation du robot dans la simulation"""
-    x: float # mètres
-    y: float # mètres
+    x: float # millimètres
+    y: float # millimètres
     orientation: float  # radians, orientation = 0 -> droite
 
 
 @dataclass
-class CommandeRoues:
-    """Commandes envoyées aux roues"""
-    vitesse_rotation_gauche: float # rad/s
-    vitesse_rotation_droite: float # 
-
-
-@dataclass
-class EtatRoues:
+class Roue:
     """
-    Etat "réel" des roues
+    Etat d'une roue
     """
-    vitesse_rotation_gauche: float # rad/s
-    vitesse_rotation_droite: float #
-    rotation_totale_gauche: float # rad
-    rotation_totale_droite: float #
+    vitesse_rotation: float # rad/s
+    rotation_totale: float # rad
 
 
 @dataclass
