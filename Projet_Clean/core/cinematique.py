@@ -11,13 +11,12 @@ class CinematiqueDeuxRoues:
 
     def vitesses_robot_depuis_roues(self, vitesse_rotation_gauche: float, vitesse_rotation_droite: float) -> tuple[float, float]:
         """
-        Prends en paramètre les vitesses de rotation des roues et renvoie la vitesse avant (m/s) et la vitesse de rotation (rad/s) du robot
-        Renvoie la vitesse avant et la vitesse de rotation du robot.
+        Prends en paramètre les vitesses de rotation des roues et renvoie la vitesse avant (mm/s) et la vitesse de rotation (rad/s) du robot
         """
         vitesse_lineaire_gauche = self.rayon_roue * vitesse_rotation_gauche # millimètres/s
         vitesse_lineaire_droite = self.rayon_roue * vitesse_rotation_droite #
 
-        vitesse_avant = (vitesse_lineaire_droite + vitesse_lineaire_gauche) / 2 # cm/s : moyenne de la vitesse des roues (choix)
+        vitesse_avant = (vitesse_lineaire_droite + vitesse_lineaire_gauche) / 2 # mm/s : moyenne de la vitesse des roues (choix)
         vitesse_rotation = (vitesse_lineaire_droite - vitesse_lineaire_gauche) / self.ecartement_roues # rad/s : différence des vitesses des deux roues / ecartement (plus ils sont écartés, moins le robot tourne vite)
         
         return vitesse_avant, vitesse_rotation
