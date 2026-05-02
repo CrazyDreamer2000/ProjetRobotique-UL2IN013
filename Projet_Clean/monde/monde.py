@@ -1,15 +1,15 @@
 # SIMULATION
 
 from dataclasses import dataclass
-import config as cfg
 import math
 import random  # Pour générer des positions aléatoires
+import time
+import config as cfg
 from core.robot import Robot
 from core.geom import polygone_rectangle_local, transformer_polygone_local_vers_monde, normaliser_angle
 from core.types import Pos2D
 from core.cinematique import CinematiqueDeuxRoues
 from .collisions import collision_sat, point_dans_polygone_convexe
-import time
 
 @dataclass
 class Obstacle:
@@ -23,7 +23,7 @@ class Obstacle:
 
 class Monde:
     """
-    Simulation de l'environnement réel du robot.
+    Simulation de l'environnement du robot.
     """
     def __init__(self):
         self.liste_obstacles = []
@@ -31,9 +31,6 @@ class Monde:
         self.robot = Robot(cfg.RAYON_ROUE, cfg.ECARTEMENT_ROUES, 0, cfg.LONGUEUR_MONDE / 2, cfg.LARGEUR_MONDE / 2)
 
         self.cinematique = CinematiqueDeuxRoues(self.robot.rayon_roue, self.robot.ecartement_roues)
-        
-        self.last_step_time = None
-        self.last_capteurs_time = None
 
         self.poly_robot_local = polygone_rectangle_local(cfg.ROBOT_LONGUEUR, cfg.ROBOT_LARGEUR)
 
@@ -46,8 +43,8 @@ class Monde:
         Ajoute un obstacle au monde aux coordonnées (x,y)
 
         Paramètres:
-            x : abscisse du nouvel obstacle (pixels)
-            y : ordonnée du nouvel obstacle (pixels)
+            x : abscisse du nouvel obstacle (en pixels)
+            y : ordonnée du nouvel obstacle (en pixels)
         """
         self.liste_obstacles.append(Obstacle(
             Pos2D(x/cfg.SCALE, y/cfg.SCALE, orientation=random.uniform(0, 2 * math.pi)),
@@ -134,7 +131,7 @@ class Monde:
     def lire_distance_devant(self, pos_robot, portee=(0.5, 8000.0)):
         """
         Mesure la distance jusqu'au premier obstacle devant le robot.
-        -> Teste des points tous les 2cm devant le robot et renvoie la distance si le point est sur un obstacle
+        Utilise la dichotomie.
         """
         min = portee[0]
         max = portee[1]
@@ -155,14 +152,13 @@ class Monde:
         
         return dist
 
-    
     def calcul_dt(self, last_time):
-        now = time.perf_counter() #on lit l’heure actuelle
+        now = time.perf_counter() # on lit l’heure actuelle
         
-        if last_time is None: #c’est le tout premier appel, on n’a pas encore d’ancienne heure
+        if last_time is None: # c’est le tout premier appel, on n’a pas encore d’ancienne heure
             return 0.0, now
         
-        dt = now - last_time #on calcule le temps écoulé depuis le dernier appel
+        dt = now - last_time # on calcule le temps écoulé depuis le dernier appel
         return dt, now # le nouveau temps actuel now qui va remplacer last-time dans robot
 
     def maj_capteurs(self, vitesse_actuelle):
