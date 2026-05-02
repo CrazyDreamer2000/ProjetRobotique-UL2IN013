@@ -3,12 +3,16 @@ import math
 # Géométrie des angles
 
 def normaliser_angle(a: float) -> float:
-    """ramener un angle dans l'intervalle [-pi, pi]."""
+    """
+    Ramène un angle dans l'intervalle [-pi, pi].
+    """
     # On replie l'angle sur un tour complet (2*pi), puis on recentre autour de 0.
     return (a + math.pi) % (2 * math.pi) - math.pi
 
 def erreur_angle(cible: float, actuel: float) -> float:
-    """l'écart angle cible - angle actuel, normalisé."""
+    """
+    Normalise l'écart angle cible - angle actuel.
+    """
     return normaliser_angle(cible - actuel)
 
 

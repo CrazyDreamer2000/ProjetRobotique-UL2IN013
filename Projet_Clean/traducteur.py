@@ -1,10 +1,9 @@
-# controle/traducteur.py
 
-from abc import ABC, abstractmethod # Pour les classes abstraites
-from core.robot import Robot
-from monde.monde import Monde
-from core.geom import normaliser_angle
 import math
+from abc import ABC, abstractmethod # Pour les classes abstraites
+from monde.monde import Monde
+from core.robot import Robot
+from core.geom import normaliser_angle
 
 class Traducteur(ABC):
     """
