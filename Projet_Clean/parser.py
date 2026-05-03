@@ -17,16 +17,14 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--vitesse_roues",
         type=float,
-        default=3.0,
+        default=6.0,
         help="Vitesse des roues (rad/s)",
     )
     parser.add_argument(
-        "--orientation",
-        type=float,
-        default=0.0,
-        help="Orientation initiale du robot (degrés)",
+        "--simu",
+        action="store_true",
+        help="Execution en mode simulation ou sur le vrai robot"
     )
-
     return parser
 
 def parse_args() -> argparse.Namespace: 

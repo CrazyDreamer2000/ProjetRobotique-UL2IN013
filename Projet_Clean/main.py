@@ -3,15 +3,16 @@ import config as cfg
 from parser import parse_args
 from controle import ALGOS
 
-Simu = True
+parseArgs = parse_args() # Lit les arguments de la ligne de commande et renvoie un Namespace , un contenuer avec les valeurs lit
+
+Simu = parseArgs.simu
+print("Simu = ",Simu)
 
 monde = None
 lock = None
 vue = None
 
 trad = None
-
-parseArgs = parse_args() # Lit les arguments de la ligne de commande et renvoie un Namespace , un contenuer avec les valeurs lit
 
 if Simu:
     from monde.monde import Monde
