@@ -1,6 +1,6 @@
 import math
 from controle.algo_base import AlgoBase
-from controle.primitives import AvancerDistance, ReculerDistance, TournerAngle
+from controle.primitives import AvancerDistance, ReculerDistance, TournerAngle, Stop
 from controle.composition import Sequence, Condition, Boucle
 
 class AlgoPolygoneSafe(AlgoBase):
@@ -16,6 +16,7 @@ class AlgoPolygoneSafe(AlgoBase):
     
     def start(self):
         super().start()
+
         eviter = Sequence(  self.trad,
                             [ ReculerDistance(self.trad, self.vitesse, 30),
                               TournerAngle(self.trad, self.vitesse, math.pi/3) ]
@@ -37,7 +38,11 @@ class AlgoPolygoneSafe(AlgoBase):
         self.strategie.start()
     
     def step(self):
-        super().step()
+        #super().step()
+        
+        if self.stop():
+            self.strategie = Stop(self.trad)
+
         if self.strategie is not None:
             self.strategie.step()
     

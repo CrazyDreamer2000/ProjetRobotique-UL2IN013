@@ -12,7 +12,7 @@ class AlgoBase:
 
     def start(self):
         """
-        Initialise ou réinitialise la stratégie
+        Initialise ou réinitialise la stratégie et les variables d'instance.
         """
         if self.modeDebug:
             print(f"Start {self.name}  ({self.type})")
@@ -32,7 +32,7 @@ class AlgoBase:
     
     def stop(self)-> bool:
         """
-        Retourne True si la stratégie doit s'arrêter / est terminée, False sinon
+        Retourne True si la stratégie doit s'arrêter / est terminée, False sinon.
         """
         if self.modeDebug:
             print(f"Check stop {self.name} ({self.type})")

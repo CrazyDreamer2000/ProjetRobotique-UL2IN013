@@ -34,6 +34,9 @@ class Monde:
 
         self.poly_robot_local = polygone_rectangle_local(cfg.ROBOT_LONGUEUR, cfg.ROBOT_LARGEUR)
 
+        self.last_step_time = None
+        self.last_capteurs_time = None
+
         self.creer_obstacles_aleatoires() # Création d'obstacles aléatoires
 
         print("Monde créé")
