@@ -100,6 +100,7 @@ class Boucle(AlgoBase):
     def start(self):
         super().start()
         self.i = 0
+        self.strategie.start()
 
     def step(self):
         #super().step()

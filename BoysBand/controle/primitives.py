@@ -71,7 +71,7 @@ class AvancerProche(AlgoBase):
         super().__init__(traducteur, name="AvancerProche", type="Primitive")
         self.vitesse_max = vitesse_max
         self.dist_securite = dist_securite # Distance du mur à partir duquel on ralentit
-        self.min_securite = 30 # Distance minimale du mur à tout moment
+        self.min_securite = 50 # Distance minimale du mur à tout moment
         self.vitesse = 0
    
     def start(self):
